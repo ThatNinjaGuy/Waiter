@@ -1,12 +1,6 @@
 // components/TableManagement.js
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TextInput, Pressable } from "react-native";
 
 const TableManagement = ({ table, onUpdateTable }) => {
   const [guests, setGuests] = useState(table.guests.toString());
@@ -41,9 +35,9 @@ const TableManagement = ({ table, onUpdateTable }) => {
           multiline
         />
       </View>
-      <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
+      <Pressable style={styles.updateButton} onPress={handleUpdate}>
         <Text style={styles.updateButtonText}>Update Table</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };
@@ -75,7 +69,7 @@ const styles = StyleSheet.create({
   },
   notesInput: {
     height: 80,
-    textAlignVertical: "top",
+    verticalAlign: "top",
   },
   updateButton: {
     backgroundColor: "#007AFF",

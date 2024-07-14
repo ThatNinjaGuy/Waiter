@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, View, TextInput, TouchableOpacity, Text } from "react-native";
+import { Modal, View, TextInput, Pressable, Text } from "react-native";
 import styles from "./styles";
 
 const CustomModal = ({ visible, onClose, onSave, item, schema }) => {
@@ -21,7 +21,6 @@ const CustomModal = ({ visible, onClose, onSave, item, schema }) => {
     console.log(`Updating ${name} with value:`, value);
     setFormData((prevData) => {
       const newData = { ...prevData, [name]: value };
-      console.log("New form data:", newData);
       return newData;
     });
   };
@@ -44,12 +43,12 @@ const CustomModal = ({ visible, onClose, onSave, item, schema }) => {
               keyboardType={field.keyboardType}
             />
           ))}
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          <Pressable style={styles.saveButton} onPress={handleSave}>
             <Text style={styles.buttonText}>Save</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+          </Pressable>
+          <Pressable style={styles.cancelButton} onPress={onClose}>
             <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </Modal>

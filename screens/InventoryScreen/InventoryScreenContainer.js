@@ -1,51 +1,83 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  collection,
+  getDocs,
+  writeBatch,
+  doc,
+  deleteDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { db } from "@/firebase/firebaseConfig";
 import InventoryScreenView from "./InventoryScreenView";
 
 const InventoryScreenContainer = () => {
-  const [inventoryItems, setInventoryItems] = useState([
-    {
-      id: "1",
-      name: "Onion",
-      price: 10.99,
-      unit: "Kg",
-      quantity: 4,
-      image: "https://dummyimage.com/650x450/cc00cc/fff",
-    },
-    {
-      id: "2",
-      name: "Potato",
-      price: 8.99,
-      unit: "Kg",
-      quantity: 14,
-      image: "https://dummyimage.com/650x450/cc00cc/fff",
-    },
-    {
-      id: "3",
-      name: "Milk",
-      price: 12.99,
-      unit: "l",
-      quantity: 40,
-      image: "https://dummyimage.com/650x450/cc00cc/fff",
-    },
-  ]);
+  const [inventoryItems, setInventoryItems] = useState([]);
+
+  useEffect(() => {
+    const fetchInventoryItems = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "inventory-items"));
+        const items = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setInventoryItems(items);
+        console.log("Fetched inventory items:", items);
+      } catch (error) {
+        console.error("Error fetching inventory items:", error);
+      }
+    };
+
+    fetchInventoryItems();
+  }, []);
+
+  const addInventoryItems = async (items) => {
+    const batch = writeBatch(db);
+    const newItems = [];
+
+    items.forEach((item) => {
+      const docRef = doc(collection(db, "inventory-items"));
+      batch.set(docRef, item);
+      newItems.push({ ...item, id: docRef.id });
+    });
+
+    try {
+      await batch.commit();
+      console.log("Batch write successful");
+      setInventoryItems([...inventoryItems, ...newItems]);
+      console.log(newItems);
+    } catch (error) {
+      console.error("Error writing batch:", error);
+    }
+  };
 
   const addInventoryItem = (item) => {
-    setInventoryItems([
-      ...inventoryItems,
-      { ...item, id: Date.now().toString() },
-    ]);
+    addInventoryItems([item]);
   };
 
-  const deleteInventoryItem = (id) => {
-    setInventoryItems(inventoryItems.filter((item) => item.id !== id));
+  const deleteInventoryItem = async (id) => {
+    try {
+      await deleteDoc(doc(db, "inventory-items", id));
+      setInventoryItems(inventoryItems.filter((item) => item.id !== id));
+      console.log("Document successfully deleted!");
+    } catch (error) {
+      console.error("Error removing document: ", error);
+    }
   };
 
-  const updateInventoryItem = (id, updatedItem) => {
-    setInventoryItems(
-      inventoryItems.map((item) =>
-        item.id === id ? { ...item, ...updatedItem } : item
-      )
-    );
+  const updateInventoryItem = async (id, updatedItem) => {
+    try {
+      const itemRef = doc(db, "inventory-items", id);
+      await updateDoc(itemRef, updatedItem);
+      setInventoryItems(
+        inventoryItems.map((item) =>
+          item.id === id ? { ...item, ...updatedItem } : item
+        )
+      );
+      console.log("Document successfully updated!");
+    } catch (error) {
+      console.error("Error updating document: ", error);
+    }
   };
 
   return (

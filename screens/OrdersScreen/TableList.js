@@ -1,22 +1,13 @@
 // components/TableList.js
 import React from "react";
-import {
-  FlatList,
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { FlatList, StyleSheet, View, Text, Pressable } from "react-native";
 
 const TableList = ({ tables, onTablePress }) => {
   const renderTableItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.tableItem}
-      onPress={() => onTablePress(item)}
-    >
+    <Pressable style={styles.tableItem} onPress={() => onTablePress(item)}>
       <Text style={styles.tableNumber}>Table {item.number}</Text>
       <Text style={styles.tableStatus}>{item.status}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 
   return (

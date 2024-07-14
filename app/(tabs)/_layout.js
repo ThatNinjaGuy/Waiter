@@ -40,9 +40,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="inventory"
+        name="orders"
         options={{
-          title: "Inventory",
+          title: "Orders",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "code-slash" : "code-slash-outline"}
@@ -52,9 +52,21 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="orders"
+        name="staffs"
         options={{
-          title: "Orders",
+          title: "Staffs",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "code-slash" : "code-slash-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="inventory"
+        options={{
+          title: "Inventory",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "code-slash" : "code-slash-outline"}

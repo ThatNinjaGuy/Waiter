@@ -33,7 +33,7 @@ export default function HomeScreen() {
   const navigationItems = [
     { title: "Menu", onPress: () => navigation.navigate("menu") },
     { title: "Orders", onPress: () => navigation.navigate("orders") },
-    { title: "Staff", onPress: () => navigation.navigate("menu") },
+    { title: "Staffs", onPress: () => navigation.navigate("staffs") },
     { title: "Inventory", onPress: () => navigation.navigate("inventory") },
   ];
 

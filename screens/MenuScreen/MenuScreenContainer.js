@@ -32,11 +32,6 @@ const MenuScreenContainer = () => {
     fetchMenuItems();
   }, []);
 
-  useEffect(() => {
-    console.log(menuItems);
-    fetchHotelData();
-  }, []);
-
   const addMenuItems = async (items) => {
     const batch = writeBatch(db);
     const newItems = [];

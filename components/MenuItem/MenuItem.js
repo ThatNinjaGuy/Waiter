@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, Pressable, Image } from "react-native";
 import styles from "./styles";
 
 const MenuItem = ({ item, onEdit, onDelete }) => (
@@ -18,12 +18,12 @@ const MenuItem = ({ item, onEdit, onDelete }) => (
       <Text style={styles.price}>₹{item.price}</Text>
     </View>
     <View style={styles.actions}>
-      <TouchableOpacity onPress={onEdit}>
+      <Pressable onPress={onEdit}>
         <Text style={styles.edit}>Edit</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={onDelete}>
+      </Pressable>
+      <Pressable onPress={onDelete}>
         <Text style={styles.delete}>Delete</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   </View>
 );
