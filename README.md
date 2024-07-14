@@ -1,53 +1,76 @@
-# Welcome to your Expo app 👋
+# React Native Restaurant Menu App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This project is a React Native application for managing a restaurant menu. It uses Firebase Firestore for data storage and supports offline capabilities.
 
-## Get started
+## Table of Contents
 
-1. Install dependencies
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Installation](#installation)
+- [Firebase Setup](#firebase-setup)
+- [Project Structure](#project-structure)
+- [Usage](#usage)
+- [Building the APK](#building-the-apk)
+- [Contributing](#contributing)
+- [License](#license)
 
-   ```bash
+## Features
+
+- **Dashboard Overview**: Provides a summary of the day's revenue, orders, reservations, low inventory, and staff status.
+- **Notifications**: Displays important notifications such as new orders, staff meetings, and low inventory alerts.
+- **Quick Actions**: Allows quick navigation to different sections like Menu, Orders, Staffs, and Inventory.
+- **Menu Management**: Add, update, and delete menu items.
+- **Order Management**: View and manage orders, including order details and table management.
+- **Inventory Management**: Add, update, and delete inventory items.
+- **Offline Support**: Works seamlessly offline and syncs data when the internet is available.
+- **Firebase Firestore Integration**: Uses Firestore for real-time data storage and retrieval.
+- **Batch Operations**: Efficiently add multiple items using batch write operations.
+- **User-Friendly Interface**: Simple and intuitive UI for managing menu items.
+
+## Screenshots
+
+### Dashboard
+
+![Dashboard](https://pplx-res.cloudinary.com/image/upload/v1720996665/user_uploads/lzwlavxmz/image.jpg)
+
+### Menu Management
+
+![Menu Management](https://pplx-res.cloudinary.com/image/upload/v1720996696/user_uploads/vmfypybrr/image.jpg)
+
+### Order Management
+
+![Order Management](https://pplx-res.cloudinary.com/image/upload/v1720996738/user_uploads/gdbpxmlvs/image.jpg)
+
+### Inventory Management
+
+![Inventory Management](https://pplx-res.cloudinary.com/image/upload/v1720996764/user_uploads/ytaxbbnsv/image.jpg)
+
+## Installation
+
+1. **Clone the repository:**
+
+   ```sh
+   git clone https://github.com/ThatNinjaGuy/Waiter.git
+   cd Waiter
+   ```
+
+2. **Install dependencies:**
+
+   ```sh
    npm install
    ```
 
-2. Start the app
+3. **Install Expo CLI:**
 
-   ```bash
-    npx expo start
+   ```sh
+   npm install -g expo-cli
    ```
 
-In the output, you'll find options to open the app in a
+4. **Install EAS CLI:**
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+   ```sh
+   npm install -g eas-cli
+   ```
 
 ## Android APK build
 
