@@ -47,6 +47,7 @@ const MenuScreenView = ({
         data={menuItems}
         renderItem={({ item }) => (
           <MenuItem
+            key={item.id}
             item={item}
             onEdit={() => handleEditItem(item)}
             onDelete={() => deleteMenuItem(item.id)}

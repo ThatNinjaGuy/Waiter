@@ -1,45 +1,89 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  collection,
+  getDocs,
+  writeBatch,
+  doc,
+  deleteDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { db } from "@/firebase/firebaseConfig";
 import MenuScreenView from "./MenuScreenView";
+import { fetchHotelData } from "@/firebase/queries";
 
 const MenuScreenContainer = () => {
-  const [menuItems, setMenuItems] = useState([
-    {
-      id: "1",
-      name: "Pizza",
-      price: 10.99,
-      cuisine: "Italian",
-      image: "https://dummyimage.com/650x450/cc00cc/fff",
-    },
-    {
-      id: "2",
-      name: "Burger",
-      price: 8.99,
-      cuisine: "American",
-      image: "https://dummyimage.com/650x450/cc00cc/fff",
-    },
-    {
-      id: "3",
-      name: "Sushi",
-      price: 12.99,
-      cuisine: "Japanese",
-      image: "https://dummyimage.com/650x450/cc00cc/fff",
-    },
-  ]);
+  const [menuItems, setMenuItems] = useState([]);
+
+  useEffect(() => {
+    const fetchMenuItems = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "menu-items/"));
+        const items = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setMenuItems(items);
+        console.log("Fetched menu items:", items);
+      } catch (error) {
+        console.error("Error fetching menu items:", error);
+      }
+    };
+
+    fetchMenuItems();
+  }, []);
+
+  useEffect(() => {
+    console.log(menuItems);
+    fetchHotelData();
+  }, []);
+
+  const addMenuItems = async (items) => {
+    const batch = writeBatch(db);
+    const newItems = [];
+
+    items.forEach((item) => {
+      const docRef = doc(collection(db, "menu-items/"));
+      batch.set(docRef, item);
+      newItems.push({ ...item, id: docRef.id });
+    });
+
+    try {
+      await batch.commit();
+      console.log("Batch write successful");
+      setMenuItems([...menuItems, ...newItems]);
+      console.log(newItems);
+    } catch (error) {
+      console.error("Error writing batch:", error);
+    }
+  };
 
   const addMenuItem = (item) => {
-    setMenuItems([...menuItems, { ...item, id: Date.now().toString() }]);
+    addMenuItems([item]);
   };
 
-  const deleteMenuItem = (id) => {
-    setMenuItems(menuItems.filter((item) => item.id !== id));
+  const deleteMenuItem = async (id) => {
+    try {
+      await deleteDoc(doc(db, "menu-items/", id));
+      setMenuItems(menuItems.filter((item) => item.id !== id));
+      console.log("Document successfully deleted!");
+    } catch (error) {
+      console.error("Error removing document: ", error);
+    }
   };
 
-  const updateMenuItem = (id, updatedItem) => {
-    setMenuItems(
-      menuItems.map((item) =>
-        item.id === id ? { ...item, ...updatedItem } : item
-      )
-    );
+  const updateMenuItem = async (id, updatedItem) => {
+    try {
+      const itemRef = doc(db, "menu-items/", id);
+      await updateDoc(itemRef, updatedItem);
+      setMenuItems(
+        menuItems.map((item) =>
+          item.id === id ? { ...item, ...updatedItem } : item
+        )
+      );
+      console.log("Document successfully updated!");
+    } catch (error) {
+      console.error("Error updating document: ", error);
+    }
   };
 
   return (
