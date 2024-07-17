@@ -55,7 +55,7 @@ const RestaurantTablesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#e0e0e0",
   },
 });
 

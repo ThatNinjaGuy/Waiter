@@ -100,6 +100,20 @@ This project is a React Native application for managing a restaurant menu. It us
 - eas login
 - eas build --platform android --profile preview
 
+## Web-Based access: Publishing the app to Ngrok for local hosting
+
+- If 8081 is your port number, then use below or update it to reflext your local port number
+
+```sh
+ngrok http 8081
+```
+
+## Android-Based access: Generating APK
+
+```sh
+eas build -p android --profile preview
+```
+
 ## Contributing
 
 ```sh

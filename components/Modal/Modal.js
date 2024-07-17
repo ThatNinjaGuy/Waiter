@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, View, TextInput, TouchableOpacity, Text } from "react-native";
+import { Modal, View, TextInput, Pressable, Text } from "react-native";
 import styles from "./styles";
 
 const CustomModal = ({ visible, onClose, onSave, item, schema }) => {
@@ -30,26 +30,31 @@ const CustomModal = ({ visible, onClose, onSave, item, schema }) => {
   };
 
   return (
-    <Modal visible={visible} transparent={true} animationType="slide">
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          {schema.map((field) => (
-            <TextInput
-              key={field.name}
-              style={styles.input}
-              placeholder={field.placeholder}
-              value={formData[field.name]}
-              onChangeText={(value) => handleInputChange(field.name, value)}
-              keyboardType={field.keyboardType}
-            />
-          ))}
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.buttonText}>Save</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
-            <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
+    <Modal
+      visible={visible}
+      onBackdropPress={onClose}
+      animationIn="slideInUp"
+      animationOut="slideOutDown"
+      backdropTransitionOutTiming={0}
+      style={styles.modal}
+    >
+      <View style={styles.modalContent}>
+        {schema.map((field) => (
+          <TextInput
+            key={field.name}
+            style={styles.input}
+            placeholder={field.placeholder}
+            value={formData[field.name]}
+            onChangeText={(value) => handleInputChange(field.name, value)}
+            keyboardType={field.keyboardType}
+          />
+        ))}
+        <Pressable style={styles.saveButton} onPress={handleSave}>
+          <Text style={styles.buttonText}>Save</Text>
+        </Pressable>
+        <Pressable style={styles.cancelButton} onPress={onClose}>
+          <Text style={styles.buttonText}>Cancel</Text>
+        </Pressable>
       </View>
     </Modal>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList } from "react-native";
+import { Text, View, FlatList, Pressable } from "react-native";
 import Button from "../../components/Button/Button";
 import StaffItem from "../../components/StaffItem/StaffItem";
 import CustomModal from "../../components/Modal/Modal";
@@ -20,6 +20,7 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
   const [currentItem, setCurrentItem] = useState(null);
   const [search, setSearch] = useState("");
   const [filteredItems, setFilteredItems] = useState(staffs);
+  const [selectedFilter, setSelectedFilter] = useState("All");
 
   useEffect(() => {
     setFilteredItems(staffs);
@@ -49,6 +50,20 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
     setFilteredItems(searchByNameKey(staffs, searchText));
   };
 
+  const filterBySelectedFilter = (role) => {
+    setSelectedFilter(role);
+    if (role === "All") {
+      setFilteredItems(staffs);
+    } else {
+      setFilteredItems(staffs.filter((staff) => staff.role === role));
+    }
+  };
+
+  const getUniqueFilters = () => {
+    const roles = staffs?.map((staff) => staff.role);
+    return ["All", ...new Set(roles)];
+  };
+
   return (
     <View style={styles.container}>
       <Button title="Add Person" onPress={handleAddItem} />
@@ -62,6 +77,7 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
             onDelete={() => deleteStaff(item.id)}
           />
         )}
+        style={styles.itemList}
       />
       <CustomModal
         visible={modalVisible}
@@ -70,6 +86,25 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
         item={currentItem}
         schema={formSchema}
       />
+      <View style={styles.filterListContainer}>
+        <FlatList
+          horizontal
+          data={getUniqueFilters()}
+          renderItem={({ item }) => (
+            <Pressable
+              style={[
+                styles.filterButton,
+                selectedFilter === item && styles.selectedFilterButton,
+              ]}
+              onPress={() => filterBySelectedFilter(item)}
+            >
+              <Text style={styles.filterButtonText}>{item}</Text>
+            </Pressable>
+          )}
+          keyExtractor={(item) => item}
+          style={styles.filterList}
+        />
+      </View>
       <CustomSearchBar searchText={search} updateSearch={updateSearch} />
     </View>
   );

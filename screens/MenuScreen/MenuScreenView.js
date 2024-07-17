@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList } from "react-native";
+import { Text, View, FlatList, Pressable } from "react-native";
 import Button from "../../components/Button/Button";
 import MenuItem from "../../components/MenuItem/MenuItem";
 import CustomModal from "../../components/Modal/Modal";
@@ -25,6 +25,7 @@ const MenuScreenView = ({
   const [currentItem, setCurrentItem] = useState(null);
   const [search, setSearch] = useState("");
   const [filteredItems, setFilteredItems] = useState(menuItems);
+  const [selectedFilter, setSelectedFilter] = useState("All");
 
   useEffect(() => {
     setFilteredItems(menuItems);
@@ -54,9 +55,23 @@ const MenuScreenView = ({
     setFilteredItems(searchByNameKey(menuItems, searchText));
   };
 
+  const filterBySelectedFilter = (cuisine) => {
+    setSelectedFilter(cuisine);
+    if (cuisine === "All") {
+      setFilteredItems(menuItems);
+    } else {
+      setFilteredItems(menuItems.filter((item) => item.cuisine === cuisine));
+    }
+  };
+
+  const getUniqueFilters = () => {
+    const roles = menuItems?.map((item) => item.cuisine);
+    return ["All", ...new Set(roles)];
+  };
+
   return (
     <View style={styles.container}>
-      <Button title="Add Item" onPress={handleAddItem} />
+      <Button title="Add Person" onPress={handleAddItem} />
       <FlatList
         data={filteredItems}
         renderItem={({ item }) => (
@@ -75,6 +90,25 @@ const MenuScreenView = ({
         item={currentItem}
         schema={formSchema}
       />
+      <View style={styles.filterListContainer}>
+        <FlatList
+          horizontal
+          data={getUniqueFilters()}
+          renderItem={({ item }) => (
+            <Pressable
+              style={[
+                styles.filterButton,
+                selectedFilter === item && styles.selectedFilterButton,
+              ]}
+              onPress={() => filterBySelectedFilter(item)}
+            >
+              <Text style={styles.filterButtonText}>{item}</Text>
+            </Pressable>
+          )}
+          keyExtractor={(item) => item}
+          style={styles.filterList}
+        />
+      </View>
       <CustomSearchBar searchText={search} updateSearch={updateSearch} />
     </View>
   );
