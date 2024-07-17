@@ -40,10 +40,9 @@ export default StyleSheet.create({
     fontWeight: "bold",
     backgroundColor: "rgba(122, 8, 246, 0.8)",
     color: "#fff",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    marginBottom: 5,
+    padding: 10,
+    paddingHorizontal: 20,
+    borderRadius: 50,
   },
   actions: {
     flexDirection: "row",

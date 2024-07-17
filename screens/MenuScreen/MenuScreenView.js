@@ -50,6 +50,11 @@ const MenuScreenView = ({
     setModalVisible(false);
   };
 
+  const handleDeleteItem = () => {
+    deleteMenuItem(currentItem.id);
+    setModalVisible(false);
+  };
+
   const updateSearch = (searchText) => {
     setSearch(searchText);
     setFilteredItems(searchByNameKey(menuItems, searchText));
@@ -79,7 +84,6 @@ const MenuScreenView = ({
             key={item.id}
             item={item}
             onEdit={() => handleEditItem(item)}
-            onDelete={() => deleteMenuItem(item.id)}
           />
         )}
       />
@@ -87,6 +91,7 @@ const MenuScreenView = ({
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         onSave={handleSaveItem}
+        onDelete={handleDeleteItem}
         item={currentItem}
         schema={formSchema}
       />

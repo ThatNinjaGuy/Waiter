@@ -50,6 +50,11 @@ const InventoryScreenView = ({
     setModalVisible(false);
   };
 
+  const handleDeleteItem = () => {
+    deleteInventoryItem(currentItem.id);
+    setModalVisible(false);
+  };
+
   const updateSearch = (searchText) => {
     setSearch(searchText);
     setFilteredItems(searchByNameKey(inventoryItems, searchText));
@@ -65,7 +70,6 @@ const InventoryScreenView = ({
             key={item.id}
             item={item}
             onEdit={() => handleEditItem(item)}
-            onDelete={() => deleteInventoryItem(item.id)}
           />
         )}
       />
@@ -73,6 +77,7 @@ const InventoryScreenView = ({
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         onSave={handleSaveItem}
+        onDelete={handleDeleteItem}
         item={currentItem}
         schema={formSchema}
       />

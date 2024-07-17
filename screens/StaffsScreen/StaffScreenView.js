@@ -45,6 +45,11 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
     setModalVisible(false);
   };
 
+  const handleDeleteItem = () => {
+    deleteStaff(currentItem.id);
+    setModalVisible(false);
+  };
+
   const updateSearch = (searchText) => {
     setSearch(searchText);
     setFilteredItems(searchByNameKey(staffs, searchText));
@@ -74,7 +79,6 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
             key={item.id}
             item={item}
             onEdit={() => handleEditItem(item)}
-            onDelete={() => deleteStaff(item.id)}
           />
         )}
         style={styles.itemList}
@@ -83,6 +87,7 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         onSave={handleSaveItem}
+        onDelete={handleDeleteItem}
         item={currentItem}
         schema={formSchema}
       />

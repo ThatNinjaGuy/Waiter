@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 60, // To ensure the FlatList doesn't overlap with the SearchBar
+    paddingBottom: 60,
   },
   itemList: {
     paddingVertical: 10,

@@ -7,7 +7,7 @@ const OrderDetails = ({ order }) => {
     <View style={styles.orderItem}>
       <Text style={styles.itemName}>{item.name}</Text>
       <Text style={styles.itemQuantity}>x{item.quantity}</Text>
-      <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
+      <Text style={styles.itemPrice}>₹{item.price.toFixed(2)}</Text>
     </View>
   );
 
@@ -21,7 +21,7 @@ const OrderDetails = ({ order }) => {
       />
       <View style={styles.totalContainer}>
         <Text style={styles.totalText}>Total:</Text>
-        <Text style={styles.totalAmount}>${order.total.toFixed(2)}</Text>
+        <Text style={styles.totalAmount}>₹{order.total.toFixed(2)}</Text>
       </View>
     </View>
   );

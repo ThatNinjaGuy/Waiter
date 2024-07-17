@@ -2,8 +2,8 @@ import React from "react";
 import { View, Text, Pressable, Image } from "react-native";
 import styles from "./styles";
 
-const StaffItem = ({ item, onEdit, onDelete }) => (
-  <View style={styles.container}>
+const StaffItem = ({ item, onEdit }) => (
+  <Pressable style={styles.container} onPress={onEdit}>
     <Image
       source={{
         uri: item.image
@@ -23,16 +23,8 @@ const StaffItem = ({ item, onEdit, onDelete }) => (
       ) : (
         <></>
       )}
-      <View style={styles.actions}>
-        <Pressable onPress={onEdit}>
-          <Text style={styles.edit}>Edit</Text>
-        </Pressable>
-        <Pressable onPress={onDelete}>
-          <Text style={styles.delete}>Delete</Text>
-        </Pressable>
-      </View>
     </View>
-  </View>
+  </Pressable>
 );
 
 export default StaffItem;
