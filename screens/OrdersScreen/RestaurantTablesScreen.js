@@ -79,6 +79,7 @@ const RestaurantTablesScreen = () => {
       tables.map((t) => (t.id === updatedTable.id ? updatedTable : t))
     );
     setSelectedTable(updatedTable);
+    console.log(updatedTable);
   };
 
   const updateSearch = (searchText) => {
@@ -105,7 +106,7 @@ const RestaurantTablesScreen = () => {
       <TableList tables={filteredItems} onTablePress={handleTablePress} />
       {selectedTable && (
         <View>
-          <OrderDetails order={activeOrder} />
+          {/* <OrderDetails order={activeOrder} /> */}
           <TableManagement
             table={selectedTable}
             onUpdateTable={handleUpdateTable}

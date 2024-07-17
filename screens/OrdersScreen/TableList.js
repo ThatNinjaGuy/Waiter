@@ -56,6 +56,7 @@ const TableList = ({ tables, onTablePress }) => {
         <Text style={styles.tableDetails}>
           Guests: {item.guests ? item.guests : 0} pax
         </Text>
+        <Text style={styles.tableDetails}>Server: {item.waiter}</Text>
         <Text style={styles.tableDetails}>Notes: {item.notes}</Text>
       </View>
     </Pressable>

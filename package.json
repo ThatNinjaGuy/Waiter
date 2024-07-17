@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+    "@react-native-community/datetimepicker": "github:react-native-community/datetimepicker",
     "@react-native-firebase/app": "^20.1.0",
     "@react-native-firebase/firestore": "^20.1.0",
     "@react-navigation/native": "^6.0.2",

@@ -13,14 +13,12 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 const TableManagement = ({ table, onUpdateTable }) => {
   const [guests, setGuests] = useState(table.guests ? table.guests : 0);
   const [notes, setNotes] = useState(table.notes ? table.notes : "");
+  const [server, setServer] = useState(table.waiter ? table.waiter : "");
   const [guestName, setGuestName] = useState(
     table.guestName ? table.guestName : ""
   );
   const [guestMobile, setGuestMobile] = useState(
     table.guestMobile ? table.guestMobile : ""
-  );
-  const [isFirstTime, setIsFirstTime] = useState(
-    table.isFirstTime ? table.isFirstTime : false
   );
   const [occasion, setOccasion] = useState(
     table.occasion ? table.occasion : "Birthday"
@@ -33,8 +31,8 @@ const TableManagement = ({ table, onUpdateTable }) => {
     setNotes(table.notes ? table.notes : "");
     setGuestName(table.guestName ? table.guestName : "");
     setGuestMobile(table.guestMobile ? table.guestMobile : "");
-    setIsFirstTime(table.isFirstTime ? table.isFirstTime : false);
-    setOccasion(table.occasion ? table.occasion : "Birthday");
+    setOccasion(table.occasion ? table.occasion : "Friends");
+    setServer(table.server ? table.server : "");
     setBookingTime(new Date());
     setIsBookingNow(true);
   }, [table]);
@@ -44,9 +42,9 @@ const TableManagement = ({ table, onUpdateTable }) => {
       ...table,
       guests: parseInt(guests, 10),
       notes,
+      server,
       guestName,
       guestMobile,
-      isFirstTime,
       occasion,
       bookingTime: isBookingNow ? new Date() : bookingTime,
     });
@@ -54,17 +52,85 @@ const TableManagement = ({ table, onUpdateTable }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Table Management</Text>
+      <Text style={styles.title}>Table {table.number}</Text>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Number of Guests:</Text>
-        <TextInput
-          style={styles.input}
-          value={guests.toString()}
-          onChangeText={setGuests}
-          keyboardType="numeric"
-        />
+        <View style={styles.inputFieldContainer}>
+          <Text style={styles.label}>Guest Name:</Text>
+          <TextInput
+            style={styles.input}
+            value={guestName}
+            onChangeText={setGuestName}
+          />
+        </View>
+        <View style={styles.inputFieldContainer}>
+          <Text style={styles.label}>Guest Mobile Number:</Text>
+          <TextInput
+            style={styles.input}
+            value={guestMobile}
+            onChangeText={setGuestMobile}
+            keyboardType="phone-pad"
+          />
+        </View>
       </View>
       <View style={styles.inputContainer}>
+        <View style={styles.inputFieldContainer}>
+          <Text style={styles.label}>Number of Guests:</Text>
+          <TextInput
+            style={styles.input}
+            value={guests.toString()}
+            onChangeText={setGuests}
+            keyboardType="numeric"
+          />
+        </View>
+        <View style={styles.inputFieldContainer}>
+          <Text style={styles.label}>Occasion:</Text>
+          <Picker
+            selectedValue={occasion}
+            style={styles.picker}
+            onValueChange={(itemValue) => setOccasion(itemValue)}
+          >
+            <Picker.Item label="Friends" value="Friends" />
+            <Picker.Item label="Family" value="Family" />
+            <Picker.Item label="Party" value="Party" />
+            <Picker.Item label="Office Party" value="Office Party" />
+            <Picker.Item label="Official" value="Official" />
+            <Picker.Item label="Family & Friends" value="Family and Friends" />
+            <Picker.Item label="Other" value="Other" />
+          </Picker>
+        </View>
+      </View>
+      <View style={styles.inputContainer}>
+        <View style={styles.inputFieldContainer}>
+          <Text style={styles.label}>Booking Time:</Text>
+          <View style={styles.radioContainer}>
+            <Text>Later</Text>
+            <Switch
+              value={isBookingNow}
+              onValueChange={(value) => setIsBookingNow(value)}
+            />
+            <Text>Now</Text>
+            {!isBookingNow && (
+              <DateTimePicker
+                value={bookingTime}
+                mode="time"
+                display="default"
+                onChange={(event, selectedDate) =>
+                  setBookingTime(selectedDate || bookingTime)
+                }
+              />
+            )}
+          </View>
+        </View>
+        <View style={styles.inputFieldContainer}>
+          <Text style={styles.label}>Server:</Text>
+          <TextInput
+            style={styles.input}
+            value={server}
+            onChangeText={setServer}
+          />
+        </View>
+      </View>
+      <View style={styles.inputFieldContainer}>
         <Text style={styles.label}>Notes:</Text>
         <TextInput
           style={[styles.input, styles.notesInput]}
@@ -73,63 +139,8 @@ const TableManagement = ({ table, onUpdateTable }) => {
           multiline
         />
       </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Guest Name:</Text>
-        <TextInput
-          style={styles.input}
-          value={guestName}
-          onChangeText={setGuestName}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Guest Mobile Number:</Text>
-        <TextInput
-          style={styles.input}
-          value={guestMobile}
-          onChangeText={setGuestMobile}
-          keyboardType="phone-pad"
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>First Time Visit:</Text>
-        <Switch value={isFirstTime} onValueChange={setIsFirstTime} />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Occasion:</Text>
-        <Picker
-          selectedValue={occasion}
-          style={styles.picker}
-          onValueChange={(itemValue) => setOccasion(itemValue)}
-        >
-          <Picker.Item label="Birthday" value="Birthday" />
-          <Picker.Item label="Anniversary" value="Anniversary" />
-          <Picker.Item label="Business Meeting" value="Business Meeting" />
-          <Picker.Item label="Other" value="Other" />
-        </Picker>
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Booking Time:</Text>
-        <View style={styles.radioContainer}>
-          <Text>Now</Text>
-          <Switch
-            value={isBookingNow}
-            onValueChange={(value) => setIsBookingNow(value)}
-          />
-          <Text>Later</Text>
-        </View>
-        {!isBookingNow && (
-          <DateTimePicker
-            value={bookingTime}
-            mode="time"
-            display="default"
-            onChange={(event, selectedDate) =>
-              setBookingTime(selectedDate || bookingTime)
-            }
-          />
-        )}
-      </View>
       <Pressable style={styles.updateButton} onPress={handleUpdate}>
-        <Text style={styles.updateButtonText}>Update Table</Text>
+        <Text style={styles.updateButtonText}>Book Table</Text>
       </Pressable>
     </View>
   );
@@ -152,7 +163,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   inputContainer: {
-    marginBottom: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  inputFieldContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    margin: 10,
+    gap: 10,
+    maxWidth: "40%",
   },
   label: {
     fontSize: 16,
@@ -176,6 +195,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    gap: 10,
   },
   updateButton: {
     backgroundColor: "#007BFF",
