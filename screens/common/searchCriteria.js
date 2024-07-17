@@ -3,7 +3,7 @@ export const searchByNameKey = (items, searchText) => {
     const filteredData = items.filter(
       (item) =>
         item.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        item.key?.toLowerCase().includes(searchText.toLowerCase())
+        item.searchableKey?.toLowerCase().includes(searchText.toLowerCase())
     );
     return filteredData;
   } else {

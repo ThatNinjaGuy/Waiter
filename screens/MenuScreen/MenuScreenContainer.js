@@ -37,7 +37,7 @@ const MenuScreenContainer = () => {
     const newItems = [];
 
     items.forEach((item) => {
-      item.key = generateUniqueKey(menuItems, item);
+      item.searchableKey = generateUniqueKey(menuItems, item);
       const docRef = doc(collection(db, "menu-items/"));
       batch.set(docRef, item);
       newItems.push({ ...item, id: docRef.id });

@@ -37,7 +37,7 @@ const InventoryScreenContainer = () => {
     const newItems = [];
 
     items.forEach((item) => {
-      item.key = generateUniqueKey(inventoryItems, item);
+      item.searchableKey = generateUniqueKey(inventoryItems, item);
       const docRef = doc(collection(db, "inventory-items"));
       batch.set(docRef, item);
       newItems.push({ ...item, id: docRef.id });

@@ -9,10 +9,10 @@ export function generateUniqueKey(existingItems, newItem) {
 
   // Helper function to check if a key exists in the list of items
   const keyExists = (key) => {
-    return existingItems.some((item) => item.key === key);
+    return existingItems.some((item) => item.searchableKey === key);
   };
 
-  if (newItem.key && !keyExists) return newItem.key;
+  if (newItem.searchableKey && !keyExists) return newItem.searchableKey;
 
   let key = createInitialKey(newItem.name);
   let counter = 1;

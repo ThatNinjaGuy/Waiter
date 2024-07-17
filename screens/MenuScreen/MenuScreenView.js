@@ -4,11 +4,11 @@ import Button from "../../components/Button/Button";
 import MenuItem from "../../components/MenuItem/MenuItem";
 import CustomModal from "../../components/Modal/Modal";
 import { searchByNameKey } from "@/screens/common/searchCriteria";
-import { SearchBar } from "react-native-elements";
 import styles from "@/screens/common/styles";
+import CustomSearchBar from "@/screens/common/SearchBar";
 
 const formSchema = [
-  { name: "key", placeholder: "Key", keyboardType: "default" },
+  { name: "searchableKey", placeholder: "Key", keyboardType: "default" },
   { name: "name", placeholder: "Item Name", keyboardType: "default" },
   { name: "price", placeholder: "Price", keyboardType: "numeric" },
   { name: "cuisine", placeholder: "Cuisine", keyboardType: "default" },
@@ -67,7 +67,6 @@ const MenuScreenView = ({
             onDelete={() => deleteMenuItem(item.id)}
           />
         )}
-        keyExtractor={(item) => item.id}
       />
       <CustomModal
         visible={modalVisible}
@@ -76,15 +75,7 @@ const MenuScreenView = ({
         item={currentItem}
         schema={formSchema}
       />
-      <View style={styles.searchContainer}>
-        <SearchBar
-          placeholder="Search Here..."
-          onChangeText={updateSearch}
-          value={search}
-          containerStyle={styles.searchBar}
-          inputContainerStyle={styles.searchInputContainer}
-        />
-      </View>
+      <CustomSearchBar searchText={search} updateSearch={updateSearch} />
     </View>
   );
 };

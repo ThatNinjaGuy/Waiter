@@ -37,7 +37,7 @@ const StaffsScreenContainer = () => {
     const newItems = [];
 
     items.forEach((item) => {
-      item.key = generateUniqueKey(staffs, item);
+      item.searchableKey = generateUniqueKey(staffs, item);
       const docRef = doc(collection(db, "staffs/"));
       batch.set(docRef, item);
       newItems.push({ ...item, id: docRef.id });

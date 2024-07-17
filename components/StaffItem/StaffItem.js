@@ -18,7 +18,11 @@ const StaffItem = ({ item, onEdit, onDelete }) => (
       <Text style={styles.price}>{item.role}</Text>
     </View>
     <View style={styles.actionsContainer}>
-      {item.key ? <Text style={styles.key}>{item.key}</Text> : <></>}
+      {item.searchableKey ? (
+        <Text style={styles.key}>{item.searchableKey}</Text>
+      ) : (
+        <></>
+      )}
       <View style={styles.actions}>
         <Pressable onPress={onEdit}>
           <Text style={styles.edit}>Edit</Text>

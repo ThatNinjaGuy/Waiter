@@ -4,11 +4,11 @@ import Button from "../../components/Button/Button";
 import StaffItem from "../../components/StaffItem/StaffItem";
 import CustomModal from "../../components/Modal/Modal";
 import { searchByNameKey } from "@/screens/common/searchCriteria";
-import { SearchBar } from "react-native-elements";
 import styles from "@/screens/common/styles";
+import CustomSearchBar from "@/screens/common/SearchBar";
 
 const formSchema = [
-  { name: "key", placeholder: "Key", keyboardType: "default" },
+  { name: "searchableKey", placeholder: "Key", keyboardType: "default" },
   { name: "name", placeholder: "Name", keyboardType: "default" },
   { name: "age", placeholder: "Age", keyboardType: "numeric" },
   { name: "role", placeholder: "Role", keyboardType: "default" },
@@ -20,6 +20,10 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
   const [currentItem, setCurrentItem] = useState(null);
   const [search, setSearch] = useState("");
   const [filteredItems, setFilteredItems] = useState(staffs);
+
+  useEffect(() => {
+    setFilteredItems(staffs);
+  }, [staffs]);
 
   const handleAddItem = () => {
     setCurrentItem(null);
@@ -58,7 +62,6 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
             onDelete={() => deleteStaff(item.id)}
           />
         )}
-        keyExtractor={(item) => item.id}
       />
       <CustomModal
         visible={modalVisible}
@@ -67,15 +70,7 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
         item={currentItem}
         schema={formSchema}
       />
-      <View style={styles.searchContainer}>
-        <SearchBar
-          placeholder="Search Here..."
-          onChangeText={updateSearch}
-          value={search}
-          containerStyle={styles.searchBar}
-          inputContainerStyle={styles.searchInputContainer}
-        />
-      </View>
+      <CustomSearchBar searchText={search} updateSearch={updateSearch} />
     </View>
   );
 };
