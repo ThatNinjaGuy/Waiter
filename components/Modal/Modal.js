@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, View, TextInput, Pressable, Text } from "react-native";
+import { Modal, View, TextInput, TouchableOpacity, Text } from "react-native";
 import styles from "./styles";
 
 const CustomModal = ({ visible, onClose, onSave, item, schema }) => {
@@ -43,12 +43,12 @@ const CustomModal = ({ visible, onClose, onSave, item, schema }) => {
               keyboardType={field.keyboardType}
             />
           ))}
-          <Pressable style={styles.saveButton} onPress={handleSave}>
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
             <Text style={styles.buttonText}>Save</Text>
-          </Pressable>
-          <Pressable style={styles.cancelButton} onPress={onClose}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
             <Text style={styles.buttonText}>Cancel</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     </Modal>

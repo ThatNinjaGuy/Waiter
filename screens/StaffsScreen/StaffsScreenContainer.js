@@ -8,37 +8,37 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
-import MenuScreenView from "./MenuScreenView";
+import StaffScreenView from "./StaffScreenView";
 import { generateUniqueKey } from "@/utils/keyGenerator";
 
-const MenuScreenContainer = () => {
-  const [menuItems, setMenuItems] = useState([]);
+const StaffsScreenContainer = () => {
+  const [staffs, setStaffs] = useState([]);
 
   useEffect(() => {
-    const fetchMenuItems = async () => {
+    const fetchStaffs = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "menu-items/"));
+        const querySnapshot = await getDocs(collection(db, "staffs/"));
         const items = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setMenuItems(items);
-        console.log("Fetched menu items:", items);
+        setStaffs(items);
+        console.log("Fetched staffs:", items);
       } catch (error) {
-        console.error("Error fetching menu items:", error);
+        console.error("Error fetching staffs:", error);
       }
     };
 
-    fetchMenuItems();
+    fetchStaffs();
   }, []);
 
-  const addMenuItems = async (items) => {
+  const addStaffs = async (items) => {
     const batch = writeBatch(db);
     const newItems = [];
 
     items.forEach((item) => {
-      item.key = generateUniqueKey(menuItems, item);
-      const docRef = doc(collection(db, "menu-items/"));
+      item.key = generateUniqueKey(staffs, item);
+      const docRef = doc(collection(db, "staffs/"));
       batch.set(docRef, item);
       newItems.push({ ...item, id: docRef.id });
     });
@@ -46,33 +46,33 @@ const MenuScreenContainer = () => {
     try {
       await batch.commit();
       console.log("Batch write successful");
-      setMenuItems([...menuItems, ...newItems]);
+      setStaffs([...staffs, ...newItems]);
       console.log(newItems);
     } catch (error) {
       console.error("Error writing batch:", error);
     }
   };
 
-  const addMenuItem = (item) => {
-    addMenuItems([item]);
+  const addStaff = (item) => {
+    addStaffs([item]);
   };
 
-  const deleteMenuItem = async (id) => {
+  const deleteStaff = async (id) => {
     try {
-      await deleteDoc(doc(db, "menu-items/", id));
-      setMenuItems(menuItems.filter((item) => item.id !== id));
+      await deleteDoc(doc(db, "staffs/", id));
+      setStaffs(staffs.filter((item) => item.id !== id));
       console.log("Document successfully deleted!");
     } catch (error) {
       console.error("Error removing document: ", error);
     }
   };
 
-  const updateMenuItem = async (id, updatedItem) => {
+  const updateStaff = async (id, updatedItem) => {
     try {
-      const itemRef = doc(db, "menu-items/", id);
+      const itemRef = doc(db, "staffs/", id);
       await updateDoc(itemRef, updatedItem);
-      setMenuItems(
-        menuItems.map((item) =>
+      setStaffs(
+        staffs.map((item) =>
           item.id === id ? { ...item, ...updatedItem } : item
         )
       );
@@ -83,13 +83,13 @@ const MenuScreenContainer = () => {
   };
 
   return (
-    <MenuScreenView
-      menuItems={menuItems}
-      addMenuItem={addMenuItem}
-      deleteMenuItem={deleteMenuItem}
-      updateMenuItem={updateMenuItem}
+    <StaffScreenView
+      staffs={staffs}
+      addStaff={addStaff}
+      deleteStaff={deleteStaff}
+      updateStaff={updateStaff}
     />
   );
 };
 
-export default MenuScreenContainer;
+export default StaffsScreenContainer;

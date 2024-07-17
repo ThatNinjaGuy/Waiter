@@ -17,13 +17,16 @@ const InventoryItem = ({ item, onEdit, onDelete }) => (
       <Text style={styles.price}>₹{item.price + " /" + item.unit}</Text>
       <Text style={styles.cuisine}>{item.quantity + " " + item.unit}</Text>
     </View>
-    <View style={styles.actions}>
-      <Pressable onPress={onEdit}>
-        <Text style={styles.edit}>Edit</Text>
-      </Pressable>
-      <Pressable onPress={onDelete}>
-        <Text style={styles.delete}>Delete</Text>
-      </Pressable>
+    <View style={styles.actionsContainer}>
+      {item.key ? <Text style={styles.key}>{item.key}</Text> : <></>}
+      <View style={styles.actions}>
+        <Pressable onPress={onEdit}>
+          <Text style={styles.edit}>Edit</Text>
+        </Pressable>
+        <Pressable onPress={onDelete}>
+          <Text style={styles.delete}>Delete</Text>
+        </Pressable>
+      </View>
     </View>
   </View>
 );

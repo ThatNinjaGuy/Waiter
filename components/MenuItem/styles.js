@@ -30,6 +30,21 @@ export default StyleSheet.create({
     fontSize: 16,
     color: "#666",
   },
+  actionsContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  key: {
+    fontSize: 20,
+    fontWeight: "bold",
+    backgroundColor: "rgba(122, 8, 246, 0.8)",
+    color: "#fff",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    marginBottom: 5,
+  },
   actions: {
     flexDirection: "row",
     justifyContent: "space-between",

@@ -72,8 +72,42 @@ This project is a React Native application for managing a restaurant menu. It us
    npm install -g eas-cli
    ```
 
-## Android APK build
+## Firebase Setup
+
+1. **Create a Firebase project:**
+   - Go to the Firebase Console.
+   - Click on "Add project" and follow the setup wizard to create a new project.
+2. **Register your app:**
+   - In the Firebase Console, navigate to "Project settings" and add your Android and iOS apps.
+   - Download the google-services.json file for Android and GoogleService-Info.plist file for iOS.
+3. **Add Firebase configuration:**
+   Create a firebaseConfig.js file in the app/firebase directory:
+
+   ```sh
+   const firebaseConfig = {
+   apiKey: 'YOUR_API_KEY',
+   authDomain: 'YOUR_AUTH_DOMAIN',
+   projectId: 'YOUR_PROJECT_ID',
+   storageBucket: 'YOUR_STORAGE_BUCKET',
+   messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
+   appId: 'YOUR_APP_ID',
+   };
+   ```
+
+## Building the APK
 
 - npm install -g eas-cli
 - eas login
 - eas build --platform android --profile preview
+
+## Contributing
+
+```sh
+Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+```
+
+## License
+
+```sh
+This project is licensed under the MIT License.
+```

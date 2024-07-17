@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import InventoryScreenView from "./InventoryScreenView";
+import { generateUniqueKey } from "@/utils/keyGenerator";
 
 const InventoryScreenContainer = () => {
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -36,6 +37,7 @@ const InventoryScreenContainer = () => {
     const newItems = [];
 
     items.forEach((item) => {
+      item.key = generateUniqueKey(inventoryItems, item);
       const docRef = doc(collection(db, "inventory-items"));
       batch.set(docRef, item);
       newItems.push({ ...item, id: docRef.id });

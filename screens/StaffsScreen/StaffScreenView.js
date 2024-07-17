@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList } from "react-native";
 import Button from "../../components/Button/Button";
-import MenuItem from "../../components/MenuItem/MenuItem";
+import StaffItem from "../../components/StaffItem/StaffItem";
 import CustomModal from "../../components/Modal/Modal";
 import { searchByNameKey } from "@/screens/common/searchCriteria";
 import { SearchBar } from "react-native-elements";
@@ -9,26 +9,17 @@ import styles from "@/screens/common/styles";
 
 const formSchema = [
   { name: "key", placeholder: "Key", keyboardType: "default" },
-  { name: "name", placeholder: "Item Name", keyboardType: "default" },
-  { name: "price", placeholder: "Price", keyboardType: "numeric" },
-  { name: "cuisine", placeholder: "Cuisine", keyboardType: "default" },
+  { name: "name", placeholder: "Name", keyboardType: "default" },
+  { name: "age", placeholder: "Age", keyboardType: "numeric" },
+  { name: "role", placeholder: "Role", keyboardType: "default" },
   { name: "image", placeholder: "Image URL", keyboardType: "default" },
 ];
 
-const MenuScreenView = ({
-  menuItems,
-  addMenuItem,
-  deleteMenuItem,
-  updateMenuItem,
-}) => {
+const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const [search, setSearch] = useState("");
-  const [filteredItems, setFilteredItems] = useState(menuItems);
-
-  useEffect(() => {
-    setFilteredItems(menuItems);
-  }, [menuItems]);
+  const [filteredItems, setFilteredItems] = useState(staffs);
 
   const handleAddItem = () => {
     setCurrentItem(null);
@@ -42,29 +33,29 @@ const MenuScreenView = ({
 
   const handleSaveItem = (item) => {
     if (currentItem) {
-      updateMenuItem(currentItem.id, item);
+      updateStaff(currentItem.id, item);
     } else {
-      addMenuItem(item);
+      addStaff(item);
     }
     setModalVisible(false);
   };
 
   const updateSearch = (searchText) => {
     setSearch(searchText);
-    setFilteredItems(searchByNameKey(menuItems, searchText));
+    setFilteredItems(searchByNameKey(staffs, searchText));
   };
 
   return (
     <View style={styles.container}>
-      <Button title="Add Item" onPress={handleAddItem} />
+      <Button title="Add Person" onPress={handleAddItem} />
       <FlatList
         data={filteredItems}
         renderItem={({ item }) => (
-          <MenuItem
+          <StaffItem
             key={item.id}
             item={item}
             onEdit={() => handleEditItem(item)}
-            onDelete={() => deleteMenuItem(item.id)}
+            onDelete={() => deleteStaff(item.id)}
           />
         )}
         keyExtractor={(item) => item.id}
@@ -89,4 +80,4 @@ const MenuScreenView = ({
   );
 };
 
-export default MenuScreenView;
+export default StaffScreenView;
