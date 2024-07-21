@@ -18,7 +18,7 @@ import CustomSearchBar from "@/screens/common/SearchBar";
 import OrderManagement from "@/components/OrderTaking/OrderManagement";
 
 const RestaurantTablesScreen = () => {
-  const [tables, setTables] = useState();
+  const [tables, setTables] = useState([]);
 
   const [selectedTable, setSelectedTable] = useState(null);
   const [search, setSearch] = useState("");
@@ -47,6 +47,7 @@ const RestaurantTablesScreen = () => {
 
   useEffect(() => {
     setFilteredItems(tables);
+    console.log("Filtered tables:", tables);
   }, [tables]);
 
   const addDetailsForTables = async (items) => {
@@ -175,13 +176,33 @@ const RestaurantTablesScreen = () => {
   return (
     <View style={styles.container}>
       {!selectedTable && !tableAdd && (
-        <View>
+        <View style={styles.container}>
           <Button title="Add Table" onPress={handleAddItemClick} />
           <TableList
             tables={filteredItems}
             onTablePress={handleTablePress}
             onOrderDetailsPress={handleOrderDetailsPress}
           />
+          {/* <View style={styles.filterListContainer}>
+            <FlatList
+              horizontal
+              data={getUniqueFilters()}
+              renderItem={({ item }) => (
+                <Pressable
+                  style={[
+                    styles.filterButton,
+                    selectedFilter === item && styles.selectedFilterButton,
+                  ]}
+                  onPress={() => filterBySelectedFilter(item)}
+                >
+                  <Text style={styles.filterButtonText}>{item}</Text>
+                </Pressable>
+              )}
+              keyExtractor={(item) => item}
+              style={styles.filterList}
+            />
+          </View>
+          <CustomSearchBar searchText={search} updateSearch={updateSearch} /> */}
         </View>
       )}
       {selectedTable && !tableInfoOptionClicked && (
@@ -189,11 +210,12 @@ const RestaurantTablesScreen = () => {
           items={selectedTable?.orders}
           onClose={handleTableInfoClose}
           updateOrder={handleTableOrderUpdate}
+          style={styles.container}
         />
       )}
 
       {selectedTable && tableInfoOptionClicked && (
-        <View>
+        <View style={styles.container}>
           <TableManagement
             table={selectedTable}
             onUpdateTable={handleUpdateTable}
@@ -212,27 +234,6 @@ const RestaurantTablesScreen = () => {
           />
         </View>
       )}
-
-      <View style={styles.filterListContainer}>
-        <FlatList
-          horizontal
-          data={getUniqueFilters()}
-          renderItem={({ item }) => (
-            <Pressable
-              style={[
-                styles.filterButton,
-                selectedFilter === item && styles.selectedFilterButton,
-              ]}
-              onPress={() => filterBySelectedFilter(item)}
-            >
-              <Text style={styles.filterButtonText}>{item}</Text>
-            </Pressable>
-          )}
-          keyExtractor={(item) => item}
-          style={styles.filterList}
-        />
-      </View>
-      <CustomSearchBar searchText={search} updateSearch={updateSearch} />
     </View>
   );
 };

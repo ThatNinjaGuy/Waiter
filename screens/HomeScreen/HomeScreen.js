@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, View } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -38,7 +38,7 @@ export default function HomeScreen() {
   ];
 
   return (
-    <ScrollView style={styles.scrollView}>
+    <View style={styles.scrollView}>
       <ThemedView style={styles.container}>
         <ThemedView style={styles.headerForeground}>
           <UserProfile
@@ -68,7 +68,7 @@ export default function HomeScreen() {
           <NavigationMenu items={navigationItems} />
         </ThemedView>
       </ThemedView>
-    </ScrollView>
+    </View>
   );
 }
 

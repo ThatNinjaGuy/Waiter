@@ -19,6 +19,7 @@
     "@react-native-community/datetimepicker": "github:react-native-community/datetimepicker",
     "@react-native-firebase/app": "^20.1.0",
     "@react-native-firebase/firestore": "^20.1.0",
+    "@react-native-picker/picker": "^2.7.7",
     "@react-navigation/native": "^6.0.2",
     "expo": "~51.0.20",
     "expo-constants": "~16.0.2",
