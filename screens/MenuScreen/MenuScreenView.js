@@ -76,7 +76,7 @@ const MenuScreenView = ({
 
   return (
     <View style={styles.container}>
-      <Button title="Add Person" onPress={handleAddItem} />
+      <Button title="Add Menu" onPress={handleAddItem} />
       <FlatList
         data={filteredItems}
         renderItem={({ item }) => (

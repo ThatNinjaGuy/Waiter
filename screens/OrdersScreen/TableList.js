@@ -1,7 +1,15 @@
 import React from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
-const TableList = ({ tables, onTablePress }) => {
+const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
   const getStatusColor = (status, orderCount, totalOrders) => {
     if (
       status == "Occupied" &&
@@ -31,34 +39,45 @@ const TableList = ({ tables, onTablePress }) => {
       ]}
       onPress={() => onTablePress(item)}
     >
-      <View style={styles.tableInfo}>
-        <Text style={styles.tableNumber}>Table - {item.number}</Text>
-        <Text style={styles.tableDetails}>
-          Orders: {item.orderCount ? item.orderCount : 0}/
-          {item.totalOrders ? item.totalOrders : 0}
-        </Text>
-        {/* ETA for orders in kitchen, and Time to last order for people sitting but no order in kitchen */}
-        <Text style={styles.tableDetails}>
-          {item.status === "Occupied" &&
-          item.orderCount &&
-          item.totalOrders &&
-          item.orderCount < item.totalOrders
-            ? `ETA: ${item.eta ? item.eta / 60 : 0}${item.eta ? ":" : ""}${
-                item.eta ? item.eta % 60 : ""
-              } min`
-            : `TTLO: ${item.ttlo ? item.ttlo / 60 : 0}${item.ttlo ? ":" : ""}${
-                item.ttlo ? item.ttlo % 60 : ""
-              } min`}
-        </Text>
-        <Text style={styles.tableDetails}>
-          Bill: ₹ {item.orderValue ? item.orderValue : 0}
-        </Text>
-        <Text style={styles.tableDetails}>
-          Guests: {item.guests ? item.guests : 0} pax
-        </Text>
-        <Text style={styles.tableDetails}>Server: {item.waiter}</Text>
-        <Text style={styles.tableDetails}>Notes: {item.notes}</Text>
+      <Text style={styles.tableNumber}>Table - {item.number}</Text>
+      <View style={styles.tableDetailsContainer}>
+        <View style={styles.leftColumn}>
+          <Text style={styles.tableDetails}>Guest Name: {item.guestName}</Text>
+          <Text style={styles.tableDetails}>
+            Guests: {item.guests || 0} pax
+          </Text>
+          <Text style={styles.tableDetails}>Server: {item.waiter}</Text>
+          <Text style={styles.tableDetails}>Notes: {item.notes}</Text>
+        </View>
+        <View style={styles.rightColumn}>
+          <Text style={styles.tableDetails}>
+            Orders: {item.orderCount || 0}/{item.totalOrders || 0}
+          </Text>
+          <Text style={styles.tableDetails}>
+            {item.status === "Occupied" &&
+            item.orderCount &&
+            item.totalOrders &&
+            item.orderCount < item.totalOrders
+              ? `ETA: ${item.eta ? Math.floor(item.eta / 60) : 0}${
+                  item.eta ? ":" : ""
+                }${item.eta ? String(item.eta % 60).padStart(2, "0") : ""} min`
+              : `TTLO: ${item.ttlo ? Math.floor(item.ttlo / 60) : 0}${
+                  item.ttlo ? ":" : ""
+                }${
+                  item.ttlo ? String(item.ttlo % 60).padStart(2, "0") : ""
+                } min`}
+          </Text>
+          <Text style={styles.tableDetails}>
+            Bill: ₹ {item.orderValue || 0}
+          </Text>
+        </View>
       </View>
+      <TouchableOpacity
+        style={styles.orderDetailsIcon}
+        onPress={() => onOrderDetailsPress(item)}
+      >
+        <Icon name="receipt" size={36} color="#000" />
+      </TouchableOpacity>
     </Pressable>
   );
 
@@ -85,7 +104,7 @@ const styles = StyleSheet.create({
   },
   tableItem: {
     flex: 1,
-    padding: 16,
+    padding: 20,
     margin: 10,
     borderWidth: 1,
     borderColor: "#ccc",
@@ -95,19 +114,31 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    alignItems: "center",
-  },
-  tableInfo: {
-    alignItems: "center",
+    backgroundColor: "#fff", // Default white background
   },
   tableNumber: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 4,
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  tableDetailsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  leftColumn: {
+    flex: 1,
+    alignItems: "flex-start",
+  },
+  rightColumn: {
+    flex: 1,
+    alignItems: "flex-end",
   },
   tableDetails: {
     fontSize: 14,
     color: "#333",
+    marginBottom: 2,
   },
   ordered: {
     backgroundColor: "#b2fab4", // Light green
@@ -121,8 +152,15 @@ const styles = StyleSheet.create({
   reserved: {
     backgroundColor: "#add8e6", // Light blue
   },
-  default: {
+  empty: {
     backgroundColor: "#e0e0e0", // Default grey
+  },
+  orderDetailsIcon: {
+    position: "absolute",
+    bottom: -18,
+    left: 0,
+    right: 0,
+    alignItems: "center",
   },
 });
 

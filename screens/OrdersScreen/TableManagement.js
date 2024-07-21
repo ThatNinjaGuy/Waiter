@@ -7,32 +7,34 @@ import {
   StyleSheet,
   Switch,
   Picker,
+  TouchableOpacity,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseButton";
 
-const TableManagement = ({ table, onUpdateTable }) => {
-  const [guests, setGuests] = useState(table.guests ? table.guests : 0);
-  const [notes, setNotes] = useState(table.notes ? table.notes : "");
-  const [server, setServer] = useState(table.waiter ? table.waiter : "");
+const TableManagement = ({ table, onUpdateTable, onClose }) => {
+  const [guests, setGuests] = useState(table?.guests ? table?.guests : 0);
+  const [notes, setNotes] = useState(table?.notes ? table?.notes : "");
+  const [waiter, setWaiter] = useState(table?.waiter ? table?.waiter : "");
   const [guestName, setGuestName] = useState(
-    table.guestName ? table.guestName : ""
+    table?.guestName ? table?.guestName : ""
   );
   const [guestMobile, setGuestMobile] = useState(
-    table.guestMobile ? table.guestMobile : ""
+    table?.guestMobile ? table?.guestMobile : ""
   );
   const [occasion, setOccasion] = useState(
-    table.occasion ? table.occasion : "Birthday"
+    table?.occasion ? table?.occasion : "Birthday"
   );
   const [bookingTime, setBookingTime] = useState(new Date());
   const [isBookingNow, setIsBookingNow] = useState(true);
 
   useEffect(() => {
-    setGuests(table.guests ? table.guests : 0);
-    setNotes(table.notes ? table.notes : "");
-    setGuestName(table.guestName ? table.guestName : "");
-    setGuestMobile(table.guestMobile ? table.guestMobile : "");
-    setOccasion(table.occasion ? table.occasion : "Friends");
-    setServer(table.server ? table.server : "");
+    setGuests(table?.guests ? table?.guests : 0);
+    setNotes(table?.notes ? table?.notes : "");
+    setGuestName(table?.guestName ? table?.guestName : "");
+    setGuestMobile(table?.guestMobile ? table?.guestMobile : "");
+    setOccasion(table?.occasion ? table?.occasion : "Friends");
+    setWaiter(table?.waiter ? table?.waiter : "");
     setBookingTime(new Date());
     setIsBookingNow(true);
   }, [table]);
@@ -40,19 +42,20 @@ const TableManagement = ({ table, onUpdateTable }) => {
   const handleUpdate = () => {
     onUpdateTable({
       ...table,
-      guests: parseInt(guests, 10),
-      notes,
-      server,
       guestName,
       guestMobile,
+      guests: parseInt(guests, 10),
       occasion,
       bookingTime: isBookingNow ? new Date() : bookingTime,
+      waiter,
+      notes,
     });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Table {table.number}</Text>
+      <FloatingCloseButton onClose={onClose} />
+      <Text style={styles.title}>Table {table?.number}</Text>
       <View style={styles.inputContainer}>
         <View style={styles.inputFieldContainer}>
           <Text style={styles.label}>Guest Name:</Text>
@@ -125,8 +128,8 @@ const TableManagement = ({ table, onUpdateTable }) => {
           <Text style={styles.label}>Server:</Text>
           <TextInput
             style={styles.input}
-            value={server}
-            onChangeText={setServer}
+            value={waiter}
+            onChangeText={setWaiter}
           />
         </View>
       </View>
@@ -206,6 +209,23 @@ const styles = StyleSheet.create({
   updateButtonText: {
     color: "#fff",
     fontSize: 16,
+    fontWeight: "bold",
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    zIndex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    borderRadius: 15,
+    width: 30,
+    height: 30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  closeButtonText: {
+    color: "white",
+    fontSize: 18,
     fontWeight: "bold",
   },
 });

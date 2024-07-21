@@ -8,6 +8,7 @@ const OrderDetails = ({ order }) => {
       <Text style={styles.itemName}>{item.name}</Text>
       <Text style={styles.itemQuantity}>x{item.quantity}</Text>
       <Text style={styles.itemPrice}>₹{item.price.toFixed(2)}</Text>
+      <Text style={styles.itemPrice}>₹{item.itemValue.toFixed(2)}</Text>
     </View>
   );
 
@@ -15,13 +16,13 @@ const OrderDetails = ({ order }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Order Details</Text>
       <FlatList
-        data={order.items}
+        data={order.orders}
         renderItem={renderOrderItem}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.name.toString() + item.category.toString()}
       />
       <View style={styles.totalContainer}>
         <Text style={styles.totalText}>Total:</Text>
-        <Text style={styles.totalAmount}>₹{order.total.toFixed(2)}</Text>
+        <Text style={styles.totalAmount}>₹{order.orderValue.toFixed(2)}</Text>
       </View>
     </View>
   );

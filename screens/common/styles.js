@@ -12,6 +12,7 @@ export default StyleSheet.create({
     paddingVertical: 10,
     justifyContent: "center",
     backgroundColor: "#fff",
+    bottom: 0,
   },
   filterList: {
     flexGrow: 0,
