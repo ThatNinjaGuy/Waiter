@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
+    borderRadius: 10,
   },
   typeIndicator: {
     width: 20,

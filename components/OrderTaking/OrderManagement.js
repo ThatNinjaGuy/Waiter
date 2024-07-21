@@ -304,7 +304,7 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
             decreaseQuantity={decreaseQuantity}
             removeItem={removeItem}
           />
-          <PaymentOptions style={styles.paymentOptions} />
+          <PaymentOptions style={styles.paymentOptions} onSave={onClose} />
         </View>
       </View>
     </View>
