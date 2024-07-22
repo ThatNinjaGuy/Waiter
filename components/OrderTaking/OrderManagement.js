@@ -4,9 +4,11 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import MenuItemGrid from "./MenuItemGrid";
 import OrderDetails from "./OrderDetails";
 import PaymentOptions from "./PaymentOptions";
+import HeaderSection from "./HeaderSection";
 import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseButton";
 
 const categories = [
+  "Favorites",
   "Beverages",
   "Burgers",
   "EGG",
@@ -229,6 +231,7 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
   const [orders, setOrders] = useState(items ? items : []);
 
   useEffect(() => {
+    if (selectedCategory == 0) return setSelectedMenu(getFavoriteItems());
     setSelectedMenu(
       menuItems.filter((item) => item.category === categories[selectedCategory])
     );
@@ -282,29 +285,37 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
     setOrders(newOrders); // Update the state with the new array
   };
 
+  const getFavoriteItems = () => {
+    return menuItems.filter((item) => item.orderCountPercentile > 70);
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={styles.mainContainer}>
+      <HeaderSection />
       <FloatingCloseButton onClose={onClose} />
-      <Sidebar
-        items={categories}
-        style={styles.sidebar}
-        onItemClick={onSidebarItemClicked}
-      />
-      <View style={styles.mainContent}>
-        <MenuItemGrid
-          menuItems={selectedMenu}
-          onItemClick={onMenuItemClick}
-          style={styles.menuItemGrid}
+      <View style={styles.container}>
+        <Sidebar
+          items={categories}
+          style={styles.sidebar}
+          onItemClick={onSidebarItemClicked}
+          selectedItemIndex={selectedCategory}
         />
-        <View style={styles.orderAndPayment}>
-          <OrderDetails
-            orders={orders}
-            style={styles.orderDetails}
-            increaseQuantity={increaseQuantity}
-            decreaseQuantity={decreaseQuantity}
-            removeItem={removeItem}
+        <View style={styles.mainContent}>
+          <MenuItemGrid
+            menuItems={selectedMenu}
+            onItemClick={onMenuItemClick}
+            style={styles.menuItemGrid}
           />
-          <PaymentOptions style={styles.paymentOptions} onSave={onClose} />
+          <View style={styles.orderAndPayment}>
+            <OrderDetails
+              orders={orders}
+              style={styles.orderDetails}
+              increaseQuantity={increaseQuantity}
+              decreaseQuantity={decreaseQuantity}
+              removeItem={removeItem}
+            />
+            <PaymentOptions style={styles.paymentOptions} onSave={onClose} />
+          </View>
         </View>
       </View>
     </View>
@@ -312,6 +323,9 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
 };
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     flexDirection: "row",
@@ -342,10 +356,8 @@ const styles = StyleSheet.create({
   },
   menuItemGrid: {
     flex: 1,
-    // width: "50%",
   },
   orderAndPayment: {
-    // flex: 1,
     flexDirection: "column",
     width: "50%",
   },

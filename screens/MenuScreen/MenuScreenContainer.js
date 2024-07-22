@@ -23,7 +23,6 @@ const MenuScreenContainer = () => {
           ...doc.data(),
         }));
         setMenuItems(items);
-        console.log("Fetched menu items:", items);
       } catch (error) {
         console.error("Error fetching menu items:", error);
       }

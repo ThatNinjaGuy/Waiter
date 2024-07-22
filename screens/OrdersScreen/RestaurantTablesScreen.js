@@ -12,6 +12,7 @@ import {
 import { db } from "@/firebase/firebaseConfig";
 import OrderDetails from "./OrderDetails";
 import TableManagement from "./TableManagement";
+import AddTable from "./AddTable";
 import { searchOrder } from "@/screens/common/searchCriteria";
 import styles from "@/screens/common/styles";
 import CustomSearchBar from "@/screens/common/SearchBar";
@@ -36,7 +37,6 @@ const RestaurantTablesScreen = () => {
           ...doc.data(),
         }));
         setTables(items);
-        console.log("Fetched tables:", items);
       } catch (error) {
         console.error("Error fetching tables:", error);
       }
@@ -47,7 +47,6 @@ const RestaurantTablesScreen = () => {
 
   useEffect(() => {
     setFilteredItems(tables);
-    console.log("Filtered tables:", tables);
   }, [tables]);
 
   const addDetailsForTables = async (items) => {
@@ -174,7 +173,7 @@ const RestaurantTablesScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.mainContainer}>
       {!selectedTable && !tableAdd && (
         <View style={styles.container}>
           <Button title="Add Table" onPress={handleAddItemClick} />
@@ -183,7 +182,7 @@ const RestaurantTablesScreen = () => {
             onTablePress={handleTablePress}
             onOrderDetailsPress={handleOrderDetailsPress}
           />
-          {/* <View style={styles.filterListContainer}>
+          <View style={styles.filterListContainer}>
             <FlatList
               horizontal
               data={getUniqueFilters()}
@@ -202,7 +201,7 @@ const RestaurantTablesScreen = () => {
               style={styles.filterList}
             />
           </View>
-          <CustomSearchBar searchText={search} updateSearch={updateSearch} /> */}
+          <CustomSearchBar searchText={search} updateSearch={updateSearch} />
         </View>
       )}
       {selectedTable && !tableInfoOptionClicked && (
@@ -227,8 +226,7 @@ const RestaurantTablesScreen = () => {
 
       {tableAdd && (
         <View>
-          <TableManagement
-            table={selectedTable}
+          <AddTable
             onUpdateTable={addDetailsForTable}
             onClose={handleTableInfoClose}
           />

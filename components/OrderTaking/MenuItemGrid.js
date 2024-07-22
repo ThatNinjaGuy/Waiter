@@ -38,9 +38,9 @@ const styles = StyleSheet.create({
     width: "50%",
   },
   grid: {
+    flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-around",
   },
 });
 

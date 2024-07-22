@@ -1,13 +1,9 @@
 import React from "react";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 
-const SidebarItem = ({ title, style, clickable, onItemClick }) => {
+const SidebarItem = ({ title, style, onItemClick }) => {
   return (
-    <TouchableOpacity
-      style={[styles.item, style]}
-      disabled={!clickable}
-      onPress={onItemClick}
-    >
+    <TouchableOpacity style={[styles.item, style]} onPress={onItemClick}>
       <Text style={styles.itemTitle}>{title}</Text>
     </TouchableOpacity>
   );
