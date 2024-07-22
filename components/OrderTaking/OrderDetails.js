@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -22,36 +23,38 @@ const OrderDetails = ({
   }, [orders]);
 
   const renderOrderItem = ({ item, index }) => (
-    <View style={styles.orderItem}>
-      <TouchableOpacity
-        onPress={() => removeItem(index)}
-        style={styles.removeItemButton}
-      >
-        <Icon name="close" size={30} color="#f00" />
-      </TouchableOpacity>
-      <View style={styles.itemDetailsContainer}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemPrice}>@ ₹ {item.price.toFixed(2)}</Text>
-      </View>
-      <View style={styles.quantityContainer}>
-        <View style={styles.quantityManipulator}>
-          <TouchableOpacity
-            onPress={() => decreaseQuantity(index)}
-            style={styles.quantityButton}
-          >
-            <Icon name="remove" size={24} color="#000" />
-          </TouchableOpacity>
-          <Text style={styles.quantityText}>{item.quantity}</Text>
-          <TouchableOpacity
-            onPress={() => increaseQuantity(index)}
-            style={styles.quantityButton}
-          >
-            <Icon name="add" size={24} color="#000" />
-          </TouchableOpacity>
+    <View style={styles.container}>
+      <View style={styles.orderItem}>
+        <TouchableOpacity
+          onPress={() => removeItem(index)}
+          style={styles.removeItemButton}
+        >
+          <Icon name="close" size={30} color="#f00" />
+        </TouchableOpacity>
+        <View style={styles.itemDetailsContainer}>
+          <Text style={styles.itemName}>{item.name}</Text>
+          <Text style={styles.itemPrice}>@ ₹ {item.price.toFixed(2)}</Text>
         </View>
-        <Text style={styles.totalItemPrice}>
-          ₹ {(item.price * item.quantity).toFixed(2)}
-        </Text>
+        <View style={styles.quantityContainer}>
+          <View style={styles.quantityManipulator}>
+            <TouchableOpacity
+              onPress={() => decreaseQuantity(index)}
+              style={styles.quantityButton}
+            >
+              <Icon name="remove" size={24} color="#000" />
+            </TouchableOpacity>
+            <Text style={styles.quantityText}>{item.quantity}</Text>
+            <TouchableOpacity
+              onPress={() => increaseQuantity(index)}
+              style={styles.quantityButton}
+            >
+              <Icon name="add" size={24} color="#000" />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.totalItemPrice}>
+            ₹ {(item.price * item.quantity).toFixed(2)}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -75,6 +78,9 @@ const OrderDetails = ({
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   orderDetails: {
     padding: 10,
     backgroundColor: "#fff",
@@ -87,6 +93,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderColor: "#ccc",
+    ...Platform.select({
+      android: {
+        // backgroundColor: "red",
+        // borderBottomWidth: 5,
+      },
+      ios: {
+        // iOS-specific styles
+      },
+    }),
   },
   removeItemButton: {
     paddingHorizontal: 5,
