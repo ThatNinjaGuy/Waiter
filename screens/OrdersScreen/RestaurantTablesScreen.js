@@ -12,6 +12,7 @@ import {
 import { db } from "@/firebase/firebaseConfig";
 import OrderDetails from "./OrderDetails";
 import TableManagement from "./TableManagement";
+import AddTable from "./AddTable";
 import { searchOrder } from "@/screens/common/searchCriteria";
 import styles from "@/screens/common/styles";
 import CustomSearchBar from "@/screens/common/SearchBar";
@@ -225,8 +226,7 @@ const RestaurantTablesScreen = () => {
 
       {tableAdd && (
         <View>
-          <TableManagement
-            table={selectedTable}
+          <AddTable
             onUpdateTable={addDetailsForTable}
             onClose={handleTableInfoClose}
           />
