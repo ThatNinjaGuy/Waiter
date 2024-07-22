@@ -22,7 +22,7 @@ const OrderDetails = ({ order }) => {
       />
       <View style={styles.totalContainer}>
         <Text style={styles.totalText}>Total:</Text>
-        <Text style={styles.totalAmount}>₹{order.orderValue.toFixed(2)}</Text>
+        <Text style={styles.totalAmount}>₹{order.orderValue?.toFixed(2)}</Text>
       </View>
     </View>
   );

@@ -49,14 +49,14 @@ const RestaurantTablesScreen = () => {
     setFilteredItems(tables);
   }, [tables]);
 
-  const addDetailsForTables = async (items) => {
+  const addNewTable = async (items) => {
     const batch = writeBatch(db);
     const newItems = [];
 
     items.forEach((item) => {
       item.number = item.number ? item.number : tables.length + 1;
       item.searchableKey = item.number;
-      item.status = "Occupied";
+      item.status = "Available";
       item.orderCount = 0;
       item.totalOrders = 0;
       const docRef = doc(collection(db, "tables/"));
@@ -74,8 +74,8 @@ const RestaurantTablesScreen = () => {
     }
   };
 
-  const addDetailsForTable = (item) => {
-    addDetailsForTables([item]);
+  const addTable = (item) => {
+    addNewTable([item]);
     setTableAdd(false);
   };
 
@@ -120,6 +120,7 @@ const RestaurantTablesScreen = () => {
   };
 
   const handleUpdateTable = (updatedTable) => {
+    updatedTable.status = "Occupied";
     setTables(tables.map((t) => (t.id === updatedTable.id ? updatedTable : t)));
     updateTableDetails(updatedTable.id, updatedTable);
     setSelectedTable(null);
@@ -226,10 +227,7 @@ const RestaurantTablesScreen = () => {
 
       {tableAdd && (
         <View>
-          <AddTable
-            onUpdateTable={addDetailsForTable}
-            onClose={handleTableInfoClose}
-          />
+          <AddTable onUpdateTable={addTable} onClose={handleTableInfoClose} />
         </View>
       )}
     </View>
