@@ -172,7 +172,7 @@ const RestaurantTablesScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.mainContainer}>
       {!selectedTable && !tableAdd && (
         <View style={styles.container}>
           <Button title="Add Table" onPress={handleAddItemClick} />
@@ -181,7 +181,7 @@ const RestaurantTablesScreen = () => {
             onTablePress={handleTablePress}
             onOrderDetailsPress={handleOrderDetailsPress}
           />
-          {/* <View style={styles.filterListContainer}>
+          <View style={styles.filterListContainer}>
             <FlatList
               horizontal
               data={getUniqueFilters()}
@@ -200,7 +200,7 @@ const RestaurantTablesScreen = () => {
               style={styles.filterList}
             />
           </View>
-          <CustomSearchBar searchText={search} updateSearch={updateSearch} /> */}
+          <CustomSearchBar searchText={search} updateSearch={updateSearch} />
         </View>
       )}
       {selectedTable && !tableInfoOptionClicked && (
