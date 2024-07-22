@@ -36,7 +36,6 @@ const RestaurantTablesScreen = () => {
           ...doc.data(),
         }));
         setTables(items);
-        console.log("Fetched tables:", items);
       } catch (error) {
         console.error("Error fetching tables:", error);
       }
@@ -47,7 +46,6 @@ const RestaurantTablesScreen = () => {
 
   useEffect(() => {
     setFilteredItems(tables);
-    console.log("Filtered tables:", tables);
   }, [tables]);
 
   const addDetailsForTables = async (items) => {

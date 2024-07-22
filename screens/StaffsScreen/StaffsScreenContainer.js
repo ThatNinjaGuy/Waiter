@@ -23,7 +23,6 @@ const StaffsScreenContainer = () => {
           ...doc.data(),
         }));
         setStaffs(items);
-        console.log("Fetched staffs:", items);
       } catch (error) {
         console.error("Error fetching staffs:", error);
       }

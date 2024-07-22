@@ -8,7 +8,6 @@ export const fetchHotelData = async () => {
       id: doc.id,
       ...doc.data(),
     }));
-    console.log("Fetched hotel data:", hotels);
   } catch (error) {
     console.error("Error fetching hotel data:", error);
   }

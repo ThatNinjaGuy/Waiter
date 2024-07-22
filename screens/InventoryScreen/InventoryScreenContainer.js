@@ -23,7 +23,6 @@ const InventoryScreenContainer = () => {
           ...doc.data(),
         }));
         setInventoryItems(items);
-        console.log("Fetched inventory items:", items);
       } catch (error) {
         console.error("Error fetching inventory items:", error);
       }
