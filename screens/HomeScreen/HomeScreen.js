@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -38,37 +38,28 @@ export default function HomeScreen() {
   ];
 
   return (
-    <View style={styles.scrollView}>
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.headerForeground}>
-          <UserProfile
-            name="John Doe"
-            role="Restaurant Manager"
-            imageUrl="https://dummyimage.com/650x450/cc00cc/fff"
-          />
-        </ThemedView>
-        <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle} type="title">
-            Today's Overview
-          </ThemedText>
-          <Overview overviewItems={overviewItems} />
-        </ThemedView>
-
-        <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle} type="title">
-            Notifications
-          </ThemedText>
-          <Notifications notifications={notifications} />
-        </ThemedView>
-
-        <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle} type="title">
-            Quick Actions
-          </ThemedText>
-          <NavigationMenu items={navigationItems} />
-        </ThemedView>
+    <ThemedView style={styles.container}>
+      <ThemedView style={styles.section}>
+        <ThemedText style={styles.title} type="title">
+          Today's Overview
+        </ThemedText>
+        <Overview overviewItems={overviewItems} />
       </ThemedView>
-    </View>
+
+      <ThemedView style={styles.section}>
+        <ThemedText style={styles.title} type="title">
+          Notifications
+        </ThemedText>
+        <Notifications notifications={notifications} />
+      </ThemedView>
+
+      <ThemedView style={styles.section}>
+        <ThemedText style={styles.title} type="title">
+          Quick Actions
+        </ThemedText>
+        <NavigationMenu items={navigationItems} />
+      </ThemedView>
+    </ThemedView>
   );
 }
 
@@ -78,16 +69,13 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: wp("5%"),
+    padding: "2%",
   },
   headerForeground: {
     height: hp("15%"),
-    marginTop: hp("2%"),
     paddingLeft: wp("2%"),
-    marginBottom: hp("2%"),
     justifyContent: "center",
-    backgroundColor: "rgba(170, 183, 225, 0.5)",
-    borderRadius: wp("1%"),
+    backgroundColor: "rgba(14, 16, 231, 0.8)",
   },
   section: {
     marginBottom: hp("2%"),
