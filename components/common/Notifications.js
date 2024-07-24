@@ -16,14 +16,21 @@ const Notifications = ({ notifications }) => {
         keyExtractor={(item) => item.id.toString()}
       />
     </View>
+
+    // <View style={styles.overviewContainer}>
+    //   {notifications.map((item) => (
+    //     <View key={item.id} style={styles.overviewItem}>
+    //       <ThemedText style={styles.itemTitle}>{item.title}</ThemedText>
+    //       <ThemedText style={styles.itemMessage}>{item.message}</ThemedText>
+    //     </View>
+    //   ))}
+    // </View>
   );
 };
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
+  container: {
+    marginTop: 16,
   },
   notificationItem: {
     backgroundColor: "rgba(170, 183, 225, 0.5)",

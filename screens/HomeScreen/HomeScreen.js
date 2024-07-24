@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, View } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -40,33 +40,33 @@ export default function HomeScreen() {
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.section}>
-        <ThemedText style={styles.title} type="title">
-          Today's Overview
-        </ThemedText>
+        <View style={styles.titleContainer}>
+          <ThemedText style={styles.title} type="title">
+            Today's Overview
+          </ThemedText>
+        </View>
         <Overview overviewItems={overviewItems} />
       </ThemedView>
-
       <ThemedView style={styles.section}>
-        <ThemedText style={styles.title} type="title">
-          Notifications
-        </ThemedText>
+        <View style={styles.titleContainer}>
+          <ThemedText style={styles.title} type="title">
+            Notifications
+          </ThemedText>
+        </View>
         <Notifications notifications={notifications} />
       </ThemedView>
 
-      <ThemedView style={styles.section}>
+      {/* <ThemedView style={styles.section}>
         <ThemedText style={styles.title} type="title">
           Quick Actions
-        </ThemedText>
-        <NavigationMenu items={navigationItems} />
-      </ThemedView>
+        </ThemedText> */}
+      <NavigationMenu items={navigationItems} />
+      {/* </ThemedView> */}
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-  },
   container: {
     flex: 1,
     padding: "2%",
@@ -77,12 +77,26 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "rgba(14, 16, 231, 0.8)",
   },
-  section: {
-    marginBottom: hp("2%"),
-    marginTop: hp("2%"),
-  },
   sectionTitle: {
     fontSize: wp("4%"),
     marginBottom: hp("2%"),
+  },
+  section: {
+    borderWidth: 0.5,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 16,
+    margin: 16,
+  },
+  titleContainer: {
+    position: "absolute",
+    top: -12,
+    left: 0,
+    right: 0,
+    alignItems: "center",
+  },
+  title: {
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    paddingHorizontal: 8,
   },
 });

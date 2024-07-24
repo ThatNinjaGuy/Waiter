@@ -4,12 +4,11 @@ import { ThemedText } from "@/components/common/ThemedText";
 
 const Overview = ({ overviewItems }) => {
   return (
-    <View style={styles.container}>
+    <View style={styles.overviewContainer}>
       {overviewItems.map((item) => (
         <View key={item.id} style={styles.overviewItem}>
-          <ThemedText>{item.title}</ThemedText>
-          <ThemedText>{" : "}</ThemedText>
-          <ThemedText>{item.message}</ThemedText>
+          <ThemedText style={styles.itemTitle}>{item.title}</ThemedText>
+          <ThemedText style={styles.itemMessage}>{item.message}</ThemedText>
         </View>
       ))}
     </View>
@@ -17,15 +16,23 @@ const Overview = ({ overviewItems }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  overviewContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
+    justifyContent: "space-around",
+    marginTop: 16,
   },
   overviewItem: {
-    flexDirection: "row",
-    marginTop: 5,
-    marginBottom: 5,
-    width: 150,
+    width: "45%",
+    marginBottom: 16,
+    alignItems: "center",
+  },
+  itemTitle: {
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  itemMessage: {
+    textAlign: "center",
   },
 });
 
