@@ -1,50 +1,128 @@
-# Welcome to your Expo app 👋
+# React Native Restaurant Menu App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This project is a React Native application for managing a restaurant menu. It uses Firebase Firestore for data storage and supports offline capabilities.
 
-## Get started
+## Table of Contents
 
-1. Install dependencies
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Installation](#installation)
+- [Firebase Setup](#firebase-setup)
+- [Project Structure](#project-structure)
+- [Usage](#usage)
+- [Building the APK](#building-the-apk)
+- [Contributing](#contributing)
+- [License](#license)
 
-   ```bash
+## Features
+
+- **Dashboard Overview**: Provides a summary of the day's revenue, orders, reservations, low inventory, and staff status.
+- **Notifications**: Displays important notifications such as new orders, staff meetings, and low inventory alerts.
+- **Quick Actions**: Allows quick navigation to different sections like Menu, Orders, Staffs, and Inventory.
+- **Menu Management**: Add, update, and delete menu items.
+- **Order Management**: View and manage orders, including order details and table management.
+- **Inventory Management**: Add, update, and delete inventory items.
+- **Offline Support**: Works seamlessly offline and syncs data when the internet is available.
+- **Firebase Firestore Integration**: Uses Firestore for real-time data storage and retrieval.
+- **Batch Operations**: Efficiently add multiple items using batch write operations.
+- **User-Friendly Interface**: Simple and intuitive UI for managing menu items.
+
+## Screenshots
+
+### Dashboard
+
+![Dashboard](https://pplx-res.cloudinary.com/image/upload/v1720996665/user_uploads/lzwlavxmz/image.jpg)
+
+### Menu Management
+
+![Menu Management](https://pplx-res.cloudinary.com/image/upload/v1720996696/user_uploads/vmfypybrr/image.jpg)
+
+### Order Management
+
+![Order Management](https://pplx-res.cloudinary.com/image/upload/v1720996738/user_uploads/gdbpxmlvs/image.jpg)
+
+### Inventory Management
+
+![Inventory Management](https://pplx-res.cloudinary.com/image/upload/v1720996764/user_uploads/ytaxbbnsv/image.jpg)
+
+## Installation
+
+1. **Clone the repository:**
+
+   ```sh
+   git clone https://github.com/ThatNinjaGuy/Waiter.git
+   cd Waiter
+   ```
+
+2. **Install dependencies:**
+
+   ```sh
    npm install
    ```
 
-2. Start the app
+3. **Install Expo CLI:**
 
-   ```bash
-    npx expo start
+   ```sh
+   npm install -g expo-cli
    ```
 
-In the output, you'll find options to open the app in a
+4. **Install EAS CLI:**
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   ```sh
+   npm install -g eas-cli
+   ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Firebase Setup
 
-## Get a fresh project
+1. **Create a Firebase project:**
+   - Go to the Firebase Console.
+   - Click on "Add project" and follow the setup wizard to create a new project.
+2. **Register your app:**
+   - In the Firebase Console, navigate to "Project settings" and add your Android and iOS apps.
+   - Download the google-services.json file for Android and GoogleService-Info.plist file for iOS.
+3. **Add Firebase configuration:**
+   Create a firebaseConfig.js file in the app/firebase directory:
 
-When you're ready, run:
+   ```sh
+   const firebaseConfig = {
+   apiKey: 'YOUR_API_KEY',
+   authDomain: 'YOUR_AUTH_DOMAIN',
+   projectId: 'YOUR_PROJECT_ID',
+   storageBucket: 'YOUR_STORAGE_BUCKET',
+   messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
+   appId: 'YOUR_APP_ID',
+   };
+   ```
 
-```bash
-npm run reset-project
+## Building the APK
+
+- npm install -g eas-cli
+- eas login
+- eas build --platform android --profile preview
+
+## Web-Based access: Publishing the app to Ngrok for local hosting
+
+- If 8081 is your port number, then use below or update it to reflext your local port number
+
+```sh
+ngrok http 8081
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Android-Based access: Generating APK
 
-## Learn more
+```sh
+eas build -p android --profile preview
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Contributing
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```sh
+Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+```
 
-## Join the community
+## License
 
-Join our community of developers creating universal apps.
+```sh
+This project is licensed under the MIT License.
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions

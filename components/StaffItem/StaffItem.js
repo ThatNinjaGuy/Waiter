@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Pressable, Image } from "react-native";
 import styles from "./styles";
 
-const MenuItem = ({ item, onEdit }) => (
+const StaffItem = ({ item, onEdit }) => (
   <Pressable style={styles.container} onPress={onEdit}>
     <Image
       source={{
@@ -14,8 +14,8 @@ const MenuItem = ({ item, onEdit }) => (
     />
     <View style={styles.infoContainer}>
       <Text style={styles.name}>{item.name}</Text>
-      <Text style={styles.cuisine}>{item.cuisine}</Text>
-      <Text style={styles.price}>₹{item.price}</Text>
+      <Text style={styles.cuisine}>{item.age}</Text>
+      <Text style={styles.price}>{item.role}</Text>
     </View>
     <View style={styles.actionsContainer}>
       {item.searchableKey ? (
@@ -27,4 +27,4 @@ const MenuItem = ({ item, onEdit }) => (
   </Pressable>
 );
 
-export default MenuItem;
+export default StaffItem;

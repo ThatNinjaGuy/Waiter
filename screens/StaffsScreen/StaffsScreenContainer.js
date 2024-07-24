@@ -8,36 +8,36 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
-import InventoryScreenView from "./InventoryScreenView";
+import StaffScreenView from "./StaffScreenView";
 import { generateUniqueKey } from "@/utils/keyGenerator";
 
-const InventoryScreenContainer = () => {
-  const [inventoryItems, setInventoryItems] = useState([]);
+const StaffsScreenContainer = () => {
+  const [staffs, setStaffs] = useState([]);
 
   useEffect(() => {
-    const fetchInventoryItems = async () => {
+    const fetchStaffs = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "inventory-items"));
+        const querySnapshot = await getDocs(collection(db, "staffs/"));
         const items = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setInventoryItems(items);
+        setStaffs(items);
       } catch (error) {
-        console.error("Error fetching inventory items:", error);
+        console.error("Error fetching staffs:", error);
       }
     };
 
-    fetchInventoryItems();
+    fetchStaffs();
   }, []);
 
-  const addInventoryItems = async (items) => {
+  const addStaffs = async (items) => {
     const batch = writeBatch(db);
     const newItems = [];
 
     items.forEach((item) => {
-      item.searchableKey = generateUniqueKey(inventoryItems, item);
-      const docRef = doc(collection(db, "inventory-items"));
+      item.searchableKey = generateUniqueKey(staffs, item);
+      const docRef = doc(collection(db, "staffs/"));
       batch.set(docRef, item);
       newItems.push({ ...item, id: docRef.id });
     });
@@ -45,33 +45,33 @@ const InventoryScreenContainer = () => {
     try {
       await batch.commit();
       console.log("Batch write successful");
-      setInventoryItems([...inventoryItems, ...newItems]);
+      setStaffs([...staffs, ...newItems]);
       console.log(newItems);
     } catch (error) {
       console.error("Error writing batch:", error);
     }
   };
 
-  const addInventoryItem = (item) => {
-    addInventoryItems([item]);
+  const addStaff = (item) => {
+    addStaffs([item]);
   };
 
-  const deleteInventoryItem = async (id) => {
+  const deleteStaff = async (id) => {
     try {
-      await deleteDoc(doc(db, "inventory-items", id));
-      setInventoryItems(inventoryItems.filter((item) => item.id !== id));
+      await deleteDoc(doc(db, "staffs/", id));
+      setStaffs(staffs.filter((item) => item.id !== id));
       console.log("Document successfully deleted!");
     } catch (error) {
       console.error("Error removing document: ", error);
     }
   };
 
-  const updateInventoryItem = async (id, updatedItem) => {
+  const updateStaff = async (id, updatedItem) => {
     try {
-      const itemRef = doc(db, "inventory-items", id);
+      const itemRef = doc(db, "staffs/", id);
       await updateDoc(itemRef, updatedItem);
-      setInventoryItems(
-        inventoryItems.map((item) =>
+      setStaffs(
+        staffs.map((item) =>
           item.id === id ? { ...item, ...updatedItem } : item
         )
       );
@@ -82,13 +82,13 @@ const InventoryScreenContainer = () => {
   };
 
   return (
-    <InventoryScreenView
-      inventoryItems={inventoryItems}
-      addInventoryItem={addInventoryItem}
-      deleteInventoryItem={deleteInventoryItem}
-      updateInventoryItem={updateInventoryItem}
+    <StaffScreenView
+      staffs={staffs}
+      addStaff={addStaff}
+      deleteStaff={deleteStaff}
+      updateStaff={updateStaff}
     />
   );
 };
 
-export default InventoryScreenContainer;
+export default StaffsScreenContainer;

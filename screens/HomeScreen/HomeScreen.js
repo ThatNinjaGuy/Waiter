@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, View } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -22,7 +22,7 @@ export default function HomeScreen() {
   ];
 
   const overviewItems = [
-    { id: 1, title: "Revenue", message: "$1,234" },
+    { id: 1, title: "Revenue", message: "₹1,234" },
     { id: 2, title: "Orders", message: "56" },
     { id: 3, title: "Reservations", message: "12" },
     { id: 4, title: "Low Inventory", message: "34" },
@@ -33,12 +33,12 @@ export default function HomeScreen() {
   const navigationItems = [
     { title: "Menu", onPress: () => navigation.navigate("menu") },
     { title: "Orders", onPress: () => navigation.navigate("orders") },
-    { title: "Staff", onPress: () => navigation.navigate("menu") },
+    { title: "Staffs", onPress: () => navigation.navigate("staffs") },
     { title: "Inventory", onPress: () => navigation.navigate("inventory") },
   ];
 
   return (
-    <ScrollView style={styles.scrollView}>
+    <View style={styles.scrollView}>
       <ThemedView style={styles.container}>
         <ThemedView style={styles.headerForeground}>
           <UserProfile
@@ -68,7 +68,7 @@ export default function HomeScreen() {
           <NavigationMenu items={navigationItems} />
         </ThemedView>
       </ThemedView>
-    </ScrollView>
+    </View>
   );
 }
 

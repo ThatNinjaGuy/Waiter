@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import MenuScreenView from "./MenuScreenView";
-import { fetchHotelData } from "@/firebase/queries";
+import { generateUniqueKey } from "@/utils/keyGenerator";
 
 const MenuScreenContainer = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -23,7 +23,6 @@ const MenuScreenContainer = () => {
           ...doc.data(),
         }));
         setMenuItems(items);
-        console.log("Fetched menu items:", items);
       } catch (error) {
         console.error("Error fetching menu items:", error);
       }
@@ -32,16 +31,12 @@ const MenuScreenContainer = () => {
     fetchMenuItems();
   }, []);
 
-  useEffect(() => {
-    console.log(menuItems);
-    fetchHotelData();
-  }, []);
-
   const addMenuItems = async (items) => {
     const batch = writeBatch(db);
     const newItems = [];
 
     items.forEach((item) => {
+      item.searchableKey = generateUniqueKey(menuItems, item);
       const docRef = doc(collection(db, "menu-items/"));
       batch.set(docRef, item);
       newItems.push({ ...item, id: docRef.id });

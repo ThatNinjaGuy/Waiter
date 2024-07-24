@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -9,13 +9,9 @@ const NavigationMenu = ({ items }) => {
   return (
     <View style={styles.container}>
       {items.map((item, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.item}
-          onPress={item.onPress}
-        >
+        <Pressable key={index} style={styles.item} onPress={item.onPress}>
           <Text style={styles.itemText}>{item.title}</Text>
-        </TouchableOpacity>
+        </Pressable>
       ))}
     </View>
   );
