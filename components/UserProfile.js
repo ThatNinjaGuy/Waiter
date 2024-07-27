@@ -7,8 +7,8 @@ const UserProfile = ({ name, role, imageUrl }) => {
     <View style={styles.container}>
       <Image source={{ uri: imageUrl }} style={styles.image} />
       <View style={styles.textContainer}>
-        <ThemedText style={styles.name}>{name}</ThemedText>
-        <ThemedText style={styles.role}>{role}</ThemedText>
+        <ThemedText style={styles.title}>{name}</ThemedText>
+        <ThemedText style={styles.subtitle}>{role}</ThemedText>
       </View>
     </View>
   );
@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
   },
   image: {
     width: 50,
@@ -30,12 +29,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   name: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
   },
   role: {
     fontSize: 14,
-    color: "rgba(48, 52, 65, 1)",
   },
 });
 
