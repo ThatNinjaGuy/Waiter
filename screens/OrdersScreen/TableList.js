@@ -1,3 +1,6 @@
+import ThemedButton from "@/components/common/ThemedButton";
+import { ThemedText } from "@/components/common/ThemedText";
+import { ThemedView } from "@/components/common/ThemedView";
 import React, { useMemo, useState, useCallback, useEffect } from "react";
 import {
   useWindowDimensions,
@@ -69,7 +72,7 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
   };
 
   const renderTableItem = ({ item }) => (
-    <Pressable
+    <ThemedButton
       style={[
         styles.tableItem,
         getStatusColor(item.status, item.orderCount, item.totalOrders),
@@ -77,21 +80,27 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
       ]}
       onPress={() => onTablePress(item)}
     >
-      <Text style={styles.tableNumber}>Table - {item.number}</Text>
+      <ThemedText style={styles.tableNumber}>Table - {item.number}</ThemedText>
       <View style={styles.tableDetailsContainer}>
         <View style={styles.leftColumn}>
-          <Text style={styles.tableDetails}>Guest Name: {item.guestName}</Text>
-          <Text style={styles.tableDetails}>
+          <ThemedText style={styles.tableDetails}>
+            Guest Name: {item.guestName}
+          </ThemedText>
+          <ThemedText style={styles.tableDetails}>
             Guests: {item.guests || 0} pax
-          </Text>
-          <Text style={styles.tableDetails}>Server: {item.waiter}</Text>
-          <Text style={styles.tableDetails}>Notes: {item.notes}</Text>
+          </ThemedText>
+          <ThemedText style={styles.tableDetails}>
+            Server: {item.waiter}
+          </ThemedText>
+          <ThemedText style={styles.tableDetails}>
+            Notes: {item.notes}
+          </ThemedText>
         </View>
         <View style={styles.rightColumn}>
-          <Text style={styles.tableDetails}>
+          <ThemedText style={styles.tableDetails}>
             Orders: {item.orderCount || 0}/{item.totalOrders || 0}
-          </Text>
-          <Text style={styles.tableDetails}>
+          </ThemedText>
+          <ThemedText style={styles.tableDetails}>
             {item.status === "Occupied" &&
             item.orderCount &&
             item.totalOrders &&
@@ -104,23 +113,24 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
                 }${
                   item.ttlo ? String(item.ttlo % 60).padStart(2, "0") : ""
                 } min`}
-          </Text>
-          <Text style={styles.tableDetails}>
+          </ThemedText>
+          <ThemedText style={styles.tableDetails}>
             Bill: ₹ {item.orderValue || 0}
-          </Text>
+          </ThemedText>
         </View>
       </View>
-      <TouchableOpacity
-        style={styles.orderDetailsIcon}
-        onPress={() => onOrderDetailsPress(item)}
-      >
-        <Icon name="receipt" size={36} color="#000" />
-      </TouchableOpacity>
-    </Pressable>
+      <View style={styles.orderDetailsIcon}>
+        <Icon
+          name="receipt"
+          size={36}
+          onPress={() => onOrderDetailsPress(item)}
+        />
+      </View>
+    </ThemedButton>
   );
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <FlatList
         key={key} // Force re-render when numColumns changes
         data={sortedTables}
@@ -135,7 +145,7 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
         }
         style={styles.list}
       />
-    </View>
+    </ThemedView>
   );
 };
 
@@ -161,7 +171,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    backgroundColor: "#fff",
   },
   tableNumber: {
     fontSize: 18,

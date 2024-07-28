@@ -6,6 +6,7 @@ import OrderDetails from "./OrderDetails";
 import PaymentOptions from "./PaymentOptions";
 import HeaderSection from "./HeaderSection";
 import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseButton";
+import { ThemedView } from "../common/ThemedView";
 
 const categories = [
   "Favorites",
@@ -290,23 +291,23 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
   };
 
   return (
-    <View style={styles.mainContainer}>
+    <ThemedView style={styles.mainContainer}>
       {/* <HeaderSection /> */}
       <FloatingCloseButton onClose={onClose} />
-      <View style={styles.container}>
+      <ThemedView style={styles.container}>
         <Sidebar
           items={categories}
           style={styles.sidebar}
           onItemClick={onSidebarItemClicked}
           selectedItemIndex={selectedCategory}
         />
-        <View style={styles.mainContent}>
+        <ThemedView style={styles.mainContent}>
           <MenuItemGrid
             menuItems={selectedMenu}
             onItemClick={onMenuItemClick}
             style={styles.menuItemGrid}
           />
-          <View style={styles.orderAndPayment}>
+          <ThemedView style={styles.orderAndPayment}>
             <OrderDetails
               orders={orders}
               style={styles.orderDetails}
@@ -315,10 +316,10 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
               removeItem={removeItem}
             />
             <PaymentOptions style={styles.paymentOptions} onSave={onClose} />
-          </View>
-        </View>
-      </View>
-    </View>
+          </ThemedView>
+        </ThemedView>
+      </ThemedView>
+    </ThemedView>
   );
 };
 

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import MenuItem from "./MenuItem";
 import { ScrollView } from "react-native-gesture-handler";
+import { ThemedView } from "../common/ThemedView";
 
 const MenuItemGrid = ({ menuItems, onItemClick, style }) => {
   const [sortedMenuItems, setSortedMenuItems] = useState(null);
@@ -20,7 +21,7 @@ const MenuItemGrid = ({ menuItems, onItemClick, style }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={[styles.grid, style]}>
+      <ThemedView style={[styles.grid, style]}>
         {sortedMenuItems?.map((item, index) => (
           <MenuItem
             key={index}
@@ -28,7 +29,7 @@ const MenuItemGrid = ({ menuItems, onItemClick, style }) => {
             onItemClick={() => onItemClick(item, index)}
           />
         ))}
-      </View>
+      </ThemedView>
     </ScrollView>
   );
 };

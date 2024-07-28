@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-  Platform,
-} from "react-native";
+import { StyleSheet, FlatList, Platform } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { ThemedView } from "../common/ThemedView";
+import { ThemedText } from "../common/ThemedText";
+import ThemedButton from "../common/ThemedButton";
 
 const OrderDetails = ({
   style,
@@ -23,48 +19,50 @@ const OrderDetails = ({
   }, [orders]);
 
   const renderOrderItem = ({ item, index }) => (
-    <View style={styles.container}>
-      <View style={styles.orderItem}>
-        <TouchableOpacity
+    <ThemedView style={styles.container}>
+      <ThemedView style={styles.orderItem}>
+        <ThemedButton
           onPress={() => removeItem(index)}
           style={styles.removeItemButton}
         >
           <Icon name="close" size={30} color="#f00" />
-        </TouchableOpacity>
-        <View style={styles.itemDetailsContainer}>
-          <Text style={styles.itemName}>{item.name}</Text>
-          <Text style={styles.itemPrice}>@ ₹ {item.price.toFixed(2)}</Text>
-        </View>
-        <View style={styles.quantityContainer}>
-          <View style={styles.quantityManipulator}>
-            <TouchableOpacity
+        </ThemedButton>
+        <ThemedView style={styles.itemDetailsContainer}>
+          <ThemedText style={styles.itemName}>{item.name}</ThemedText>
+          <ThemedText style={styles.itemPrice}>
+            @ ₹ {item.price.toFixed(2)}
+          </ThemedText>
+        </ThemedView>
+        <ThemedView style={styles.quantityContainer}>
+          <ThemedView style={styles.quantityManipulator}>
+            <ThemedButton
               onPress={() => decreaseQuantity(index)}
               style={styles.quantityButton}
             >
               <Icon name="remove" size={24} color="#000" />
-            </TouchableOpacity>
-            <Text style={styles.quantityText}>{item.quantity}</Text>
-            <TouchableOpacity
+            </ThemedButton>
+            <ThemedText style={styles.quantityText}>{item.quantity}</ThemedText>
+            <ThemedButton
               onPress={() => increaseQuantity(index)}
               style={styles.quantityButton}
             >
               <Icon name="add" size={24} color="#000" />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.totalItemPrice}>
+            </ThemedButton>
+          </ThemedView>
+          <ThemedText style={styles.totalItemPrice}>
             ₹ {(item.price * item.quantity).toFixed(2)}
-          </Text>
-        </View>
-      </View>
-    </View>
+          </ThemedText>
+        </ThemedView>
+      </ThemedView>
+    </ThemedView>
   );
 
   return (
-    <View style={[styles.orderDetails, style]}>
+    <ThemedView style={[styles.orderDetails, style]}>
       {orders.length === 0 ? (
         <>
-          <Text>No item selected</Text>
-          <Text>Please select item from left menu item</Text>
+          <ThemedText>No item selected</ThemedText>
+          <ThemedText>Please select item from left menu item</ThemedText>
         </>
       ) : (
         <FlatList
@@ -73,7 +71,7 @@ const OrderDetails = ({
           keyExtractor={(item, index) => index.toString()}
         />
       )}
-    </View>
+    </ThemedView>
   );
 };
 
@@ -83,7 +81,7 @@ const styles = StyleSheet.create({
   },
   orderDetails: {
     padding: 10,
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
     borderLeftWidth: 1,
     borderColor: "#ccc",
   },

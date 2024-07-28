@@ -30,7 +30,6 @@ export default StyleSheet.create({
     backgroundColor: "#4CAF50",
   },
   filterButtonText: {
-    color: "black",
     fontWeight: "bold",
   },
   searchContainer: {

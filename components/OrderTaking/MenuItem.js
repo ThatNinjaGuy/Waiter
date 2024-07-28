@@ -1,5 +1,8 @@
 import React from "react";
-import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
+import ThemedButton from "../common/ThemedButton";
+import { ThemedText } from "../common/ThemedText";
+import { ThemedView } from "../common/ThemedView";
 
 // Define the colors for different item types
 const typeColors = {
@@ -23,13 +26,15 @@ const MenuItem = ({ item, onItemClick }) => {
   const backgroundColor = getBackgroundColor(orderCountPercentile, available);
 
   return (
-    <TouchableOpacity
+    <ThemedButton
       style={[styles.menuItem, { backgroundColor }]}
       onPress={onItemClick}
     >
-      <Text>{name}</Text>
-      <View style={[styles.typeIndicator, { backgroundColor: typeColor }]} />
-    </TouchableOpacity>
+      <ThemedView
+        style={[styles.typeIndicator, { backgroundColor: typeColor }]}
+      />
+      <ThemedText>{name}</ThemedText>
+    </ThemedButton>
   );
 };
 

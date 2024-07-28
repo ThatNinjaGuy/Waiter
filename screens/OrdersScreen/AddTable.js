@@ -1,6 +1,9 @@
 import React from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseButton";
+import { ThemedView } from "@/components/common/ThemedView";
+import { ThemedText } from "@/components/common/ThemedText";
+import ThemedButton from "@/components/common/ThemedButton";
 
 const AddTable = ({ onUpdateTable, onClose }) => {
   const handleUpdate = () => {
@@ -16,20 +19,27 @@ const AddTable = ({ onUpdateTable, onClose }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <FloatingCloseButton onClose={onClose} />
-      <Text style={styles.title}>Add a table</Text>
-      <Pressable style={styles.updateButton} onPress={handleUpdate}>
-        <Text style={styles.updateButtonText}>Add Table</Text>
-      </Pressable>
-    </View>
+      <ThemedText type="title">Add a table</ThemedText>
+      <ThemedButton
+        style={styles.updateButton}
+        onPress={handleUpdate}
+        type="primary"
+      >
+        <ThemedText type="defaultSemiBold">Add Table</ThemedText>
+      </ThemedButton>
+    </ThemedView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
     padding: 20,
-    backgroundColor: "#fff",
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -38,21 +48,12 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   title: {
-    fontSize: 20,
-    fontWeight: "bold",
+    flex: 1,
     marginBottom: 20,
   },
-
   updateButton: {
-    backgroundColor: "#007BFF",
     padding: 15,
     borderRadius: 5,
-    alignItems: "center",
-  },
-  updateButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
   },
 });
 

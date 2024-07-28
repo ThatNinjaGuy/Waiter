@@ -1,37 +1,43 @@
 // components/OrderDetails.js
+import { ThemedText } from "@/components/common/ThemedText";
+import { ThemedView } from "@/components/common/ThemedView";
 import React from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 
 const OrderDetails = ({ order }) => {
   const renderOrderItem = ({ item }) => (
-    <View style={styles.orderItem}>
-      <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemQuantity}>x{item.quantity}</Text>
-      <Text style={styles.itemPrice}>₹{item.price.toFixed(2)}</Text>
-      <Text style={styles.itemPrice}>₹{item.itemValue.toFixed(2)}</Text>
-    </View>
+    <ThemedView style={styles.orderItem}>
+      <ThemedText style={styles.itemName}>{item.name}</ThemedText>
+      <ThemedText style={styles.itemQuantity}>x{item.quantity}</ThemedText>
+      <ThemedText style={styles.itemPrice}>₹{item.price.toFixed(2)}</ThemedText>
+      <ThemedText style={styles.itemPrice}>
+        ₹{item.itemValue.toFixed(2)}
+      </ThemedText>
+    </ThemedView>
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Order Details</Text>
+    <ThemedView style={styles.container}>
+      <ThemedText style={styles.title}>Order Details</ThemedText>
       <FlatList
         data={order.orders}
         renderItem={renderOrderItem}
         keyExtractor={(item) => item.name.toString() + item.category.toString()}
       />
-      <View style={styles.totalContainer}>
-        <Text style={styles.totalText}>Total:</Text>
-        <Text style={styles.totalAmount}>₹{order.orderValue?.toFixed(2)}</Text>
-      </View>
-    </View>
+      <ThemedView style={styles.totalContainer}>
+        <ThemedText style={styles.totalText}>Total:</ThemedText>
+        <ThemedText style={styles.totalAmount}>
+          ₹{order.orderValue?.toFixed(2)}
+        </ThemedText>
+      </ThemedView>
+    </ThemedView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: "#f8f8f8",
+    // backgroundColor: "#f8f8f8",
     borderRadius: 8,
     marginBottom: 16,
   },

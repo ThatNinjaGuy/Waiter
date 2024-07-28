@@ -1,5 +1,8 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, Text } from "react-native";
+import { StyleSheet, TouchableOpacity, Text, Pressable } from "react-native";
+import { ThemedText } from "../common/ThemedText";
+import ThemedButton from "../common/ThemedButton";
+import { ThemedView } from "../common/ThemedView";
 
 const FloatingCloseButton = ({ onClose }) => {
   return (
