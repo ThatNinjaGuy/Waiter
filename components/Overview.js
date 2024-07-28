@@ -1,17 +1,18 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/common/ThemedText";
+import { ThemedView } from "@/components/common/ThemedView";
 
 const Overview = ({ overviewItems }) => {
   return (
-    <View style={styles.overviewContainer}>
+    <ThemedView style={styles.overviewContainer}>
       {overviewItems.map((item) => (
-        <View key={item.id} style={styles.overviewItem}>
+        <ThemedView key={item.id} style={styles.overviewItem}>
           <ThemedText style={styles.itemTitle}>{item.title}</ThemedText>
           <ThemedText style={styles.itemMessage}>{item.message}</ThemedText>
-        </View>
+        </ThemedView>
       ))}
-    </View>
+    </ThemedView>
   );
 };
 
