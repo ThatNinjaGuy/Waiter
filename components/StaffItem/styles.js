@@ -4,7 +4,6 @@ export default StyleSheet.create({
   container: {
     flexDirection: "row",
     padding: 10,
-    backgroundColor: "#e0e0e0",
     marginBottom: 10,
     borderRadius: 5,
     alignItems: "center",
@@ -24,11 +23,9 @@ export default StyleSheet.create({
   },
   cuisine: {
     fontSize: 14,
-    color: "#666",
   },
   price: {
     fontSize: 16,
-    color: "#666",
   },
   actionsContainer: {
     flexDirection: "column",

@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     marginRight: 5,
     fontSize: 18,
-    fontWeight: 800,
+    fontWeight: "bold",
   },
   searchInputContainers: {
     width: "45%",

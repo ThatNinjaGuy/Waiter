@@ -1,16 +1,17 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { Image, StyleSheet } from "react-native";
 import { ThemedText } from "./common/ThemedText";
+import { ThemedView } from "./common/ThemedView";
 
 const UserProfile = ({ name, role, imageUrl }) => {
   return (
-    <View style={styles.container}>
+    <ThemedView>
       <Image source={{ uri: imageUrl }} style={styles.image} />
-      <View style={styles.textContainer}>
-        <ThemedText style={styles.name}>{name}</ThemedText>
-        <ThemedText style={styles.role}>{role}</ThemedText>
-      </View>
-    </View>
+      <ThemedView style={styles.textContainer}>
+        <ThemedText style={styles.title}>{name}</ThemedText>
+        <ThemedText style={styles.subtitle}>{role}</ThemedText>
+      </ThemedView>
+    </ThemedView>
   );
 };
 
@@ -18,7 +19,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
   },
   image: {
     width: 50,
@@ -30,12 +30,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   name: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
   },
   role: {
     fontSize: 14,
-    color: "rgba(48, 52, 65, 1)",
   },
 });
 

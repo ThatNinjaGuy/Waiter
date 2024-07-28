@@ -1,9 +1,11 @@
 import React from "react";
-import { View, Text, Pressable, Image } from "react-native";
+import { View, Image } from "react-native";
 import styles from "./styles";
+import ThemedButton from "../common/ThemedButton";
+import { ThemedText } from "../common/ThemedText";
 
 const InventoryItem = ({ item, onEdit }) => (
-  <Pressable style={styles.container} onPress={onEdit}>
+  <ThemedButton style={styles.container} onPress={onEdit} type="secondary">
     <Image
       source={{
         uri: item.image
@@ -13,18 +15,22 @@ const InventoryItem = ({ item, onEdit }) => (
       style={styles.image}
     />
     <View style={styles.infoContainer}>
-      <Text style={styles.name}>{item.name}</Text>
-      <Text style={styles.price}>₹{item.price + " /" + item.unit}</Text>
-      <Text style={styles.cuisine}>{item.quantity + " " + item.unit}</Text>
+      <ThemedText style={styles.name}>{item.name}</ThemedText>
+      <ThemedText style={styles.price}>
+        ₹{item.price + " /" + item.unit}
+      </ThemedText>
+      <ThemedText style={styles.cuisine}>
+        {item.quantity + " " + item.unit}
+      </ThemedText>
     </View>
     <View style={styles.actionsContainer}>
       {item.searchableKey ? (
-        <Text style={styles.key}>{item.searchableKey}</Text>
+        <ThemedText style={styles.key}>{item.searchableKey}</ThemedText>
       ) : (
         <></>
       )}
     </View>
-  </Pressable>
+  </ThemedButton>
 );
 
 export default InventoryItem;

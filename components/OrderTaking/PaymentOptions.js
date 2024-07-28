@@ -1,25 +1,28 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { ThemedView } from "../common/ThemedView";
+import { ThemedText } from "../common/ThemedText";
+import ThemedButton from "../common/ThemedButton";
 
 const PaymentOptions = ({ onSave, style }) => {
   return (
-    <View style={[styles.paymentOptions, style]}>
-      <TouchableOpacity style={styles.button} onPress={onSave}>
-        <Text>Save</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={onSave}>
-        <Text>Save & Print</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={onSave}>
-        <Text>Save & eBill</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={onSave}>
-        <Text>KOT</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={onSave}>
-        <Text>Hold</Text>
-      </TouchableOpacity>
-    </View>
+    <ThemedView style={[styles.paymentOptions, style]}>
+      <ThemedButton style={styles.button} onPress={onSave} type="secondary">
+        <ThemedText>Save</ThemedText>
+      </ThemedButton>
+      <ThemedButton style={styles.button} onPress={onSave} type="secondary">
+        <ThemedText>Save & Print</ThemedText>
+      </ThemedButton>
+      <ThemedButton style={styles.button} onPress={onSave} type="secondary">
+        <ThemedText>Save & eBill</ThemedText>
+      </ThemedButton>
+      <ThemedButton style={styles.button} onPress={onSave} type="secondary">
+        <ThemedText>KOT</ThemedText>
+      </ThemedButton>
+      {/* <TouchableOpacity style={styles.button} onPress={onSave}>
+        <ThemedText>Hold</ThemedText>
+      </TouchableOpacity> */}
+    </ThemedView>
   );
 };
 
@@ -27,14 +30,14 @@ const styles = StyleSheet.create({
   paymentOptions: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 10,
-    backgroundColor: "#fff",
+    padding: 5,
     borderTopWidth: 1,
     borderColor: "#ccc",
+    margin: 1,
   },
   button: {
     padding: 10,
-    backgroundColor: "#ddd",
+    margin: 2,
     borderRadius: 5,
   },
 });

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, Text } from "react-native";
+import { StyleSheet, TouchableOpacity, Text, Pressable } from "react-native";
 
 const FloatingCloseButton = ({ onClose }) => {
   return (

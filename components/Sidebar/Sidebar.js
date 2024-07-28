@@ -9,7 +9,7 @@ const Sidebar = ({ items, style, onItemClick, selectedItemIndex }) => {
         <SidebarItem
           key={index}
           title={item}
-          style={index === selectedItemIndex ? styles.favorites : null}
+          style={index === selectedItemIndex ? styles.selectedItem : null}
           onItemClick={() => onItemClick(item, index)}
         />
       ))}
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   sidebar: {
     backgroundColor: "#f0f0f0",
   },
-  favorites: {
+  selectedItem: {
     backgroundColor: "rgba(46, 188, 59, 0.8)",
   },
 });

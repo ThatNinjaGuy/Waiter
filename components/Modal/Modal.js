@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Modal, View, TextInput, Pressable, Text } from "react-native";
+import { Modal, TextInput } from "react-native";
 import styles from "./styles";
+import { ThemedView } from "../common/ThemedView";
+import ThemedButton from "../common/ThemedButton";
+import { ThemedText } from "../common/ThemedText";
 
 const CustomModal = ({ visible, onClose, onSave, onDelete, item, schema }) => {
   const [formData, setFormData] = useState({});
@@ -43,7 +46,7 @@ const CustomModal = ({ visible, onClose, onSave, onDelete, item, schema }) => {
       style={styles.modal}
       transparent={true}
     >
-      <View style={styles.modalContent}>
+      <ThemedView style={styles.modalContent}>
         {schema.map((field) => (
           <TextInput
             key={field.name}
@@ -54,29 +57,29 @@ const CustomModal = ({ visible, onClose, onSave, onDelete, item, schema }) => {
             keyboardType={field.keyboardType}
           />
         ))}
-        <View style={styles.buttonContainer}>
-          <Pressable
+        <ThemedView style={styles.buttonContainer}>
+          <ThemedButton
             style={[styles.button, styles.deleteButton]}
             onPress={handleDelete}
           >
-            <Text style={styles.buttonText}>Delete</Text>
-          </Pressable>
-          <Pressable
+            <ThemedText style={styles.buttonText}>Delete</ThemedText>
+          </ThemedButton>
+          <ThemedButton
             style={[styles.button, styles.saveButton]}
             onPress={handleSave}
           >
-            <Text style={styles.buttonText}>Update</Text>
-          </Pressable>
-        </View>
-        <View style={styles.buttonContainer}>
-          <Pressable
+            <ThemedText style={styles.buttonText}>Update</ThemedText>
+          </ThemedButton>
+        </ThemedView>
+        <ThemedView style={styles.buttonContainer}>
+          <ThemedButton
             style={[styles.button, styles.cancelButton]}
             onPress={onClose}
           >
-            <Text style={styles.buttonText}>Close</Text>
-          </Pressable>
-        </View>
-      </View>
+            <ThemedText style={styles.buttonText}>Close</ThemedText>
+          </ThemedButton>
+        </ThemedView>
+      </ThemedView>
     </Modal>
   );
 };

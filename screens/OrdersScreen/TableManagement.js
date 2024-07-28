@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  StyleSheet,
-  Switch,
-} from "react-native";
+import { TextInput, StyleSheet, Switch } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseButton";
+import { ThemedView } from "@/components/common/ThemedView";
+import { ThemedText } from "@/components/common/ThemedText";
+import ThemedButton from "@/components/common/ThemedButton";
+import OrderDetails from "./OrderDetails";
 
 const TableManagement = ({ table, onUpdateTable, onClose }) => {
   const [guests, setGuests] = useState(table?.guests ? table?.guests : 0);
@@ -52,40 +49,40 @@ const TableManagement = ({ table, onUpdateTable, onClose }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <FloatingCloseButton onClose={onClose} />
-      <Text style={styles.title}>Table {table?.number}</Text>
-      <View style={styles.inputContainer}>
-        <View style={styles.inputFieldContainer}>
-          <Text style={styles.label}>Guest Name:</Text>
+      <ThemedText style={styles.title}>Table {table?.number}</ThemedText>
+      <ThemedView style={styles.inputContainer}>
+        <ThemedView style={styles.inputFieldContainer}>
+          <ThemedText style={styles.label}>Guest Name:</ThemedText>
           <TextInput
             style={styles.input}
             value={guestName}
             onChangeText={setGuestName}
           />
-        </View>
-        <View style={styles.inputFieldContainer}>
-          <Text style={styles.label}>Guest Mobile Number:</Text>
+        </ThemedView>
+        <ThemedView style={styles.inputFieldContainer}>
+          <ThemedText style={styles.label}>Guest Mobile Number:</ThemedText>
           <TextInput
             style={styles.input}
             value={guestMobile}
             onChangeText={setGuestMobile}
             keyboardType="phone-pad"
           />
-        </View>
-      </View>
-      <View style={styles.inputContainer}>
-        <View style={styles.inputFieldContainer}>
-          <Text style={styles.label}>Number of Guests:</Text>
+        </ThemedView>
+      </ThemedView>
+      <ThemedView style={styles.inputContainer}>
+        <ThemedView style={styles.inputFieldContainer}>
+          <ThemedText style={styles.label}>Number of Guests:</ThemedText>
           <TextInput
             style={styles.input}
             value={guests.toString()}
             onChangeText={setGuests}
             keyboardType="numeric"
           />
-        </View>
-        <View style={styles.inputFieldContainer}>
-          <Text style={styles.label}>Occasion:</Text>
+        </ThemedView>
+        <ThemedView style={styles.inputFieldContainer}>
+          <ThemedText style={styles.label}>Occasion:</ThemedText>
           <Picker
             selectedValue={occasion}
             style={styles.picker}
@@ -99,18 +96,18 @@ const TableManagement = ({ table, onUpdateTable, onClose }) => {
             <Picker.Item label="Family & Friends" value="Family and Friends" />
             <Picker.Item label="Other" value="Other" />
           </Picker>
-        </View>
-      </View>
-      <View style={styles.inputContainer}>
-        <View style={styles.inputFieldContainer}>
-          <Text style={styles.label}>Booking Time:</Text>
-          <View style={styles.radioContainer}>
-            <Text>Later</Text>
+        </ThemedView>
+      </ThemedView>
+      <ThemedView style={styles.inputContainer}>
+        <ThemedView style={styles.inputFieldContainer}>
+          <ThemedText style={styles.label}>Booking Time:</ThemedText>
+          <ThemedView style={styles.radioContainer}>
+            <ThemedText>Later</ThemedText>
             <Switch
               value={isBookingNow}
               onValueChange={(value) => setIsBookingNow(value)}
             />
-            <Text>Now</Text>
+            <ThemedText>Now</ThemedText>
             {!isBookingNow && (
               <DateTimePicker
                 value={bookingTime}
@@ -121,37 +118,41 @@ const TableManagement = ({ table, onUpdateTable, onClose }) => {
                 }
               />
             )}
-          </View>
-        </View>
-        <View style={styles.inputFieldContainer}>
-          <Text style={styles.label}>Server:</Text>
+          </ThemedView>
+        </ThemedView>
+        <ThemedView style={styles.inputFieldContainer}>
+          <ThemedText style={styles.label}>Server:</ThemedText>
           <TextInput
             style={styles.input}
             value={waiter}
             onChangeText={setWaiter}
           />
-        </View>
-      </View>
-      <View style={styles.inputFieldContainer}>
-        <Text style={styles.label}>Notes:</Text>
+        </ThemedView>
+      </ThemedView>
+      <ThemedView style={styles.inputFieldContainer}>
+        <ThemedText style={styles.label}>Notes:</ThemedText>
         <TextInput
           style={[styles.input, styles.notesInput]}
           value={notes}
           onChangeText={setNotes}
           multiline
         />
-      </View>
-      <Pressable style={styles.updateButton} onPress={handleUpdate}>
-        <Text style={styles.updateButtonText}>Book Table</Text>
-      </Pressable>
-    </View>
+      </ThemedView>
+      <ThemedButton
+        style={styles.updateButton}
+        onPress={handleUpdate}
+        type="primary"
+      >
+        <ThemedText style={styles.updateButtonText}>Book Table</ThemedText>
+      </ThemedButton>
+      <OrderDetails order={table} />
+    </ThemedView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: "#fff",
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -200,13 +201,11 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   updateButton: {
-    backgroundColor: "#007BFF",
     padding: 15,
     borderRadius: 5,
     alignItems: "center",
   },
   updateButtonText: {
-    color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
   },

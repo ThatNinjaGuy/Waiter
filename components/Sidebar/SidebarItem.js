@@ -1,11 +1,17 @@
 import React from "react";
-import { Text, TouchableOpacity, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { ThemedText } from "../common/ThemedText";
+import ThemedButton from "../common/ThemedButton";
 
 const SidebarItem = ({ title, style, onItemClick }) => {
   return (
-    <TouchableOpacity style={[styles.item, style]} onPress={onItemClick}>
-      <Text style={styles.itemTitle}>{title}</Text>
-    </TouchableOpacity>
+    <ThemedButton
+      style={[styles.item, style]}
+      onPress={onItemClick}
+      type="primary"
+    >
+      <ThemedText style={styles.itemTitle}>{title}</ThemedText>
+    </ThemedButton>
   );
 };
 
@@ -15,11 +21,10 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
-    backgroundColor: "rgba(91, 95, 112, 0.8)",
     marginBottom: "1%",
+    borderRadius: 0,
   },
   itemTitle: {
-    color: "#fff",
     fontWeight: "bold",
   },
 });

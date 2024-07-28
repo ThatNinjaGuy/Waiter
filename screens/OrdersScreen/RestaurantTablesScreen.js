@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, Button, View, FlatList, Pressable } from "react-native";
+import { FlatList } from "react-native";
 import TableList from "./TableList";
 import {
   collection,
@@ -10,13 +10,15 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
-import OrderDetails from "./OrderDetails";
 import TableManagement from "./TableManagement";
 import AddTable from "./AddTable";
 import { searchOrder } from "@/screens/common/searchCriteria";
 import styles from "@/screens/common/styles";
 import CustomSearchBar from "@/screens/common/SearchBar";
 import OrderManagement from "@/components/OrderTaking/OrderManagement";
+import { ThemedView } from "@/components/common/ThemedView";
+import ThemedButton from "@/components/common/ThemedButton";
+import { ThemedText } from "@/components/common/ThemedText";
 
 const RestaurantTablesScreen = () => {
   const [tables, setTables] = useState([]);
@@ -49,14 +51,14 @@ const RestaurantTablesScreen = () => {
     setFilteredItems(tables);
   }, [tables]);
 
-  const addDetailsForTables = async (items) => {
+  const addNewTable = async (items) => {
     const batch = writeBatch(db);
     const newItems = [];
 
     items.forEach((item) => {
       item.number = item.number ? item.number : tables.length + 1;
       item.searchableKey = item.number;
-      item.status = "Occupied";
+      item.status = "Available";
       item.orderCount = 0;
       item.totalOrders = 0;
       const docRef = doc(collection(db, "tables/"));
@@ -74,8 +76,8 @@ const RestaurantTablesScreen = () => {
     }
   };
 
-  const addDetailsForTable = (item) => {
-    addDetailsForTables([item]);
+  const addTable = (item) => {
+    addNewTable([item]);
     setTableAdd(false);
   };
 
@@ -120,6 +122,7 @@ const RestaurantTablesScreen = () => {
   };
 
   const handleUpdateTable = (updatedTable) => {
+    updatedTable.status = "Occupied";
     setTables(tables.map((t) => (t.id === updatedTable.id ? updatedTable : t)));
     updateTableDetails(updatedTable.id, updatedTable);
     setSelectedTable(null);
@@ -173,36 +176,45 @@ const RestaurantTablesScreen = () => {
   };
 
   return (
-    <View style={styles.mainContainer}>
+    <ThemedView style={styles.mainContainer}>
       {!selectedTable && !tableAdd && (
-        <View style={styles.container}>
-          <Button title="Add Table" onPress={handleAddItemClick} />
+        <ThemedView style={styles.container}>
+          <ThemedButton
+            onPress={handleAddItemClick}
+            type="primary"
+            style={[{ borderRadius: 0, marginBottom: 5 }]}
+          >
+            <ThemedText>Add Table</ThemedText>
+          </ThemedButton>
           <TableList
             tables={filteredItems}
             onTablePress={handleTablePress}
             onOrderDetailsPress={handleOrderDetailsPress}
           />
-          <View style={styles.filterListContainer}>
+          <ThemedView style={styles.filterListContainer}>
             <FlatList
               horizontal
               data={getUniqueFilters()}
               renderItem={({ item }) => (
-                <Pressable
+                <ThemedButton
                   style={[
                     styles.filterButton,
                     selectedFilter === item && styles.selectedFilterButton,
                   ]}
                   onPress={() => filterBySelectedFilter(item)}
+                  type="secondary"
                 >
-                  <Text style={styles.filterButtonText}>{item}</Text>
-                </Pressable>
+                  <ThemedText style={styles.filterButtonText}>
+                    {item}
+                  </ThemedText>
+                </ThemedButton>
               )}
               keyExtractor={(item) => item}
               style={styles.filterList}
             />
-          </View>
+          </ThemedView>
           <CustomSearchBar searchText={search} updateSearch={updateSearch} />
-        </View>
+        </ThemedView>
       )}
       {selectedTable && !tableInfoOptionClicked && (
         <OrderManagement
@@ -214,25 +226,21 @@ const RestaurantTablesScreen = () => {
       )}
 
       {selectedTable && tableInfoOptionClicked && (
-        <View style={styles.container}>
+        <ThemedView style={styles.container}>
           <TableManagement
             table={selectedTable}
             onUpdateTable={handleUpdateTable}
             onClose={handleTableInfoClose}
           />
-          <OrderDetails order={selectedTable} />
-        </View>
+        </ThemedView>
       )}
 
       {tableAdd && (
-        <View>
-          <AddTable
-            onUpdateTable={addDetailsForTable}
-            onClose={handleTableInfoClose}
-          />
-        </View>
+        <ThemedView style={[{ flex: 1, width: "100%" }]}>
+          <AddTable onUpdateTable={addTable} onClose={handleTableInfoClose} />
+        </ThemedView>
       )}
-    </View>
+    </ThemedView>
   );
 };
 
