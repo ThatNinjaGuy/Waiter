@@ -41,7 +41,7 @@ export default function HomeScreen() {
     <ThemedView style={styles.container}>
       <ThemedView style={styles.section}>
         <View style={styles.titleContainer}>
-          <ThemedText style={styles.title} type="title">
+          <ThemedText style={styles.title} type="title" setBackground={true}>
             Today's Overview
           </ThemedText>
         </View>
@@ -49,7 +49,7 @@ export default function HomeScreen() {
       </ThemedView>
       <ThemedView style={styles.section}>
         <View style={styles.titleContainer}>
-          <ThemedText style={styles.title} type="title">
+          <ThemedText style={styles.title} type="title" setBackground={true}>
             Notifications
           </ThemedText>
         </View>
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    // backgroundColor: "rgba(0, 0, 0, 0.8)",
     paddingHorizontal: 8,
   },
 });

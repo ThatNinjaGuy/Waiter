@@ -6,6 +6,7 @@ export type ThemedTextProps = TextProps & {
   lightColor?: string;
   darkColor?: string;
   type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link";
+  setBackground?: boolean;
 };
 
 export function ThemedText({
@@ -13,14 +14,17 @@ export function ThemedText({
   lightColor,
   darkColor,
   type = "default",
+  setBackground = false,
   ...rest
 }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+  const bgColor = useThemeColor({}, "background");
 
   return (
     <Text
       style={[
         { color },
+        setBackground ? { backgroundColor: bgColor } : undefined,
         type === "default" ? styles.default : undefined,
         type === "title" ? styles.title : undefined,
         type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
