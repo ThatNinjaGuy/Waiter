@@ -6,6 +6,9 @@ import CustomModal from "../../components/Modal/Modal";
 import { searchByNameKey } from "@/screens/common/searchCriteria";
 import styles from "@/screens/common/styles";
 import CustomSearchBar from "@/screens/common/SearchBar";
+import { ThemedView } from "@/components/common/ThemedView";
+import ThemedButton from "@/components/common/ThemedButton";
+import { ThemedText } from "@/components/common/ThemedText";
 
 const formSchema = [
   { name: "searchableKey", placeholder: "Key", keyboardType: "default" },
@@ -70,8 +73,14 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Button title="Add Person" onPress={handleAddItem} />
+    <ThemedView style={styles.container}>
+      <ThemedButton
+        onPress={handleAddItem}
+        type="primary"
+        style={[{ borderRadius: 0, marginBottom: 5 }]}
+      >
+        <ThemedText>Add Person</ThemedText>
+      </ThemedButton>
       <FlatList
         data={filteredItems}
         renderItem={({ item }) => (
@@ -90,28 +99,30 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
         onDelete={handleDeleteItem}
         item={currentItem}
         schema={formSchema}
+        style={styles.container}
       />
-      <View style={styles.filterListContainer}>
+      <ThemedView style={styles.filterListContainer}>
         <FlatList
           horizontal
           data={getUniqueFilters()}
           renderItem={({ item }) => (
-            <Pressable
+            <ThemedButton
               style={[
                 styles.filterButton,
                 selectedFilter === item && styles.selectedFilterButton,
               ]}
               onPress={() => filterBySelectedFilter(item)}
+              type="secondary"
             >
-              <Text style={styles.filterButtonText}>{item}</Text>
-            </Pressable>
+              <ThemedText style={styles.filterButtonText}>{item}</ThemedText>
+            </ThemedButton>
           )}
           keyExtractor={(item) => item}
           style={styles.filterList}
         />
-      </View>
+      </ThemedView>
       <CustomSearchBar searchText={search} updateSearch={updateSearch} />
-    </View>
+    </ThemedView>
   );
 };
 

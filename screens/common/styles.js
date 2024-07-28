@@ -3,6 +3,8 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   mainContainer: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   container: {
     flex: 1,
@@ -14,7 +16,6 @@ export default StyleSheet.create({
   filterListContainer: {
     paddingVertical: 10,
     justifyContent: "center",
-    backgroundColor: "#fff",
     bottom: 0,
   },
   filterList: {
@@ -23,7 +24,6 @@ export default StyleSheet.create({
   filterButton: {
     padding: 10,
     borderRadius: 20,
-    backgroundColor: "#e0e0e0",
     marginHorizontal: 5,
   },
   selectedFilterButton: {

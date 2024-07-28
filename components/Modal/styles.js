@@ -3,14 +3,10 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   modal: {
     flex: 1,
-    width: "100%",
-    height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Optional: This gives a dim background effect
   },
   modalContent: {
-    backgroundColor: "white",
     padding: 20,
     borderRadius: 20,
     width: "80%",
@@ -28,7 +24,6 @@ export default StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     fontSize: 16,
-    backgroundColor: "#f9f9f9",
   },
   buttonContainer: {
     flexDirection: "row",

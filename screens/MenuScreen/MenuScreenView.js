@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, FlatList, Pressable } from "react-native";
-import Button from "../../components/Button/Button";
+import { Text, FlatList, Pressable } from "react-native";
 import MenuItem from "../../components/MenuItem/MenuItem";
 import CustomModal from "../../components/Modal/Modal";
 import { searchByNameKey } from "@/screens/common/searchCriteria";
 import styles from "@/screens/common/styles";
 import CustomSearchBar from "@/screens/common/SearchBar";
+import { ThemedView } from "@/components/common/ThemedView";
+import { ThemedText } from "@/components/common/ThemedText";
+import { ThemedButton } from "@/components/common/ThemedButton";
 
 const formSchema = [
   { name: "searchableKey", placeholder: "Key", keyboardType: "default" },
@@ -75,8 +77,14 @@ const MenuScreenView = ({
   };
 
   return (
-    <View style={styles.container}>
-      <Button title="Add Menu" onPress={handleAddItem} />
+    <ThemedView style={styles.container}>
+      <ThemedButton
+        onPress={handleAddItem}
+        type="primary"
+        style={[{ borderRadius: 0, marginBottom: 5 }]}
+      >
+        <ThemedText>Add Menu</ThemedText>
+      </ThemedButton>
       <FlatList
         data={filteredItems}
         renderItem={({ item }) => (
@@ -95,27 +103,28 @@ const MenuScreenView = ({
         item={currentItem}
         schema={formSchema}
       />
-      <View style={styles.filterListContainer}>
+      <ThemedView style={styles.filterListContainer}>
         <FlatList
           horizontal
           data={getUniqueFilters()}
           renderItem={({ item }) => (
-            <Pressable
+            <ThemedButton
               style={[
                 styles.filterButton,
                 selectedFilter === item && styles.selectedFilterButton,
               ]}
               onPress={() => filterBySelectedFilter(item)}
+              type="secondary"
             >
-              <Text style={styles.filterButtonText}>{item}</Text>
-            </Pressable>
+              <ThemedText style={styles.filterButtonText}>{item}</ThemedText>
+            </ThemedButton>
           )}
           keyExtractor={(item) => item}
           style={styles.filterList}
         />
-      </View>
+      </ThemedView>
       <CustomSearchBar searchText={search} updateSearch={updateSearch} />
-    </View>
+    </ThemedView>
   );
 };
 
