@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useMemo, useState, useCallback, useEffect } from "react";
 import {
+  useWindowDimensions,
   FlatList,
   Pressable,
   StyleSheet,
@@ -10,6 +11,42 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
+  const { width } = useWindowDimensions();
+  const [layoutParams, setLayoutParams] = useState({
+    itemWidth: 300,
+    numColumns: 1,
+    containerPadding: 0,
+  });
+  const [key, setKey] = useState(0);
+
+  const calculateLayout = useCallback(() => {
+    let itemWidth = 300; // Initial fixed width for each item
+    const itemMargin = 20;
+    const numColumns = Math.max(
+      1,
+      Math.floor((width - itemMargin) / (itemWidth + itemMargin))
+    );
+    let containerPadding = (width - numColumns * (itemWidth + itemMargin)) / 2;
+
+    if (containerPadding > itemMargin) {
+      itemWidth += (containerPadding - itemMargin) / numColumns;
+      containerPadding = itemMargin;
+    }
+
+    return { itemWidth, numColumns, containerPadding };
+  }, [width]);
+
+  useEffect(() => {
+    const newLayoutParams = calculateLayout();
+    setLayoutParams(newLayoutParams);
+    setKey((prevKey) => prevKey + 1); // Update key to force re-render
+  }, [calculateLayout]);
+
+  // Sort the tables array by item.number
+  const sortedTables = useMemo(() => {
+    return [...tables].sort((a, b) => a.number - b.number);
+  }, [tables]);
+
   const getStatusColor = (status, orderCount, totalOrders) => {
     if (
       status == "Occupied" &&
@@ -36,6 +73,7 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
       style={[
         styles.tableItem,
         getStatusColor(item.status, item.orderCount, item.totalOrders),
+        { width: layoutParams.itemWidth },
       ]}
       onPress={() => onTablePress(item)}
     >
@@ -82,30 +120,39 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
   );
 
   return (
-    <FlatList
-      data={tables}
-      renderItem={renderTableItem}
-      keyExtractor={(item) => item.id.toString()}
-      numColumns={2}
-      columnWrapperStyle={styles.row}
-      style={styles.list}
-    />
+    <View style={styles.container}>
+      <FlatList
+        key={key} // Force re-render when numColumns changes
+        data={sortedTables}
+        renderItem={renderTableItem}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={layoutParams.numColumns}
+        contentContainerStyle={{
+          paddingHorizontal: layoutParams.containerPadding,
+        }}
+        columnWrapperStyle={
+          layoutParams.numColumns > 1 ? styles.row : undefined
+        }
+        style={styles.list}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+  },
   list: {
     flex: 1,
-    margin: 10,
   },
   row: {
-    flex: 1,
-    justifyContent: "space-around",
+    justifyContent: "flex-start",
   },
   tableItem: {
-    flex: 1,
     padding: 20,
-    margin: 10,
+    margin: 15,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 10,
@@ -114,7 +161,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    backgroundColor: "#fff", // Default white background
+    backgroundColor: "#fff",
   },
   tableNumber: {
     fontSize: 18,
