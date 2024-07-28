@@ -291,7 +291,7 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
 
   return (
     <View style={styles.mainContainer}>
-      <HeaderSection />
+      {/* <HeaderSection /> */}
       <FloatingCloseButton onClose={onClose} />
       <View style={styles.container}>
         <Sidebar
