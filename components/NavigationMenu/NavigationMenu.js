@@ -4,9 +4,9 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { ThemedText } from "./ThemedText";
-import { ThemedView } from "./ThemedView";
-import ThemedButton from "./ThemedButton";
+import { ThemedText } from "../common/ThemedText";
+import { ThemedView } from "../common/ThemedView";
+import ThemedButton from "../common/ThemedButton";
 
 const NavigationMenu = ({ items }) => {
   return (

@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   primary: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#5aa9ff",
     borderRadius: wp("1%"),
     padding: 10,
     justifyContent: "center",

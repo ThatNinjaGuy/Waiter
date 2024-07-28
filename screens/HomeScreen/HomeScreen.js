@@ -7,9 +7,9 @@ import {
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
 import UserProfile from "@/components/UserProfile";
-import Notifications from "@/components/common/Notifications";
+import Notifications from "@/components/Notifications/Notifications";
 import Overview from "@/components/Overview";
-import NavigationMenu from "@/components/common/NavigationMenu";
+import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
 import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
