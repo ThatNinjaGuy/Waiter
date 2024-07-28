@@ -1,8 +1,7 @@
-// components/OrderDetails.js
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
 import React from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList } from "react-native";
 
 const OrderDetails = ({ order }) => {
   const renderOrderItem = ({ item }) => (

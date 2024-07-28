@@ -2,15 +2,7 @@ import ThemedButton from "@/components/common/ThemedButton";
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
 import React, { useMemo, useState, useCallback, useEffect } from "react";
-import {
-  useWindowDimensions,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { useWindowDimensions, FlatList, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import MenuItemGrid from "./MenuItemGrid";
 import OrderDetails from "./OrderDetails";

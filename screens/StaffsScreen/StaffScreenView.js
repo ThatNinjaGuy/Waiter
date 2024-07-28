@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, FlatList, Pressable } from "react-native";
-import Button from "../../components/Button/Button";
+import { FlatList } from "react-native";
 import StaffItem from "../../components/StaffItem/StaffItem";
 import CustomModal from "../../components/Modal/Modal";
 import { searchByNameKey } from "@/screens/common/searchCriteria";

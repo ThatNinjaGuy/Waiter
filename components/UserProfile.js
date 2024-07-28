@@ -1,16 +1,17 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { Image, StyleSheet } from "react-native";
 import { ThemedText } from "./common/ThemedText";
+import { ThemedView } from "./common/ThemedView";
 
 const UserProfile = ({ name, role, imageUrl }) => {
   return (
-    <View style={styles.container}>
+    <ThemedView>
       <Image source={{ uri: imageUrl }} style={styles.image} />
-      <View style={styles.textContainer}>
+      <ThemedView style={styles.textContainer}>
         <ThemedText style={styles.title}>{name}</ThemedText>
         <ThemedText style={styles.subtitle}>{role}</ThemedText>
-      </View>
-    </View>
+      </ThemedView>
+    </ThemedView>
   );
 };
 

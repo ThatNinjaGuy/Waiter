@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  StyleSheet,
-  Switch,
-} from "react-native";
+import { TextInput, StyleSheet, Switch } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseButton";
