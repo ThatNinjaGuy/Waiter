@@ -40,7 +40,7 @@ const MenuItem = ({ item, onItemClick }) => {
 
 const styles = StyleSheet.create({
   menuItem: {
-    width: "22%",
+    // width: "22%",
     height: 100,
     padding: 10,
     margin: "1%",

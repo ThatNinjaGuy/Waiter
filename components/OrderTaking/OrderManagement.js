@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import MenuItemGrid from "./MenuItemGrid";
 import OrderDetails from "./OrderDetails";
@@ -290,33 +290,47 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
     return menuItems.filter((item) => item.orderCountPercentile > 70);
   };
 
+  const { width } = useWindowDimensions();
+  const isLargeScreen = width > 768; // Adjust the breakpoint as needed
+
   return (
     <ThemedView style={styles.mainContainer}>
       {/* <HeaderSection /> */}
       <FloatingCloseButton onClose={onClose} />
-      <ThemedView style={styles.container}>
-        <Sidebar
-          items={categories}
-          style={styles.sidebar}
-          onItemClick={onSidebarItemClicked}
-          selectedItemIndex={selectedCategory}
-        />
-        <ThemedView style={styles.mainContent}>
+      <ThemedView
+        style={[
+          styles.container,
+          isLargeScreen ? styles.containerRow : styles.containerColumn,
+          // isLargeScreen ? styles.mainContentRow : styles.mainContentColumn,
+        ]}
+      >
+        <ThemedView
+          style={[
+            styles.menuContent,
+            isLargeScreen ? styles.menuContentRow : styles.menuContentColumn,
+          ]}
+        >
+          <Sidebar
+            items={categories}
+            style={isLargeScreen ? styles.sidebarRow : styles.sidebarColumn}
+            onItemClick={onSidebarItemClicked}
+            selectedItemIndex={selectedCategory}
+          />
           <MenuItemGrid
             menuItems={selectedMenu}
             onItemClick={onMenuItemClick}
             style={styles.menuItemGrid}
           />
-          <ThemedView style={styles.orderAndPayment}>
-            <OrderDetails
-              orders={orders}
-              style={styles.orderDetails}
-              increaseQuantity={increaseQuantity}
-              decreaseQuantity={decreaseQuantity}
-              removeItem={removeItem}
-            />
-            <PaymentOptions style={styles.paymentOptions} onSave={onClose} />
-          </ThemedView>
+        </ThemedView>
+        <ThemedView style={styles.orderAndPayment}>
+          <OrderDetails
+            orders={orders}
+            style={styles.orderDetails}
+            increaseQuantity={increaseQuantity}
+            decreaseQuantity={decreaseQuantity}
+            removeItem={removeItem}
+          />
+          <PaymentOptions style={styles.paymentOptions} onSave={onClose} />
         </ThemedView>
       </ThemedView>
     </ThemedView>
@@ -329,38 +343,37 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    width: "100%",
+  },
+  containerRow: {
     flexDirection: "row",
   },
-  closeButton: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    zIndex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    borderRadius: 15,
-    width: 30,
-    height: 30,
-    justifyContent: "center",
-    alignItems: "center",
+  containerColumn: {
+    flexDirection: "column",
   },
-  closeButtonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  sidebar: {
-    width: "10%",
-  },
-  mainContent: {
-    width: "90%",
+  menuContent: {
     flexDirection: "row",
+  },
+  menuContentRow: {
+    width: "60%",
+  },
+  menuContentColumn: {
+    width: "100%",
+    height: "60%",
+  },
+  sidebarRow: {
+    width: "40%",
+  },
+  sidebarColumn: {
+    width: "40%",
   },
   menuItemGrid: {
     flex: 1,
+    flexWrap: "wrap",
   },
   orderAndPayment: {
+    flex: 1,
     flexDirection: "column",
-    width: "50%",
   },
   orderDetails: {
     flex: 1,
