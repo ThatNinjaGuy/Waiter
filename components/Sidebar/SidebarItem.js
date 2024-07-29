@@ -17,12 +17,13 @@ const SidebarItem = ({ title, style, onItemClick }) => {
 
 const styles = StyleSheet.create({
   item: {
-    paddingHorizontal: 10,
-    paddingVertical: 20,
     borderBottomWidth: 1,
+    height: 80,
     borderBottomColor: "#ccc",
     marginBottom: "1%",
     borderRadius: 0,
+    justifyContent: "center",
+    alignItems: "center",
   },
   itemTitle: {
     fontWeight: "bold",

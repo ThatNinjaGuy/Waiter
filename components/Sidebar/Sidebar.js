@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
   },
   selectedItem: {
     backgroundColor: "rgba(46, 188, 59, 0.8)",
+    justifyContent: "center",
   },
 });
 

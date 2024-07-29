@@ -309,6 +309,7 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
             styles.menuContent,
             isLargeScreen ? styles.menuContentRow : styles.menuContentColumn,
           ]}
+          x
         >
           <Sidebar
             items={categories}
@@ -365,7 +366,7 @@ const styles = StyleSheet.create({
     width: "40%",
   },
   sidebarColumn: {
-    width: "40%",
+    width: "35%",
   },
   menuItemGrid: {
     flex: 1,
