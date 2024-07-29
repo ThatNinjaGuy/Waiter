@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -37,32 +37,43 @@ export default function HomeScreen() {
     { title: "Inventory", onPress: () => navigation.navigate("inventory") },
   ];
 
-  return (
-    <ThemedView style={styles.container}>
-      <ThemedView style={styles.section}>
-        <View style={styles.titleContainer}>
-          <ThemedText style={styles.title} type="title" setBackground={true}>
-            Today's Overview
-          </ThemedText>
-        </View>
-        <Overview overviewItems={overviewItems} />
-      </ThemedView>
-      <ThemedView style={styles.section}>
-        <View style={styles.titleContainer}>
-          <ThemedText style={styles.title} type="title" setBackground={true}>
-            Notifications
-          </ThemedText>
-        </View>
-        <Notifications notifications={notifications} />
-      </ThemedView>
+  const renderHeader = () => (
+    <View>
+      <ThemedView style={styles.container}>
+        <ThemedView style={styles.section}>
+          <View style={styles.titleContainer}>
+            <ThemedText style={styles.title} type="title" setBackground={true}>
+              Today's Overview
+            </ThemedText>
+          </View>
+          <Overview overviewItems={overviewItems} />
+        </ThemedView>
+        <ThemedView style={styles.section}>
+          <View style={styles.titleContainer}>
+            <ThemedText style={styles.title} type="title" setBackground={true}>
+              Notifications
+            </ThemedText>
+          </View>
+          <Notifications notifications={notifications} />
+        </ThemedView>
 
-      {/* <ThemedView style={styles.section}>
+        {/* <ThemedView style={styles.section}>
         <ThemedText style={styles.title} type="title">
           Quick Actions
         </ThemedText> */}
-      <NavigationMenu items={navigationItems} />
-      {/* </ThemedView> */}
-    </ThemedView>
+        <NavigationMenu items={navigationItems} />
+        {/* </ThemedView> */}
+      </ThemedView>
+    </View>
+  );
+
+  return (
+    <FlatList
+      data={[]} // empty data array since we only need the header component
+      ListHeaderComponent={renderHeader}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={null}
+    />
   );
 }
 

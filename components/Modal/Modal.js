@@ -4,6 +4,7 @@ import styles from "./styles";
 import { ThemedView } from "../common/ThemedView";
 import ThemedButton from "../common/ThemedButton";
 import { ThemedText } from "../common/ThemedText";
+import { View } from "react-native-animatable";
 
 const CustomModal = ({ visible, onClose, onSave, onDelete, item, schema }) => {
   const [formData, setFormData] = useState({});
@@ -46,7 +47,7 @@ const CustomModal = ({ visible, onClose, onSave, onDelete, item, schema }) => {
       style={styles.modal}
       transparent={true}
     >
-      <ThemedView style={styles.modalContent}>
+      <View style={styles.modalContent}>
         {schema.map((field) => (
           <TextInput
             key={field.name}
@@ -79,7 +80,7 @@ const CustomModal = ({ visible, onClose, onSave, onDelete, item, schema }) => {
             <ThemedText style={styles.buttonText}>Close</ThemedText>
           </ThemedButton>
         </ThemedView>
-      </ThemedView>
+      </View>
     </Modal>
   );
 };

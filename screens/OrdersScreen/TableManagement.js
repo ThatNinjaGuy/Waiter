@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TextInput, StyleSheet, Switch } from "react-native";
+import { TextInput, StyleSheet, Switch, View, FlatList } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseButton";
@@ -48,105 +48,119 @@ const TableManagement = ({ table, onUpdateTable, onClose }) => {
     });
   };
 
-  return (
-    <ThemedView style={styles.container}>
-      <FloatingCloseButton onClose={onClose} />
-      <ThemedText style={styles.title}>Table {table?.number}</ThemedText>
-      <ThemedView style={styles.inputContainer}>
-        <ThemedView style={styles.inputFieldContainer}>
-          <ThemedText style={styles.label}>Guest Name:</ThemedText>
-          <TextInput
-            style={styles.input}
-            value={guestName}
-            onChangeText={setGuestName}
-          />
-        </ThemedView>
-        <ThemedView style={styles.inputFieldContainer}>
-          <ThemedText style={styles.label}>Guest Mobile Number:</ThemedText>
-          <TextInput
-            style={styles.input}
-            value={guestMobile}
-            onChangeText={setGuestMobile}
-            keyboardType="phone-pad"
-          />
-        </ThemedView>
-      </ThemedView>
-      <ThemedView style={styles.inputContainer}>
-        <ThemedView style={styles.inputFieldContainer}>
-          <ThemedText style={styles.label}>Number of Guests:</ThemedText>
-          <TextInput
-            style={styles.input}
-            value={guests.toString()}
-            onChangeText={setGuests}
-            keyboardType="numeric"
-          />
-        </ThemedView>
-        <ThemedView style={styles.inputFieldContainer}>
-          <ThemedText style={styles.label}>Occasion:</ThemedText>
-          <Picker
-            selectedValue={occasion}
-            style={styles.picker}
-            onValueChange={(itemValue) => setOccasion(itemValue)}
-          >
-            <Picker.Item label="Friends" value="Friends" />
-            <Picker.Item label="Family" value="Family" />
-            <Picker.Item label="Party" value="Party" />
-            <Picker.Item label="Office Party" value="Office Party" />
-            <Picker.Item label="Official" value="Official" />
-            <Picker.Item label="Family & Friends" value="Family and Friends" />
-            <Picker.Item label="Other" value="Other" />
-          </Picker>
-        </ThemedView>
-      </ThemedView>
-      <ThemedView style={styles.inputContainer}>
-        <ThemedView style={styles.inputFieldContainer}>
-          <ThemedText style={styles.label}>Booking Time:</ThemedText>
-          <ThemedView style={styles.radioContainer}>
-            <ThemedText>Later</ThemedText>
-            <Switch
-              value={isBookingNow}
-              onValueChange={(value) => setIsBookingNow(value)}
+  const renderHeader = () => (
+    <View>
+      <ThemedView style={styles.container}>
+        <FloatingCloseButton onClose={onClose} />
+        <ThemedText style={styles.title}>Table {table?.number}</ThemedText>
+        <ThemedView style={styles.inputContainer}>
+          <ThemedView style={styles.inputFieldContainer}>
+            <ThemedText style={styles.label}>Guest Name:</ThemedText>
+            <TextInput
+              style={styles.input}
+              value={guestName}
+              onChangeText={setGuestName}
             />
-            <ThemedText>Now</ThemedText>
-            {!isBookingNow && (
-              <DateTimePicker
-                value={bookingTime}
-                mode="time"
-                display="default"
-                onChange={(event, selectedDate) =>
-                  setBookingTime(selectedDate || bookingTime)
-                }
+          </ThemedView>
+          <ThemedView style={styles.inputFieldContainer}>
+            <ThemedText style={styles.label}>Guest Mobile Number:</ThemedText>
+            <TextInput
+              style={styles.input}
+              value={guestMobile}
+              onChangeText={setGuestMobile}
+              keyboardType="phone-pad"
+            />
+          </ThemedView>
+        </ThemedView>
+        <ThemedView style={styles.inputContainer}>
+          <ThemedView style={styles.inputFieldContainer}>
+            <ThemedText style={styles.label}>Number of Guests:</ThemedText>
+            <TextInput
+              style={styles.input}
+              value={guests.toString()}
+              onChangeText={setGuests}
+              keyboardType="numeric"
+            />
+          </ThemedView>
+          <ThemedView style={styles.inputFieldContainer}>
+            <ThemedText style={styles.label}>Occasion:</ThemedText>
+            <Picker
+              selectedValue={occasion}
+              style={styles.picker}
+              onValueChange={(itemValue) => setOccasion(itemValue)}
+            >
+              <Picker.Item label="Friends" value="Friends" />
+              <Picker.Item label="Family" value="Family" />
+              <Picker.Item label="Party" value="Party" />
+              <Picker.Item label="Office Party" value="Office Party" />
+              <Picker.Item label="Official" value="Official" />
+              <Picker.Item
+                label="Family & Friends"
+                value="Family and Friends"
               />
-            )}
+              <Picker.Item label="Other" value="Other" />
+            </Picker>
+          </ThemedView>
+        </ThemedView>
+        <ThemedView style={styles.inputContainer}>
+          <ThemedView style={styles.inputFieldContainer}>
+            <ThemedText style={styles.label}>Booking Time:</ThemedText>
+            <ThemedView style={styles.radioContainer}>
+              <ThemedText>Later</ThemedText>
+              <Switch
+                value={isBookingNow}
+                onValueChange={(value) => setIsBookingNow(value)}
+              />
+              <ThemedText>Now</ThemedText>
+              {!isBookingNow && (
+                <DateTimePicker
+                  value={bookingTime}
+                  mode="time"
+                  display="default"
+                  onChange={(event, selectedDate) =>
+                    setBookingTime(selectedDate || bookingTime)
+                  }
+                />
+              )}
+            </ThemedView>
+          </ThemedView>
+          <ThemedView style={styles.inputFieldContainer}>
+            <ThemedText style={styles.label}>Server:</ThemedText>
+            <TextInput
+              style={styles.input}
+              value={waiter}
+              onChangeText={setWaiter}
+            />
           </ThemedView>
         </ThemedView>
         <ThemedView style={styles.inputFieldContainer}>
-          <ThemedText style={styles.label}>Server:</ThemedText>
+          <ThemedText style={styles.label}>Notes:</ThemedText>
           <TextInput
-            style={styles.input}
-            value={waiter}
-            onChangeText={setWaiter}
+            style={[styles.input, styles.notesInput]}
+            value={notes}
+            onChangeText={setNotes}
+            multiline
           />
         </ThemedView>
+        <ThemedButton
+          style={styles.updateButton}
+          onPress={handleUpdate}
+          type="primary"
+        >
+          <ThemedText style={styles.updateButtonText}>Book Table</ThemedText>
+        </ThemedButton>
+        <OrderDetails order={table} />
       </ThemedView>
-      <ThemedView style={styles.inputFieldContainer}>
-        <ThemedText style={styles.label}>Notes:</ThemedText>
-        <TextInput
-          style={[styles.input, styles.notesInput]}
-          value={notes}
-          onChangeText={setNotes}
-          multiline
-        />
-      </ThemedView>
-      <ThemedButton
-        style={styles.updateButton}
-        onPress={handleUpdate}
-        type="primary"
-      >
-        <ThemedText style={styles.updateButtonText}>Book Table</ThemedText>
-      </ThemedButton>
-      <OrderDetails order={table} />
-    </ThemedView>
+    </View>
+  );
+
+  return (
+    <FlatList
+      data={[]} // empty data array since we only need the header component
+      ListHeaderComponent={renderHeader}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={null}
+    />
   );
 };
 

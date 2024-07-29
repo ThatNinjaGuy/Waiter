@@ -14,10 +14,10 @@ const typeColors = {
 
 // Function to determine the background color based on order count percentile
 const getBackgroundColor = (orderCountPercentile, available) => {
-  if (!available) return "#d3d3d3"; // Disabled color
+  if (!available) return "rgba(95, 95, 123, 0.8)"; // Disabled color
   if (orderCountPercentile > 75) return "#ff6347"; // Hot color
-  if (orderCountPercentile > 50) return "#ffcccb"; // Medium color
-  return "#fff"; // Default color
+  if (orderCountPercentile > 50) return "rgba(150, 114, 49, 0.8)"; // Medium color
+  return "rgba(49, 150, 146, 0.8)"; // Default color
 };
 
 const MenuItem = ({ item, onItemClick }) => {

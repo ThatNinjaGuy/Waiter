@@ -94,6 +94,10 @@ This project is a React Native application for managing a restaurant menu. It us
    };
    ```
 
+## Running the app
+
+- npx expo start
+
 ## Building the APK
 
 - npm install -g eas-cli
@@ -125,4 +129,3 @@ Contributions are welcome! Please open an issue or submit a pull request for any
 ```sh
 This project is licensed under the MIT License.
 ```
-
