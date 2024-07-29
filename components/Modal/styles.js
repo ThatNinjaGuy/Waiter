@@ -16,6 +16,7 @@ export default StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 10,
     elevation: 10,
+    backgroundColor: "#fff",
   },
   input: {
     borderWidth: 1,
@@ -29,6 +30,7 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
+    backgroundColor: "#fff",
   },
   button: {
     flex: 1,

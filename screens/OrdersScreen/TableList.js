@@ -116,6 +116,7 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
           name="receipt"
           size={36}
           onPress={() => onOrderDetailsPress(item)}
+          style={styles.iconContainer}
         />
       </View>
     </ThemedButton>
@@ -185,23 +186,22 @@ const styles = StyleSheet.create({
   },
   tableDetails: {
     fontSize: 14,
-    color: "#333",
     marginBottom: 2,
   },
   ordered: {
-    backgroundColor: "#b2fab4", // Light green
+    backgroundColor: "rgba(38, 149, 59, 0.8)", // Light green
   },
   inProgress: {
-    backgroundColor: "#fff3b0", // Light yellow
+    backgroundColor: "rgba(142, 149, 38, 0.8)", // Light yellow
   },
   sitting: {
-    backgroundColor: "#ffcccb", // Light red
+    backgroundColor: "rgba(144, 38, 149, 0.8)", // Light red
   },
   reserved: {
-    backgroundColor: "#add8e6", // Light blue
+    backgroundColor: "rgba(38, 38, 149, 0.8)", // Light blue
   },
   empty: {
-    backgroundColor: "#e0e0e0", // Default grey
+    backgroundColor: "rgba(95, 95, 123, 0.8)", // Default grey
   },
   orderDetailsIcon: {
     position: "absolute",
@@ -209,6 +209,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: "center",
+  },
+  iconContainer: {
+    backgroundColor: "#e0e0e0", // Default
   },
 });
 
