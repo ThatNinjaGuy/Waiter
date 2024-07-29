@@ -301,7 +301,6 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
         style={[
           styles.container,
           isLargeScreen ? styles.containerRow : styles.containerColumn,
-          // isLargeScreen ? styles.mainContentRow : styles.mainContentColumn,
         ]}
       >
         <ThemedView
@@ -363,10 +362,10 @@ const styles = StyleSheet.create({
     height: "60%",
   },
   sidebarRow: {
-    width: "40%",
+    // width: "40%",
   },
   sidebarColumn: {
-    width: "35%",
+    // width: "35%",
   },
   menuItemGrid: {
     flex: 1,

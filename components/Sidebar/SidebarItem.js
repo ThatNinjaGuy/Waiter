@@ -18,7 +18,7 @@ const SidebarItem = ({ title, style, onItemClick }) => {
 const styles = StyleSheet.create({
   item: {
     borderBottomWidth: 1,
-    height: 80,
+    height: 60,
     borderBottomColor: "#ccc",
     marginBottom: "1%",
     borderRadius: 0,

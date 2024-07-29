@@ -34,13 +34,16 @@ const MenuItem = ({ item, onItemClick }) => {
   const [key, setKey] = useState(0);
 
   const calculateLayout = useCallback(() => {
-    let itemWidth = 200; // Initial fixed width for each item
+    const isLargeScreen = width > 768;
+    let itemWidth = isLargeScreen ? 200 : 120; // Initial fixed width for each item
     const itemMargin = 20;
+    const usableWidth = width - 150; //Size of sidebar
     const numColumns = Math.max(
       1,
-      Math.floor((width - itemMargin) / (itemWidth + itemMargin))
+      Math.floor((usableWidth - itemMargin) / (itemWidth + itemMargin))
     );
-    let containerPadding = (width - numColumns * (itemWidth + itemMargin)) / 2;
+    let containerPadding =
+      (usableWidth - numColumns * (itemWidth + itemMargin)) / 2;
 
     if (containerPadding > itemMargin) {
       itemWidth += (containerPadding - itemMargin) / numColumns;
