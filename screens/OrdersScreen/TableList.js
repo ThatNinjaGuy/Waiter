@@ -42,7 +42,7 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
     return [...tables].sort((a, b) => a.number - b.number);
   }, [tables]);
 
-  const getStatusColor = (status, orderCount, totalOrders) => {
+  const getDarkBackgroundColor = (status, orderCount, totalOrders) => {
     if (
       status == "Occupied" &&
       orderCount &&
@@ -50,27 +50,55 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
       totalOrders > 0 &&
       orderCount == totalOrders
     )
-      return styles.inProgress;
+      return "rgba(142, 149, 38, 0.8)";
     else if (
       status == "Occupied" &&
       orderCount &&
       totalOrders &&
       orderCount < totalOrders
     )
-      return styles.ordered;
-    else if (status == "Occupied" && totalOrders == 0) return styles.sitting;
-    else if (status == "Reserved") return styles.reserved;
-    else return styles.empty;
+      return "rgba(38, 149, 59, 0.8)";
+    else if (status == "Occupied" && totalOrders == 0)
+      return "rgba(144, 38, 149, 0.8)";
+    else if (status == "Reserved") return "rgba(38, 38, 149, 0.8)";
+    else return "rgba(95, 95, 123, 0.8)";
+  };
+
+  const getLightBackgroundColor = (status, orderCount, totalOrders) => {
+    if (
+      status == "Occupied" &&
+      orderCount &&
+      totalOrders &&
+      totalOrders > 0 &&
+      orderCount == totalOrders
+    )
+      return "rgba(142, 149, 38, 0.8)";
+    else if (
+      status == "Occupied" &&
+      orderCount &&
+      totalOrders &&
+      orderCount < totalOrders
+    )
+      return "rgba(38, 149, 59, 0.8)";
+    else if (status == "Occupied" && totalOrders == 0) return "#fff";
+    else if (status == "Reserved") return "rgba(38, 38, 149, 0.8)";
+    else return "rgba(95, 95, 123, 0.8)";
   };
 
   const renderTableItem = ({ item }) => (
     <ThemedButton
-      style={[
-        styles.tableItem,
-        getStatusColor(item.status, item.orderCount, item.totalOrders),
-        { width: layoutParams.itemWidth },
-      ]}
+      style={[styles.tableItem, { width: layoutParams.itemWidth }]}
       onPress={() => onTablePress(item)}
+      lightBackgroundColor={getLightBackgroundColor(
+        item.status,
+        item.orderCount,
+        item.totalOrders
+      )}
+      darkBackgroundColor={getDarkBackgroundColor(
+        item.status,
+        item.orderCount,
+        item.totalOrders
+      )}
     >
       <ThemedText style={styles.tableNumber}>Table - {item.number}</ThemedText>
       <View style={styles.tableDetailsContainer}>

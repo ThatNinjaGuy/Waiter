@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import ThemedButton from "../common/ThemedButton";
 import { ThemedText } from "../common/ThemedText";
 import { ThemedView } from "../common/ThemedView";
@@ -25,9 +25,47 @@ const MenuItem = ({ item, onItemClick }) => {
   const typeColor = typeColors[type] || "transparent";
   const backgroundColor = getBackgroundColor(orderCountPercentile, available);
 
+  const { width } = useWindowDimensions();
+  const [layoutParams, setLayoutParams] = useState({
+    itemWidth: 200,
+    numColumns: 1,
+    containerPadding: 0,
+  });
+  const [key, setKey] = useState(0);
+
+  const calculateLayout = useCallback(() => {
+    const isLargeScreen = width > 768;
+    let itemWidth = isLargeScreen ? 200 : 120; // Initial fixed width for each item
+    const itemMargin = 20;
+    const usableWidth = width - 150; //Size of sidebar
+    const numColumns = Math.max(
+      1,
+      Math.floor((usableWidth - itemMargin) / (itemWidth + itemMargin))
+    );
+    let containerPadding =
+      (usableWidth - numColumns * (itemWidth + itemMargin)) / 2;
+
+    if (containerPadding > itemMargin) {
+      itemWidth += (containerPadding - itemMargin) / numColumns;
+      containerPadding = itemMargin;
+    }
+
+    return { itemWidth, numColumns, containerPadding };
+  }, [width]);
+
+  useEffect(() => {
+    const newLayoutParams = calculateLayout();
+    setLayoutParams(newLayoutParams);
+    setKey((prevKey) => prevKey + 1); // Update key to force re-render
+  }, [calculateLayout]);
+
   return (
     <ThemedButton
-      style={[styles.menuItem, { backgroundColor }]}
+      style={[
+        styles.menuItem,
+        { backgroundColor },
+        { width: layoutParams.itemWidth, margin: 10 },
+      ]}
       onPress={onItemClick}
     >
       <ThemedView
@@ -40,8 +78,7 @@ const MenuItem = ({ item, onItemClick }) => {
 
 const styles = StyleSheet.create({
   menuItem: {
-    width: "22%",
-    height: 100,
+    height: 120,
     padding: 10,
     margin: "1%",
     borderWidth: 1,

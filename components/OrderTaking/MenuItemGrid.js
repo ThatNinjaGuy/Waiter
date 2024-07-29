@@ -36,7 +36,7 @@ const MenuItemGrid = ({ menuItems, onItemClick, style }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "50%",
+    // width: "50%",
   },
   grid: {
     flex: 1,

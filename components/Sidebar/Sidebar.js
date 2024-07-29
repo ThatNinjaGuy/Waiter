@@ -20,9 +20,13 @@ const Sidebar = ({ items, style, onItemClick, selectedItemIndex }) => {
 const styles = StyleSheet.create({
   sidebar: {
     backgroundColor: "#f0f0f0",
+    width: "20%",
+    minWidth: 150,
   },
   selectedItem: {
     backgroundColor: "rgba(46, 188, 59, 0.8)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
