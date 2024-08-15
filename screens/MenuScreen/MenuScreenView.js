@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FlatList } from "react-native";
 import MenuItem from "../../components/MenuItem/MenuItem";
-import CustomModal from "../../components/Modal/Modal";
+import CustomModal from "../../components/CustomModal/CustomModal";
 import { searchByNameKey } from "@/screens/common/searchCriteria";
 import styles from "@/screens/common/styles";
 import CustomSearchBar from "@/screens/common/SearchBar";
@@ -10,11 +10,65 @@ import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedButton } from "@/components/common/ThemedButton";
 
 const formSchema = [
-  { name: "searchableKey", placeholder: "Key", keyboardType: "default" },
-  { name: "name", placeholder: "Item Name", keyboardType: "default" },
-  { name: "price", placeholder: "Price", keyboardType: "numeric" },
-  { name: "cuisine", placeholder: "Cuisine", keyboardType: "default" },
-  { name: "image", placeholder: "Image URL", keyboardType: "default" },
+  {
+    name: "searchableKey",
+    placeholder: "Key",
+    inputMode: "default",
+    type: "text",
+  },
+  {
+    name: "name",
+    placeholder: "Item Name",
+    inputMode: "default",
+    type: "text",
+  },
+  {
+    name: "type",
+    placeholder: "Type",
+    inputMode: "default",
+    type: "dropdown",
+    options: ["Veg", "Non-Veg", "Vegan"],
+  },
+  {
+    name: "isAvailable",
+    placeholder: "Is Available?",
+    inputMode: "default",
+    type: "radio",
+    options: ["Yes", "No"],
+  },
+  {
+    name: "category",
+    placeholder: "Category",
+    inputMode: "default",
+    type: "dropdown",
+    options: [
+      "Beverages",
+      "Burgers",
+      "EGG",
+      "Chicken",
+      "Chakhna",
+      "Chinese Snacks",
+      "Chinese Soups",
+      "Garlic Bread",
+      "Gravy Items",
+      "Hawaiian Wraps",
+      "Maggie Lover",
+    ],
+  },
+  { name: "price", placeholder: "Price", inputMode: "numeric", type: "text" },
+  {
+    name: "cuisine",
+    placeholder: "Cuisine",
+    inputMode: "default",
+    type: "dropdown",
+    options: ["Italian", "Chinese", "Indian"],
+  },
+  {
+    name: "image",
+    placeholder: "Image URL",
+    inputMode: "default",
+    type: "text",
+  },
 ];
 
 const MenuScreenView = ({
@@ -95,14 +149,15 @@ const MenuScreenView = ({
           />
         )}
       />
-      <CustomModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSave={handleSaveItem}
-        onDelete={handleDeleteItem}
-        item={currentItem}
-        schema={formSchema}
-      />
+      {modalVisible && (
+        <CustomModal
+          onClose={() => setModalVisible(false)}
+          onSave={handleSaveItem}
+          onDelete={handleDeleteItem}
+          item={currentItem}
+          schema={formSchema}
+        />
+      )}
       <ThemedView style={styles.filterListContainer}>
         <FlatList
           horizontal

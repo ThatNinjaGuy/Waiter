@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FlatList } from "react-native";
 import StaffItem from "../../components/StaffItem/StaffItem";
-import CustomModal from "../../components/Modal/Modal";
+import CustomModal from "../../components/CustomModal/CustomModal";
 import { searchByNameKey } from "@/screens/common/searchCriteria";
 import styles from "@/screens/common/styles";
 import CustomSearchBar from "@/screens/common/SearchBar";
@@ -10,11 +10,21 @@ import ThemedButton from "@/components/common/ThemedButton";
 import { ThemedText } from "@/components/common/ThemedText";
 
 const formSchema = [
-  { name: "searchableKey", placeholder: "Key", keyboardType: "default" },
-  { name: "name", placeholder: "Name", keyboardType: "default" },
-  { name: "age", placeholder: "Age", keyboardType: "numeric" },
-  { name: "role", placeholder: "Role", keyboardType: "default" },
-  { name: "image", placeholder: "Image URL", keyboardType: "default" },
+  {
+    name: "searchableKey",
+    placeholder: "Key",
+    inputMode: "default",
+    type: "text",
+  },
+  { name: "name", placeholder: "Name", inputMode: "default", type: "text" },
+  { name: "age", placeholder: "Age", inputMode: "numeric", type: "text" },
+  { name: "role", placeholder: "Role", inputMode: "default", type: "text" },
+  {
+    name: "image",
+    placeholder: "Image URL",
+    inputMode: "default",
+    type: "text",
+  },
 ];
 
 const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
@@ -91,15 +101,16 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
         )}
         style={styles.itemList}
       />
-      <CustomModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSave={handleSaveItem}
-        onDelete={handleDeleteItem}
-        item={currentItem}
-        schema={formSchema}
-        style={styles.container}
-      />
+      {modalVisible && (
+        <CustomModal
+          onClose={() => setModalVisible(false)}
+          onSave={handleSaveItem}
+          onDelete={handleDeleteItem}
+          item={currentItem}
+          schema={formSchema}
+          style={styles.container}
+        />
+      )}
       <ThemedView style={styles.filterListContainer}>
         <FlatList
           horizontal

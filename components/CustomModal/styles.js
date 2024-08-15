@@ -18,6 +18,7 @@ export default StyleSheet.create({
     elevation: 10,
     backgroundColor: "#fff",
   },
+  // Input fields
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -26,6 +27,38 @@ export default StyleSheet.create({
     marginBottom: 15,
     fontSize: 16,
   },
+  radioGroup: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 15,
+    padding: 10,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    backgroundColor: "#fff",
+  },
+  radioItem: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  radioLabel: {
+    marginLeft: 8,
+    fontSize: 16,
+    color: "#333",
+  },
+  dropdown: {
+    width: "100%",
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    padding: 15,
+    backgroundColor: "#fff",
+    fontSize: 16,
+  },
+
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
