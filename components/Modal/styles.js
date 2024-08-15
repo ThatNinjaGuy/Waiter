@@ -54,8 +54,9 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 10,
-    padding: 10,
+    padding: 15,
     backgroundColor: "#fff",
+    fontSize: 16,
   },
 
   buttonContainer: {

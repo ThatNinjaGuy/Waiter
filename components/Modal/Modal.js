@@ -59,7 +59,7 @@ const CustomModal = ({ onClose, onSave, onDelete, item, schema }) => {
                   onValueChange={(value) =>
                     handleInputChange(field.name, value)
                   }
-                  style={styles.input}
+                  style={styles.dropdown}
                 >
                   {field.options.map((option) => (
                     <Picker.Item key={option} label={option} value={option} />
