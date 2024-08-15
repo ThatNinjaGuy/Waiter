@@ -10,18 +10,65 @@ import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedButton } from "@/components/common/ThemedButton";
 
 const formSchema = [
-  { name: "searchableKey", placeholder: "Key", inputMode: "default" },
-  { name: "name", placeholder: "Item Name", inputMode: "default" },
-  { name: "type", placeholder: "Type", inputMode: "default" },
+  {
+    name: "searchableKey",
+    placeholder: "Key",
+    inputMode: "default",
+    type: "text",
+  },
+  {
+    name: "name",
+    placeholder: "Item Name",
+    inputMode: "default",
+    type: "text",
+  },
+  {
+    name: "type",
+    placeholder: "Type",
+    inputMode: "default",
+    type: "dropdown",
+    options: ["Veg", "Non-Veg", "Vegan"],
+  },
   {
     name: "isAvailable",
     placeholder: "Is Available?",
     inputMode: "default",
+    type: "radio",
+    options: ["Yes", "No"],
   },
-  { name: "category", placeholder: "Category", inputMode: "default" },
-  { name: "price", placeholder: "Price", inputMode: "numeric" },
-  { name: "cuisine", placeholder: "Cuisine", inputMode: "default" },
-  { name: "image", placeholder: "Image URL", inputMode: "default" },
+  {
+    name: "category",
+    placeholder: "Category",
+    inputMode: "default",
+    type: "dropdown",
+    options: [
+      "Beverages",
+      "Burgers",
+      "EGG",
+      "Chicken",
+      "Chakhna",
+      "Chinese Snacks",
+      "Chinese Soups",
+      "Garlic Bread",
+      "Gravy Items",
+      "Hawaiian Wraps",
+      "Maggie Lover",
+    ],
+  },
+  { name: "price", placeholder: "Price", inputMode: "numeric", type: "text" },
+  {
+    name: "cuisine",
+    placeholder: "Cuisine",
+    inputMode: "default",
+    type: "dropdown",
+    options: ["Italian", "Chinese", "Indian"],
+  },
+  {
+    name: "image",
+    placeholder: "Image URL",
+    inputMode: "default",
+    type: "text",
+  },
 ];
 
 const MenuScreenView = ({
