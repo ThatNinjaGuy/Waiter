@@ -8,23 +8,19 @@ import ThemedButton from "../common/ThemedButton";
 import { ThemedText } from "../common/ThemedText";
 
 const CustomModal = ({ onClose, onSave, onDelete, item, schema }) => {
-  const [formData, setFormData] = useState(() => {
+  const initializeFormData = (schema, item) => {
     return schema.reduce((acc, field) => {
-      acc[field.name] = "";
+      acc[field.name] = item ? item[field.name] : "";
       return acc;
     }, {});
-  });
+  };
+
+  const [formData, setFormData] = useState(() =>
+    initializeFormData(schema, item)
+  );
 
   useEffect(() => {
-    if (item) {
-      setFormData(item);
-    } else {
-      const initialFormData = schema.reduce((acc, field) => {
-        acc[field.name] = "";
-        return acc;
-      }, {});
-      setFormData(initialFormData);
-    }
+    setFormData(initializeFormData(schema, item));
   }, [item, schema]);
 
   const handleInputChange = (name, value) => {
@@ -41,6 +37,7 @@ const CustomModal = ({ onClose, onSave, onDelete, item, schema }) => {
 
   return (
     <Modal
+      key={item ? item.id : "new"} // Unique key based on item
       onBackdropPress={onClose}
       animationIn="slideInUp"
       animationOut="slideOutDown"
@@ -55,12 +52,13 @@ const CustomModal = ({ onClose, onSave, onDelete, item, schema }) => {
               return (
                 <Picker
                   key={field.name}
-                  selectedValue={formData[field.name]}
+                  selectedValue={formData[field.name] || ""} // Default to unselected
                   onValueChange={(value) =>
                     handleInputChange(field.name, value)
                   }
                   style={styles.dropdown}
                 >
+                  <Picker.Item label="Select an option" value="" />
                   {field.options.map((option) => (
                     <Picker.Item key={option} label={option} value={option} />
                   ))}

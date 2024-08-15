@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FlatList } from "react-native";
 import InventoryItem from "@/components/InventoryItem/InventoryItem";
-import CustomModal from "@/components/Modal/Modal";
+import CustomModal from "@/components/CustomModal/CustomModal";
 import { searchByNameKey } from "@/screens/common/searchCriteria";
 import styles from "@/screens/common/styles";
 import CustomSearchBar from "@/screens/common/SearchBar";
@@ -10,12 +10,37 @@ import ThemedButton from "@/components/common/ThemedButton";
 import { ThemedText } from "@/components/common/ThemedText";
 
 const formSchema = [
-  { name: "searchableKey", placeholder: "Key", keyboardType: "default" },
-  { name: "name", placeholder: "Item Name", keyboardType: "default" },
-  { name: "price", placeholder: "Price", keyboardType: "numeric" },
-  { name: "quantity", placeholder: "Quantity", keyboardType: "numeric" },
-  { name: "unit", placeholder: "Unit", keyboardType: "default" },
-  { name: "image", placeholder: "Image URL", keyboardType: "default" },
+  {
+    name: "searchableKey",
+    placeholder: "Key",
+    inputMode: "default",
+    type: "text",
+  },
+  {
+    name: "name",
+    placeholder: "Item Name",
+    inputMode: "default",
+    type: "text",
+  },
+  {
+    name: "price",
+    placeholder: "Price",
+    inputMode: "numeric",
+    type: "text",
+  },
+  {
+    name: "quantity",
+    placeholder: "Quantity",
+    inputMode: "numeric",
+    type: "text",
+  },
+  { name: "unit", placeholder: "Unit", inputMode: "default", type: "text" },
+  {
+    name: "image",
+    placeholder: "Image URL",
+    inputMode: "default",
+    type: "text",
+  },
 ];
 
 const InventoryScreenView = ({
@@ -81,14 +106,15 @@ const InventoryScreenView = ({
           />
         )}
       />
-      <CustomModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSave={handleSaveItem}
-        onDelete={handleDeleteItem}
-        item={currentItem}
-        schema={formSchema}
-      />
+      {modalVisible && (
+        <CustomModal
+          onClose={() => setModalVisible(false)}
+          onSave={handleSaveItem}
+          onDelete={handleDeleteItem}
+          item={currentItem}
+          schema={formSchema}
+        />
+      )}
       <CustomSearchBar searchText={search} updateSearch={updateSearch} />
     </ThemedView>
   );
