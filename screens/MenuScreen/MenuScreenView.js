@@ -10,11 +10,18 @@ import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedButton } from "@/components/common/ThemedButton";
 
 const formSchema = [
-  { name: "searchableKey", placeholder: "Key", keyboardType: "default" },
-  { name: "name", placeholder: "Item Name", keyboardType: "default" },
-  { name: "price", placeholder: "Price", keyboardType: "numeric" },
-  { name: "cuisine", placeholder: "Cuisine", keyboardType: "default" },
-  { name: "image", placeholder: "Image URL", keyboardType: "default" },
+  { name: "searchableKey", placeholder: "Key", inputMode: "default" },
+  { name: "name", placeholder: "Item Name", inputMode: "default" },
+  { name: "type", placeholder: "Type", inputMode: "default" },
+  {
+    name: "isAvailable",
+    placeholder: "Is Available?",
+    inputMode: "default",
+  },
+  { name: "category", placeholder: "Category", inputMode: "default" },
+  { name: "price", placeholder: "Price", inputMode: "numeric" },
+  { name: "cuisine", placeholder: "Cuisine", inputMode: "default" },
+  { name: "image", placeholder: "Image URL", inputMode: "default" },
 ];
 
 const MenuScreenView = ({
@@ -95,14 +102,15 @@ const MenuScreenView = ({
           />
         )}
       />
-      <CustomModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSave={handleSaveItem}
-        onDelete={handleDeleteItem}
-        item={currentItem}
-        schema={formSchema}
-      />
+      {modalVisible && (
+        <CustomModal
+          onClose={() => setModalVisible(false)}
+          onSave={handleSaveItem}
+          onDelete={handleDeleteItem}
+          item={currentItem}
+          schema={formSchema}
+        />
+      )}
       <ThemedView style={styles.filterListContainer}>
         <FlatList
           horizontal

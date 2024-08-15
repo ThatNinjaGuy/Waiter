@@ -6,8 +6,13 @@ import ThemedButton from "../common/ThemedButton";
 import { ThemedText } from "../common/ThemedText";
 import { View } from "react-native-animatable";
 
-const CustomModal = ({ visible, onClose, onSave, onDelete, item, schema }) => {
-  const [formData, setFormData] = useState({});
+const CustomModal = ({ onClose, onSave, onDelete, item, schema }) => {
+  const [formData, setFormData] = useState(() => {
+    return schema.reduce((acc, field) => {
+      acc[field.name] = "";
+      return acc;
+    }, {});
+  });
 
   useEffect(() => {
     if (item) {
@@ -39,7 +44,6 @@ const CustomModal = ({ visible, onClose, onSave, onDelete, item, schema }) => {
 
   return (
     <Modal
-      visible={visible}
       onBackdropPress={onClose}
       animationIn="slideInUp"
       animationOut="slideOutDown"
@@ -53,7 +57,7 @@ const CustomModal = ({ visible, onClose, onSave, onDelete, item, schema }) => {
             key={field.name}
             style={styles.input}
             placeholder={field.placeholder}
-            value={formData[field.name]}
+            value={formData[field.name] ? formData[field.name] : ""}
             onChangeText={(value) => handleInputChange(field.name, value)}
             keyboardType={field.keyboardType}
           />
