@@ -6,10 +6,10 @@ import { ThemedView } from "../common/ThemedView";
 
 // Define the colors for different item types
 const typeColors = {
-  vegetarian: "green",
-  egg: "yellow",
-  nonVeg: "red",
-  vegan: "purple",
+  Veg: "green",
+  Egg: "yellow",
+  "Non-Veg": "red",
+  Vegan: "purple",
 };
 
 // Function to determine the background color based on order count percentile

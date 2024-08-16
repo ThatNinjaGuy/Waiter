@@ -24,7 +24,30 @@ const CustomModal = ({ onClose, onSave, onDelete, item, schema }) => {
   }, [item, schema]);
 
   const handleInputChange = (name, value) => {
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    const fieldSchema = schema.find((field) => field.name === name);
+
+    if (!fieldSchema) {
+      return; // If the field is not found in the schema, do nothing
+    }
+
+    const { dataType } = fieldSchema;
+
+    let formattedValue;
+    switch (dataType) {
+      case "numeric":
+        formattedValue = Number(value);
+        break;
+      case "boolean":
+        formattedValue = value === "true" || value === true;
+        break;
+      default:
+        formattedValue = value;
+    }
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: formattedValue,
+    }));
   };
 
   const handleSave = () => {

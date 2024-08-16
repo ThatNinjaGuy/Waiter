@@ -27,7 +27,7 @@ const formSchema = [
     placeholder: "Type",
     inputMode: "default",
     type: "dropdown",
-    options: ["Veg", "Non-Veg", "Vegan"],
+    options: ["Veg", "Non-Veg", "Egg", "Vegan"],
   },
   {
     name: "isAvailable",
@@ -55,7 +55,13 @@ const formSchema = [
       "Maggie Lover",
     ],
   },
-  { name: "price", placeholder: "Price", inputMode: "numeric", type: "text" },
+  {
+    name: "price",
+    placeholder: "Price",
+    inputMode: "numeric",
+    type: "text",
+    dataType: "numeric",
+  },
   {
     name: "cuisine",
     placeholder: "Cuisine",
