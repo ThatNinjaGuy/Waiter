@@ -1,13 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Image, StyleSheet } from "react-native";
 import { ThemedText } from "./common/ThemedText";
 import { ThemedView } from "./common/ThemedView";
 
-const UserProfile = ({ name, role, imageUrl }) => {
+// Define the colors for different item types
+const typeColors = {
+  Premium: "rgba(207, 167, 5, 0.86)",
+  Free: "transparent",
+};
+
+const UserProfile = ({ name, role, imageUrl, plan }) => {
+  const [typeColor, setTypeColor] = useState("transparent");
+  useEffect(() => {
+    console.log(plan);
+    setTypeColor(typeColors[plan] || typeColors["Free"]);
+  }, [plan]);
   return (
-    <ThemedView>
-      <Image source={{ uri: imageUrl }} style={styles.image} />
-      <ThemedView style={styles.textContainer}>
+    <ThemedView style={[styles.container, { backgroundColor: typeColor }]}>
+      <Image
+        source={{
+          uri: imageUrl || "https://dummyimage.com/650x450/cc00cc/fff",
+        }}
+        style={styles.image}
+      />
+      <ThemedView
+        style={[styles.textContainer, { backgroundColor: typeColor }]}
+      >
         <ThemedText style={styles.title}>{name}</ThemedText>
         <ThemedText style={styles.subtitle}>{role}</ThemedText>
       </ThemedView>
@@ -19,6 +37,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
+    padding: 20,
+    margin: 5,
+    borderWidth: 1,
+    borderRadius: 5,
   },
   image: {
     width: 50,

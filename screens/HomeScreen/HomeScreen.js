@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -11,24 +11,25 @@ import Notifications from "@/components/Notifications/Notifications";
 import Overview from "@/components/Overview";
 import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
 import { useNavigation } from "@react-navigation/native";
+import { fetchHotelData } from "@/firebase/queries";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
 
-  const notifications = [
-    { id: 1, message: "New order received" },
-    { id: 2, message: "Staff meeting at 3 PM" },
-    { id: 3, message: "Inventory running low on tomatoes" },
-  ];
-
-  const overviewItems = [
-    { id: 1, title: "Revenue", message: "₹1,234" },
-    { id: 2, title: "Orders", message: "56" },
-    { id: 3, title: "Reservations", message: "12" },
-    { id: 4, title: "Low Inventory", message: "34" },
-    { id: 5, title: "Staff In", message: "80%" },
-    { id: 6, title: "Orders Today", message: "20" },
-  ];
+  const [hotel, setHotel] = useState();
+  const [notifications, setNotifications] = useState([]);
+  const [overviewItems, setOverviewItems] = useState([]);
+  useEffect(() => {
+    const fetchHotelDetails = async () => {
+      const hotelDetails = await fetchHotelData();
+      if (hotelDetails) {
+        setHotel(hotelDetails[0]);
+        setNotifications(hotelDetails[1].notifications || []);
+        setOverviewItems(hotelDetails[1].overviewItems || []);
+      }
+    };
+    fetchHotelDetails();
+  }, []);
 
   const navigationItems = [
     { title: "Menu", onPress: () => navigation.navigate("menu") },
@@ -40,6 +41,21 @@ export default function HomeScreen() {
   const renderHeader = () => (
     <View>
       <ThemedView style={styles.container}>
+        {hotel && (
+          <UserProfile
+            name={hotel?.name + " ( " + hotel?.owner + " )"}
+            role={
+              hotel?.city +
+              ", " +
+              hotel?.state +
+              ", " +
+              hotel?.country +
+              "- " +
+              hotel?.pinCode
+            }
+            plan={hotel?.category}
+          />
+        )}
         <ThemedView style={styles.section}>
           <View style={styles.titleContainer}>
             <ThemedText style={styles.title} type="title" setBackground={true}>
@@ -56,13 +72,7 @@ export default function HomeScreen() {
           </View>
           <Notifications notifications={notifications} />
         </ThemedView>
-
-        {/* <ThemedView style={styles.section}>
-        <ThemedText style={styles.title} type="title">
-          Quick Actions
-        </ThemedText> */}
         <NavigationMenu items={navigationItems} />
-        {/* </ThemedView> */}
       </ThemedView>
     </View>
   );
