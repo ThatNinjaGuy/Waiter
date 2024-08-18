@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAN-nxJtF6ROGWMjLboI4dEBKDNGnsMIWg",
@@ -12,10 +12,11 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
-// db.settings({
-//   persistence: true,
-// });
+// Initialize Firestore with persistent local cache
+const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true, // Optional: Use if you face network issues
+  synchronizeTabs: true,
+});
 
 export { db };

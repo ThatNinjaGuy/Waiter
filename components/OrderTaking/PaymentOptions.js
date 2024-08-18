@@ -19,9 +19,9 @@ const PaymentOptions = ({ onSave, style }) => {
       <ThemedButton style={styles.button} onPress={onSave} type="secondary">
         <ThemedText>KOT</ThemedText>
       </ThemedButton>
-      {/* <TouchableOpacity style={styles.button} onPress={onSave}>
+      {/* <Pressable style={styles.button} onPress={onSave}>
         <ThemedText>Hold</ThemedText>
-      </TouchableOpacity> */}
+      </Pressable> */}
     </ThemedView>
   );
 };

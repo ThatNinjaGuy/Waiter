@@ -46,7 +46,6 @@ const StaffsScreenContainer = () => {
       await batch.commit();
       console.log("Batch write successful");
       setStaffs([...staffs, ...newItems]);
-      console.log(newItems);
     } catch (error) {
       console.error("Error writing batch:", error);
     }

@@ -68,7 +68,7 @@ const TableManagement = ({ table, onUpdateTable, onClose }) => {
               style={styles.input}
               value={guestMobile}
               onChangeText={setGuestMobile}
-              keyboardType="phone-pad"
+              inputMode="phone-pad"
             />
           </ThemedView>
         </ThemedView>
@@ -79,7 +79,7 @@ const TableManagement = ({ table, onUpdateTable, onClose }) => {
               style={styles.input}
               value={guests.toString()}
               onChangeText={setGuests}
-              keyboardType="numeric"
+              inputMode="numeric"
             />
           </ThemedView>
           <ThemedView style={styles.inputFieldContainer}>

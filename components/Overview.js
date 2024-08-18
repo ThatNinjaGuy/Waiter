@@ -7,7 +7,7 @@ const Overview = ({ overviewItems }) => {
   return (
     <ThemedView style={styles.overviewContainer}>
       {overviewItems.map((item) => (
-        <ThemedView key={item.id} style={styles.overviewItem}>
+        <ThemedView key={item.title} style={styles.overviewItem}>
           <ThemedText style={styles.itemTitle}>{item.title}</ThemedText>
           <ThemedText style={styles.itemMessage}>{item.message}</ThemedText>
         </ThemedView>

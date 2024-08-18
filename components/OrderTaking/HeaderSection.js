@@ -1,20 +1,14 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
 import { Icon } from "react-native-elements";
 
 const HeaderSection = () => {
   return (
     <View style={styles.headerContainer}>
-      <TouchableOpacity style={styles.dropdown}>
+      <Pressable style={styles.dropdown}>
         <Text style={styles.dropdownText}>Categories</Text>
         <Icon name="chevron-down" type="font-awesome" color="#fff" />
-      </TouchableOpacity>
+      </Pressable>
       <View style={styles.searchInputContainers}>
         <TextInput
           style={styles.searchInput}
@@ -28,17 +22,17 @@ const HeaderSection = () => {
         />
       </View>
       <View style={styles.orderManagementContainer}>
-        <TouchableOpacity
+        <Pressable
           style={[styles.orderTypeButton, styles.selectedOrderTypeButton]}
         >
           <Text style={styles.orderTypeText}>Dine In</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.orderTypeButton}>
+        </Pressable>
+        <Pressable style={styles.orderTypeButton}>
           <Text style={styles.orderTypeText}>Delivery</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.orderTypeButton}>
+        </Pressable>
+        <Pressable style={styles.orderTypeButton}>
           <Text style={styles.orderTypeText}>Pick Up</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );
