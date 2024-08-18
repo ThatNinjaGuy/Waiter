@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FlatList } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import MenuItem from "../../components/MenuItem/MenuItem";
 import CustomModal from "../../components/CustomModal/CustomModal";
 import { searchByNameKey } from "@/screens/common/searchCriteria";
@@ -8,6 +8,7 @@ import CustomSearchBar from "@/screens/common/SearchBar";
 import { ThemedView } from "@/components/common/ThemedView";
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedButton } from "@/components/common/ThemedButton";
+import CategoryManagementPopup from "@/screens/MenuScreen/CategoryManagementPopup";
 
 const formSchema = [
   {
@@ -82,12 +83,15 @@ const MenuScreenView = ({
   addMenuItem,
   deleteMenuItem,
   updateMenuItem,
+  categories,
+  handleUpdateMenuItemCategories,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const [search, setSearch] = useState("");
   const [filteredItems, setFilteredItems] = useState(menuItems);
   const [selectedFilter, setSelectedFilter] = useState("All");
+  const [isPopupVisible, setPopupVisible] = useState(false);
 
   useEffect(() => {
     setFilteredItems(menuItems);
@@ -138,13 +142,23 @@ const MenuScreenView = ({
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedButton
-        onPress={handleAddItem}
-        type="primary"
-        style={[{ borderRadius: 0, marginBottom: 5 }]}
-      >
-        <ThemedText>Add Menu</ThemedText>
-      </ThemedButton>
+      <ThemedView style={buttonStyles.buttonContainer}>
+        <ThemedButton
+          // onPress={handleAddMenuItemCategory}
+          onPress={() => setPopupVisible(true)}
+          type="primary"
+          style={buttonStyles.button}
+        >
+          <ThemedText>Update Menu Category</ThemedText>
+        </ThemedButton>
+        <ThemedButton
+          onPress={handleAddItem}
+          type="primary"
+          style={buttonStyles.button}
+        >
+          <ThemedText>Update Menu Item</ThemedText>
+        </ThemedButton>
+      </ThemedView>
       <FlatList
         data={filteredItems}
         renderItem={({ item }) => (
@@ -154,6 +168,13 @@ const MenuScreenView = ({
             onEdit={() => handleEditItem(item)}
           />
         )}
+      />
+      <CategoryManagementPopup
+        visible={isPopupVisible}
+        onClose={() => setPopupVisible(false)}
+        categories={categories}
+        onAddCategory={handleUpdateMenuItemCategories}
+        onUpdateCategories={handleUpdateMenuItemCategories}
       />
       {modalVisible && (
         <CustomModal
@@ -188,5 +209,19 @@ const MenuScreenView = ({
     </ThemedView>
   );
 };
+
+const buttonStyles = StyleSheet.create({
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  button: {
+    flex: 1,
+    borderRadius: 0,
+    marginBottom: 5,
+    marginHorizontal: 2, // Optional: to add some space between buttons
+  },
+});
 
 export default MenuScreenView;

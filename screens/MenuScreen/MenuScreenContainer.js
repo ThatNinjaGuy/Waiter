@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import {
   collection,
+  getDoc,
   getDocs,
   writeBatch,
   doc,
   deleteDoc,
   updateDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import MenuScreenView from "./MenuScreenView";
@@ -13,6 +15,7 @@ import { generateUniqueKey } from "@/utils/keyGenerator";
 
 const MenuScreenContainer = () => {
   const [menuItems, setMenuItems] = useState([]);
+  const [menuItemCategories, setMenuItemCategories] = useState([]);
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -28,8 +31,68 @@ const MenuScreenContainer = () => {
       }
     };
 
+    const fetchMenuItemCategories = async () => {
+      try {
+        const docRef = doc(db, "menu-items-categories", "categoriesList"); // Reference to the specific document
+        const docSnap = await getDoc(docRef); // Fetch the document
+
+        if (docSnap.exists()) {
+          const categories = docSnap.data().categories || []; // Extract categories array
+          setMenuItemCategories(categories); // Set the state with the categories
+        } else {
+          console.error("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching menu item categories:", error);
+      }
+    };
+
     fetchMenuItems();
+    fetchMenuItemCategories();
   }, []);
+
+  const addMenuItemCategory = async (newCategories) => {
+    const docRef = doc(db, "menu-items-categories", "categoriesList"); // Use a specific document to store the list
+
+    try {
+      // Add new categories to the array
+      await updateDoc(docRef, {
+        categories: arrayUnion(newCategories),
+      });
+      console.log("Categories added successfully");
+    } catch (error) {
+      console.error("Error adding categories:", error);
+    }
+  };
+
+  // Update an existing category
+  const updateCategoryInFirebase = async (oldCategory, newCategory) => {
+    const docRef = doc(db, "menu-items-categories", "categoriesList");
+    try {
+      await updateDoc(docRef, {
+        categories: arrayRemove(oldCategory),
+      });
+      await updateDoc(docRef, {
+        categories: arrayUnion(newCategory),
+      });
+      console.log("Category updated successfully");
+    } catch (error) {
+      console.error("Error updating category:", error);
+    }
+  };
+
+  // Delete a category
+  const deleteCategoryFromFirebase = async (category) => {
+    const docRef = doc(db, "menu-items-categories", "categoriesList");
+    try {
+      await updateDoc(docRef, {
+        categories: arrayRemove(category),
+      });
+      console.log("Category deleted successfully");
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
+  };
 
   const addMenuItems = async (items) => {
     const batch = writeBatch(db);
@@ -52,6 +115,7 @@ const MenuScreenContainer = () => {
   };
 
   const addMenuItem = (item) => {
+    console.log(item);
     addMenuItems([item]);
   };
 
@@ -86,6 +150,8 @@ const MenuScreenContainer = () => {
       addMenuItem={addMenuItem}
       deleteMenuItem={deleteMenuItem}
       updateMenuItem={updateMenuItem}
+      categories={menuItemCategories}
+      handleUpdateMenuItemCategories={addMenuItemCategory}
     />
   );
 };
