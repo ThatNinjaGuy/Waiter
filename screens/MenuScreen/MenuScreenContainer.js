@@ -34,7 +34,7 @@ const MenuScreenContainer = () => {
 
     const fetchMenuItemCategories = async () => {
       try {
-        const docRef = doc(db, "menu-items-categories", "categoriesList"); // Reference to the specific document
+        const docRef = doc(db, "hotel-details", "menu-item-categories"); // Reference to the specific document
         const docSnap = await getDoc(docRef); // Fetch the document
 
         if (docSnap.exists()) {
@@ -53,7 +53,7 @@ const MenuScreenContainer = () => {
   }, []);
 
   const addMenuItemCategory = async (newCategories) => {
-    const docRef = doc(db, "menu-items-categories", "categoriesList"); // Use a specific document to store the list
+    const docRef = doc(db, "hotel-details", "menu-item-categories"); // Use a specific document to store the list
 
     try {
       // Add new categories to the array
@@ -67,7 +67,7 @@ const MenuScreenContainer = () => {
   };
 
   const updateMenuItemCategory = async (oldCategory, newCategory) => {
-    const docRef = doc(db, "menu-items-categories", "categoriesList");
+    const docRef = doc(db, "hotel-details", "menu-item-categories");
     try {
       await updateDoc(docRef, {
         categories: arrayRemove(oldCategory),
@@ -82,7 +82,7 @@ const MenuScreenContainer = () => {
   };
 
   const deleteMenuItemCategory = async (category) => {
-    const docRef = doc(db, "menu-items-categories", "categoriesList");
+    const docRef = doc(db, "hotel-details", "menu-item-categories");
     try {
       await updateDoc(docRef, {
         categories: arrayRemove(category),

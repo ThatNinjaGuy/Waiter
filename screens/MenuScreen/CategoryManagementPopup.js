@@ -1,3 +1,4 @@
+import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseButton";
 import React, { useState } from "react";
 import {
   View,
@@ -57,6 +58,7 @@ const CategoryManagementPopup = ({
   return (
     <Modal visible={visible} animationType="slide">
       <View style={styles.container}>
+        <FloatingCloseButton onClose={onClose} />
         <Text style={styles.title}>Manage Categories</Text>
         <TextInput
           style={styles.input}
@@ -69,7 +71,7 @@ const CategoryManagementPopup = ({
             title={editingCategory ? "Update Category" : "Add Category"}
             onPress={editingCategory ? handleUpdateCategory : handleAddCategory}
           />
-          <Button title="Cancel" onPress={onClose} />
+          {/* <Button title="Cancel" onPress={onClose} /> */}
         </View>
         <FlatList
           data={categories}
