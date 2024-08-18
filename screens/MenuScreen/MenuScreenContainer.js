@@ -8,6 +8,7 @@ import {
   deleteDoc,
   updateDoc,
   arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import MenuScreenView from "./MenuScreenView";
@@ -65,8 +66,7 @@ const MenuScreenContainer = () => {
     }
   };
 
-  // Update an existing category
-  const updateCategoryInFirebase = async (oldCategory, newCategory) => {
+  const updateMenuItemCategory = async (oldCategory, newCategory) => {
     const docRef = doc(db, "menu-items-categories", "categoriesList");
     try {
       await updateDoc(docRef, {
@@ -81,8 +81,7 @@ const MenuScreenContainer = () => {
     }
   };
 
-  // Delete a category
-  const deleteCategoryFromFirebase = async (category) => {
+  const deleteMenuItemCategory = async (category) => {
     const docRef = doc(db, "menu-items-categories", "categoriesList");
     try {
       await updateDoc(docRef, {
@@ -151,7 +150,10 @@ const MenuScreenContainer = () => {
       deleteMenuItem={deleteMenuItem}
       updateMenuItem={updateMenuItem}
       categories={menuItemCategories}
-      handleUpdateMenuItemCategories={addMenuItemCategory}
+      setCategories={setMenuItemCategories}
+      handleAddMenuItemCategory={addMenuItemCategory}
+      handleUpdateMenuItemCategory={updateMenuItemCategory}
+      handleDeleteMenuItemCategory={deleteMenuItemCategory}
     />
   );
 };

@@ -21,9 +21,10 @@ const CategoryManagementPopup = ({
   const [newCategory, setNewCategory] = useState("");
   const [editingCategory, setEditingCategory] = useState(null);
 
-  const handleAddCategory = () => {
+  const handleAddCategory = async () => {
     if (newCategory) {
-      onAddCategory(newCategory);
+      await onAddCategory(newCategory);
+      setCategories((prevCategories) => [...prevCategories, newCategory]);
       setNewCategory("");
     }
   };
@@ -33,14 +34,20 @@ const CategoryManagementPopup = ({
     setNewCategory(category);
   };
 
-  const handleDeleteCategory = (category) => {
-    onUpdateCategories(categories.filter((cat) => cat !== category));
+  const handleDeleteCategory = async (category) => {
+    await onDeleteCategory(category);
+    setCategories((prevCategories) =>
+      prevCategories.filter((cat) => cat !== category)
+    );
   };
 
-  const handleUpdateCategory = () => {
+  const handleUpdateCategory = async () => {
     if (editingCategory) {
-      onUpdateCategories(
-        categories.map((cat) => (cat === editingCategory ? newCategory : cat))
+      await onUpdateCategory(editingCategory, newCategory);
+      setCategories((prevCategories) =>
+        prevCategories.map((cat) =>
+          cat === editingCategory ? newCategory : cat
+        )
       );
       setEditingCategory(null);
       setNewCategory("");

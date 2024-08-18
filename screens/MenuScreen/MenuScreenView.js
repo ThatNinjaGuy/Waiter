@@ -84,7 +84,10 @@ const MenuScreenView = ({
   deleteMenuItem,
   updateMenuItem,
   categories,
-  handleUpdateMenuItemCategories,
+  setCategories,
+  handleAddMenuItemCategory,
+  handleUpdateMenuItemCategory,
+  handleDeleteMenuItemCategory,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
@@ -173,8 +176,10 @@ const MenuScreenView = ({
         visible={isPopupVisible}
         onClose={() => setPopupVisible(false)}
         categories={categories}
-        onAddCategory={handleUpdateMenuItemCategories}
-        onUpdateCategories={handleUpdateMenuItemCategories}
+        setCategories={setCategories}
+        onAddCategory={handleAddMenuItemCategory}
+        onUpdateCategory={handleUpdateMenuItemCategory}
+        onDeleteCategory={handleDeleteMenuItemCategory}
       />
       {modalVisible && (
         <CustomModal
