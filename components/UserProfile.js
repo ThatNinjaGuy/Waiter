@@ -12,7 +12,6 @@ const typeColors = {
 const UserProfile = ({ name, role, imageUrl, plan }) => {
   const [typeColor, setTypeColor] = useState("transparent");
   useEffect(() => {
-    console.log(plan);
     setTypeColor(typeColors[plan] || typeColors["Free"]);
   }, [plan]);
   return (

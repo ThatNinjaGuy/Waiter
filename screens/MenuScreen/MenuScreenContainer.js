@@ -46,7 +46,6 @@ const MenuScreenContainer = () => {
       await batch.commit();
       console.log("Batch write successful");
       setMenuItems([...menuItems, ...newItems]);
-      console.log(newItems);
     } catch (error) {
       console.error("Error writing batch:", error);
     }

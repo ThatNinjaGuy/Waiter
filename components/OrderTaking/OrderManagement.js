@@ -54,7 +54,6 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
   };
 
   const onMenuItemClick = (item, index) => {
-    console.log(item);
     const idx = getItemIndexInOrderBook(item);
     if (idx === -1) {
       // Add new item to the order
