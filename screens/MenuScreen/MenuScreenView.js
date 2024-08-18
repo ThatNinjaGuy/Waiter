@@ -10,74 +10,6 @@ import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedButton } from "@/components/common/ThemedButton";
 import CategoryManagementPopup from "@/screens/MenuScreen/CategoryManagementPopup";
 
-const formSchema = [
-  {
-    name: "searchableKey",
-    placeholder: "Key",
-    inputMode: "default",
-    type: "text",
-  },
-  {
-    name: "name",
-    placeholder: "Item Name",
-    inputMode: "default",
-    type: "text",
-  },
-  {
-    name: "type",
-    placeholder: "Type",
-    inputMode: "default",
-    type: "dropdown",
-    options: ["Veg", "Non-Veg", "Egg", "Vegan"],
-  },
-  {
-    name: "isAvailable",
-    placeholder: "Is Available?",
-    inputMode: "default",
-    type: "radio",
-    options: ["Yes", "No"],
-  },
-  {
-    name: "category",
-    placeholder: "Category",
-    inputMode: "default",
-    type: "dropdown",
-    options: [
-      "Beverages",
-      "Burgers",
-      "EGG",
-      "Chicken",
-      "Chakhna",
-      "Chinese Snacks",
-      "Chinese Soups",
-      "Garlic Bread",
-      "Gravy Items",
-      "Hawaiian Wraps",
-      "Maggie Lover",
-    ],
-  },
-  {
-    name: "price",
-    placeholder: "Price",
-    inputMode: "numeric",
-    type: "text",
-    dataType: "numeric",
-  },
-  {
-    name: "cuisine",
-    placeholder: "Cuisine",
-    inputMode: "default",
-    type: "dropdown",
-    options: ["Italian", "Chinese", "Indian"],
-  },
-  {
-    name: "image",
-    placeholder: "Image URL",
-    inputMode: "default",
-    type: "text",
-  },
-];
-
 const MenuScreenView = ({
   menuItems,
   addMenuItem,
@@ -95,6 +27,62 @@ const MenuScreenView = ({
   const [filteredItems, setFilteredItems] = useState(menuItems);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [isPopupVisible, setPopupVisible] = useState(false);
+
+  const formSchema = [
+    {
+      name: "searchableKey",
+      placeholder: "Key",
+      inputMode: "default",
+      type: "text",
+    },
+    {
+      name: "name",
+      placeholder: "Item Name",
+      inputMode: "default",
+      type: "text",
+    },
+    {
+      name: "type",
+      placeholder: "Type",
+      inputMode: "default",
+      type: "dropdown",
+      options: ["Veg", "Non-Veg", "Egg", "Vegan"],
+    },
+    {
+      name: "isAvailable",
+      placeholder: "Is Available?",
+      inputMode: "default",
+      type: "radio",
+      options: ["Yes", "No"],
+    },
+    {
+      name: "category",
+      placeholder: "Category",
+      inputMode: "default",
+      type: "dropdown",
+      options: categories,
+    },
+    {
+      name: "price",
+      placeholder: "Price",
+      inputMode: "numeric",
+      type: "text",
+      dataType: "numeric",
+    },
+    {
+      name: "cuisine",
+      placeholder: "Cuisine",
+      inputMode: "default",
+      type: "dropdown",
+      options: ["Italian", "Chinese", "Indian"],
+    },
+    {
+      name: "image",
+      placeholder: "Image URL",
+      inputMode: "default",
+      type: "text",
+    },
+  ];
 
   useEffect(() => {
     setFilteredItems(menuItems);
@@ -159,7 +147,7 @@ const MenuScreenView = ({
           type="primary"
           style={buttonStyles.button}
         >
-          <ThemedText>Update Menu Item</ThemedText>
+          <ThemedText>Add Menu Item</ThemedText>
         </ThemedButton>
       </ThemedView>
       <FlatList

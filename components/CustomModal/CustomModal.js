@@ -115,7 +115,7 @@ const CustomModal = ({ onClose, onSave, onDelete, item, schema }) => {
                   placeholder={field.placeholder}
                   value={formData[field.name]}
                   onChangeText={(value) => handleInputChange(field.name, value)}
-                  keyboardType={field.inputMode}
+                  inputMode={field.inputMode}
                 />
               );
           }
