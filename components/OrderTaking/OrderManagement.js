@@ -21,7 +21,9 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "menu-items/"));
+        const querySnapshot = await getDocs(
+          collection(db, "hotel-details/menu/menu-items")
+        );
         const items = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
