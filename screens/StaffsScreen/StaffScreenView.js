@@ -18,7 +18,28 @@ const formSchema = [
   },
   { name: "name", placeholder: "Name", inputMode: "default", type: "text" },
   { name: "age", placeholder: "Age", inputMode: "numeric", type: "text" },
-  { name: "role", placeholder: "Role", inputMode: "default", type: "text" },
+  {
+    name: "gender",
+    placeholder: "Gender",
+    inputMode: "numeric",
+    type: "dropdown",
+    options: ["Male", "Female", "Other"],
+  },
+  {
+    name: "role",
+    placeholder: "Role",
+    inputMode: "default",
+    type: "dropdown",
+    options: [
+      "Waiter",
+      "Cook",
+      "Cleaner",
+      "Manager",
+      "Helper",
+      "Assistant",
+      "Owner",
+    ],
+  },
   {
     name: "image",
     placeholder: "Image URL",
@@ -88,7 +109,7 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
         type="primary"
         style={[{ borderRadius: 0, marginBottom: 5 }]}
       >
-        <ThemedText>Add Person</ThemedText>
+        <ThemedText>Add Staff</ThemedText>
       </ThemedButton>
       <FlatList
         data={filteredItems}

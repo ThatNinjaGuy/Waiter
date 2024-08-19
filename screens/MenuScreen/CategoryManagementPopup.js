@@ -1,14 +1,9 @@
 import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseButton";
+import ThemedButton from "@/components/common/ThemedButton";
+import { ThemedText } from "@/components/common/ThemedText";
+import { ThemedView } from "@/components/common/ThemedView";
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Button,
-  Modal,
-  FlatList,
-  TextInput,
-  StyleSheet,
-} from "react-native";
+import { Modal, FlatList, TextInput, StyleSheet } from "react-native";
 
 const CategoryManagementPopup = ({
   visible,
@@ -57,39 +52,52 @@ const CategoryManagementPopup = ({
 
   return (
     <Modal visible={visible} animationType="slide">
-      <View style={styles.container}>
+      <ThemedView style={styles.container}>
         <FloatingCloseButton onClose={onClose} />
-        <Text style={styles.title}>Manage Categories</Text>
+        <ThemedText type="title" style={styles.title}>
+          Manage Categories
+        </ThemedText>
         <TextInput
           style={styles.input}
           placeholder="Category Name"
           value={newCategory}
           onChangeText={setNewCategory}
         />
-        <View style={styles.buttons}>
-          <Button
-            title={editingCategory ? "Update Category" : "Add Category"}
+        <ThemedView style={styles.buttons}>
+          <ThemedButton
+            type="primary"
             onPress={editingCategory ? handleUpdateCategory : handleAddCategory}
-          />
-          {/* <Button title="Cancel" onPress={onClose} /> */}
-        </View>
+          >
+            <ThemedText>
+              {editingCategory ? "Update Category" : "Add Category"}
+            </ThemedText>
+          </ThemedButton>
+        </ThemedView>
         <FlatList
           data={categories}
           renderItem={({ item }) => (
-            <View style={styles.categoryItem}>
-              <Text>{item}</Text>
-              <View style={styles.categoryActions}>
-                <Button title="Edit" onPress={() => handleEditCategory(item)} />
-                <Button
-                  title="Delete"
+            <ThemedView style={styles.categoryItem}>
+              <ThemedText type="defaultSemiBold">{item}</ThemedText>
+              <ThemedView style={styles.categoryActions}>
+                <ThemedButton
                   onPress={() => handleDeleteCategory(item)}
-                />
-              </View>
-            </View>
+                  style={[styles.button, styles.deleteButton]}
+                >
+                  <ThemedText>Delete</ThemedText>
+                </ThemedButton>
+                <ThemedButton
+                  type="primary"
+                  onPress={() => handleEditCategory(item)}
+                  style={styles.button}
+                >
+                  <ThemedText>Edit</ThemedText>
+                </ThemedButton>
+              </ThemedView>
+            </ThemedView>
           )}
           keyExtractor={(item) => item}
         />
-      </View>
+      </ThemedView>
     </Modal>
   );
 };
@@ -106,6 +114,13 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   categoryActions: { flexDirection: "row" },
+  button: {
+    marginHorizontal: 5,
+    width: 75,
+  },
+  deleteButton: {
+    backgroundColor: "#F44336",
+  },
 });
 
 export default CategoryManagementPopup;

@@ -17,7 +17,9 @@ const StaffsScreenContainer = () => {
   useEffect(() => {
     const fetchStaffs = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "staffs/"));
+        const querySnapshot = await getDocs(
+          collection(db, "hotel-details/staff-details/staffs")
+        );
         const items = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -37,7 +39,7 @@ const StaffsScreenContainer = () => {
 
     items.forEach((item) => {
       item.searchableKey = generateUniqueKey(staffs, item);
-      const docRef = doc(collection(db, "staffs/"));
+      const docRef = doc(collection(db, "hotel-details/staff-details/staffs"));
       batch.set(docRef, item);
       newItems.push({ ...item, id: docRef.id });
     });
@@ -57,7 +59,7 @@ const StaffsScreenContainer = () => {
 
   const deleteStaff = async (id) => {
     try {
-      await deleteDoc(doc(db, "staffs/", id));
+      await deleteDoc(doc(db, "hotel-details/staff-details/staffs", id));
       setStaffs(staffs.filter((item) => item.id !== id));
       console.log("Document successfully deleted!");
     } catch (error) {
@@ -67,7 +69,7 @@ const StaffsScreenContainer = () => {
 
   const updateStaff = async (id, updatedItem) => {
     try {
-      const itemRef = doc(db, "staffs/", id);
+      const itemRef = doc(db, "hotel-details/staff-details/staffs", id);
       await updateDoc(itemRef, updatedItem);
       setStaffs(
         staffs.map((item) =>

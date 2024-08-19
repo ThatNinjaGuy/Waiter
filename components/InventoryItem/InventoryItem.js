@@ -17,7 +17,7 @@ const InventoryItem = ({ item, onEdit }) => (
     <View style={styles.infoContainer}>
       <ThemedText style={styles.name}>{item.name}</ThemedText>
       <ThemedText style={styles.price}>
-        ₹{item.price + " /" + item.unit}
+        ₹{item.price + "/ " + item.unit}
       </ThemedText>
       <ThemedText style={styles.cuisine}>
         {item.quantity + " " + item.unit}

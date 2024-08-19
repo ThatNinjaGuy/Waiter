@@ -17,7 +17,9 @@ const InventoryScreenContainer = () => {
   useEffect(() => {
     const fetchInventoryItems = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "inventory-items"));
+        const querySnapshot = await getDocs(
+          collection(db, "hotel-details/inventory/inventory-items")
+        );
         const items = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -37,7 +39,9 @@ const InventoryScreenContainer = () => {
 
     items.forEach((item) => {
       item.searchableKey = generateUniqueKey(inventoryItems, item);
-      const docRef = doc(collection(db, "inventory-items"));
+      const docRef = doc(
+        collection(db, "hotel-details/inventory/inventory-items")
+      );
       batch.set(docRef, item);
       newItems.push({ ...item, id: docRef.id });
     });
@@ -57,7 +61,7 @@ const InventoryScreenContainer = () => {
 
   const deleteInventoryItem = async (id) => {
     try {
-      await deleteDoc(doc(db, "inventory-items", id));
+      await deleteDoc(doc(db, "hotel-details/inventory/inventory-items", id));
       setInventoryItems(inventoryItems.filter((item) => item.id !== id));
       console.log("Document successfully deleted!");
     } catch (error) {
@@ -67,7 +71,7 @@ const InventoryScreenContainer = () => {
 
   const updateInventoryItem = async (id, updatedItem) => {
     try {
-      const itemRef = doc(db, "inventory-items", id);
+      const itemRef = doc(db, "hotel-details/inventory/inventory-items", id);
       await updateDoc(itemRef, updatedItem);
       setInventoryItems(
         inventoryItems.map((item) =>

@@ -34,7 +34,13 @@ const formSchema = [
     inputMode: "numeric",
     type: "text",
   },
-  { name: "unit", placeholder: "Unit", inputMode: "default", type: "text" },
+  {
+    name: "unit",
+    placeholder: "Unit",
+    inputMode: "default",
+    type: "dropdown",
+    options: ["Kg", "l", "pc", "dozen", "quintal"],
+  },
   {
     name: "image",
     placeholder: "Image URL",
