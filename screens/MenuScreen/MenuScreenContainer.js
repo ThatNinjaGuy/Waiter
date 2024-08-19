@@ -21,7 +21,9 @@ const MenuScreenContainer = () => {
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "menu-items/"));
+        const querySnapshot = await getDocs(
+          collection(db, "hotel-details/menu/menu-items")
+        );
         const items = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -99,7 +101,7 @@ const MenuScreenContainer = () => {
 
     items.forEach((item) => {
       item.searchableKey = generateUniqueKey(menuItems, item);
-      const docRef = doc(collection(db, "menu-items/"));
+      const docRef = doc(collection(db, "hotel-details/menu/menu-items"));
       batch.set(docRef, item);
       newItems.push({ ...item, id: docRef.id });
     });
@@ -120,7 +122,7 @@ const MenuScreenContainer = () => {
 
   const deleteMenuItem = async (id) => {
     try {
-      await deleteDoc(doc(db, "menu-items/", id));
+      await deleteDoc(doc(db, "hotel-details/menu/menu-items", id));
       setMenuItems(menuItems.filter((item) => item.id !== id));
       console.log("Document successfully deleted!");
     } catch (error) {
@@ -130,7 +132,7 @@ const MenuScreenContainer = () => {
 
   const updateMenuItem = async (id, updatedItem) => {
     try {
-      const itemRef = doc(db, "menu-items/", id);
+      const itemRef = doc(db, "hotel-details/menu/menu-items", id);
       await updateDoc(itemRef, updatedItem);
       setMenuItems(
         menuItems.map((item) =>

@@ -74,7 +74,7 @@ const MenuScreenView = ({
       placeholder: "Cuisine",
       inputMode: "default",
       type: "dropdown",
-      options: ["Italian", "Chinese", "Indian"],
+      options: ["Indian", "Chinese", "Italian"],
     },
     {
       name: "image",
