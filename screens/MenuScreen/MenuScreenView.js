@@ -135,7 +135,6 @@ const MenuScreenView = ({
     <ThemedView style={styles.container}>
       <ThemedView style={buttonStyles.buttonContainer}>
         <ThemedButton
-          // onPress={handleAddMenuItemCategory}
           onPress={() => setPopupVisible(true)}
           type="primary"
           style={buttonStyles.button}
@@ -211,7 +210,7 @@ const buttonStyles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    borderRadius: 0,
+    borderRadius: 5,
     marginBottom: 5,
     marginHorizontal: 2, // Optional: to add some space between buttons
   },
