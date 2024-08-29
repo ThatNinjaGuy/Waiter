@@ -36,22 +36,24 @@ const OrdersScreen = ({ orders, onCompleteOrder }) => {
     <View style={styles.card}>
       <View style={styles.headerRow}>
         <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.quantity}>{item.quantity}</Text>
+        <Text style={styles.quantity}>{item.tableNumber}</Text>
       </View>
-      <Text style={styles.tableNumber}>Table {item.tableNumber}</Text>
-      {item.notes && <Text style={styles.notes}>Notes: {item.tableNote}</Text>}
+      <Text style={styles.tableNumber}>Qty: {item.quantity}</Text>
+      <Text style={styles.notes}>Notes: {item.tableNote}</Text>
       <TouchableOpacity
         style={styles.completeButton}
-        onPress={() => onCompleteOrder(item.id)}
+        onPress={() => onCompleteOrder(item.id, item.tableId)}
       >
         <Text style={styles.completeButtonText}>Complete Order</Text>
       </TouchableOpacity>
     </View>
   );
-
+  const filteredOrders = orders.filter(
+    (order) => !order.status || order.status === "ACTIVE"
+  );
   return (
     <FlatList
-      data={orders}
+      data={filteredOrders}
       renderItem={renderOrder}
       keyExtractor={(item, index) => `order-${index}-${item.id}`}
       contentContainerStyle={styles.listContent}

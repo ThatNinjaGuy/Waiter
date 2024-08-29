@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { collection, query, onSnapshot } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  collection,
+  query,
+  onSnapshot,
+} from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import { ThemedText } from "@/components/common/ThemedText";
 import OrdersScreen from "./OrdersScreen";
@@ -39,7 +46,6 @@ const OrdersScreenContainer = () => {
               (b.timestamp?.toMillis() || 0) - (a.timestamp?.toMillis() || 0)
           );
 
-          console.log(allOrders);
           setOrders(allOrders);
           setLoading(false);
         });
@@ -55,9 +61,36 @@ const OrdersScreenContainer = () => {
     fetchOrders();
   }, []);
 
-  const handleCompleteOrder = (orderId) => {
-    // Implement your logic to mark an order as complete in Firebase
-    console.log(`Order ${orderId} marked as complete`);
+  const handleCompleteOrder = async (orderId, tableId) => {
+    console.log(
+      `Order from ${tableId} with orderId: ${orderId} marked as complete`
+    );
+    try {
+      // Find the table document
+      const tableDocRef = doc(db, "tables", tableId);
+
+      // Get the current orders
+      const tableSnapshot = await getDoc(tableDocRef);
+      const currentOrders = tableSnapshot.data().orders;
+
+      // Find the order to update
+      const updatedOrders = currentOrders.map((order) =>
+        order.id === orderId ? { ...order, status: "COMPLETE" } : order
+      );
+
+      // Update the orders array in Firestore
+      await updateDoc(tableDocRef, { orders: updatedOrders });
+
+      // Update local state
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === orderId ? { ...order, status: "COMPLETE" } : order
+        )
+      );
+      console.log(`Order ${orderId} marked as COMPLETE`);
+    } catch (error) {
+      console.error("Error updating order status:", error);
+    }
   };
 
   if (loading) {
