@@ -98,7 +98,6 @@ const RestaurantTablesScreen = () => {
   };
 
   const updateTableDetails = async (id, updatedItem) => {
-    console.log(id, updatedItem);
     try {
       const itemRef = doc(db, "hotel-details/seating-arrangement/tables/", id);
       await updateDoc(itemRef, updatedItem);

@@ -27,7 +27,7 @@ const OrderDetails = ({
       itemValue: parseFloat(item.price) || 0, // Convert price to a number,
       orderTimestamp: Date.now(),
     };
-    increaseQuantity(item);
+    increaseQuantity(orderItem);
   };
 
   const renderOrderItem = ({ item }) => (

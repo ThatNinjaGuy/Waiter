@@ -65,9 +65,6 @@ const OrdersScreenContainer = () => {
   }, []);
 
   const handleCompleteOrder = async (orderId, tableId) => {
-    console.log(
-      `Order from ${tableId} with orderId: ${orderId} marked as complete`
-    );
     try {
       // Find the table document
       const tableDocRef = doc(
@@ -94,7 +91,6 @@ const OrdersScreenContainer = () => {
           order.id === orderId ? { ...order, status: "COMPLETE" } : order
         )
       );
-      console.log(`Order ${orderId} marked as COMPLETE`);
     } catch (error) {
       console.error("Error updating order status:", error);
     }

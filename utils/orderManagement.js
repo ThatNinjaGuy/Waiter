@@ -1,5 +1,6 @@
 export function aggregateOrders(rawOrders) {
   if (!rawOrders || rawOrders.length === 0) return [];
+
   const aggregatedOrders = rawOrders.reduce((acc, rawOrder) => {
     const existingOrder = acc.find(
       (order) =>
@@ -17,7 +18,7 @@ export function aggregateOrders(rawOrders) {
         menuItemId: rawOrder.menuItemId,
         image: rawOrder.image,
         searchableKey: rawOrder.searchableKey,
-        dietaryPreference: rawOrder.type,
+        dietaryPreference: rawOrder.type || rawOrder.dietaryPreference,
         price: rawOrder.price,
         quantity: 1,
         itemValue: rawOrder.price,
