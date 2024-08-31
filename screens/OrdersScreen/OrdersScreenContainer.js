@@ -20,7 +20,7 @@ const OrdersScreenContainer = () => {
       try {
         const tablesRef = collection(
           db,
-          "hotel-details/seating-arrangement/tables"
+          "hotel-details/seating-arrangement/tables/"
         );
         const q = query(tablesRef);
 
@@ -69,7 +69,7 @@ const OrdersScreenContainer = () => {
       // Find the table document
       const tableDocRef = doc(
         db,
-        "hotel-details/seating-arrangement/tables",
+        "hotel-details/seating-arrangement/tables/",
         tableId
       );
 

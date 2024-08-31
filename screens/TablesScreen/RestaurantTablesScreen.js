@@ -8,6 +8,8 @@ import {
   doc,
   deleteDoc,
   updateDoc,
+  query,
+  onSnapshot,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import TableManagement from "./TableManagement";
@@ -30,17 +32,45 @@ const RestaurantTablesScreen = () => {
   const [tableAdd, setTableAdd] = useState(false);
   const [tableInfoOptionClicked, setTableInfoOptionClicked] = useState(false);
 
+  // useEffect(() => {
+  //   const fetchAllTables = async () => {
+  //     try {
+  //       const querySnapshot = await getDocs(
+  //         collection(db, "hotel-details/seating-arrangement/tables/")
+  //       );
+  //       const items = querySnapshot.docs.map((doc) => ({
+  //         id: doc.id,
+  //         ...doc.data(),
+  //       }));
+  //       setTables(items);
+  //     } catch (error) {
+  //       console.error("Error fetching tables:", error);
+  //     }
+  //   };
+
+  //   fetchAllTables();
+  // }, []);
+
   useEffect(() => {
     const fetchAllTables = async () => {
       try {
-        const querySnapshot = await getDocs(
-          collection(db, "hotel-details/seating-arrangement/tables/")
+        const tablesRef = collection(
+          db,
+          "hotel-details/seating-arrangement/tables/"
         );
-        const items = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setTables(items);
+        const q = query(tablesRef);
+
+        // Set up real-time listener
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const allTables = [];
+          querySnapshot.docs.forEach((doc) => {
+            console.log(doc.data());
+            allTables.push({ id: doc.id, ...doc.data() });
+          });
+          setTables(allTables);
+        });
+        // Clean up the listener on component unmount
+        return () => unsubscribe();
       } catch (error) {
         console.error("Error fetching tables:", error);
       }
