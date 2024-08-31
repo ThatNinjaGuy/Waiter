@@ -1,9 +1,16 @@
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, FlatList } from "react-native";
+import {
+  aggregateOrders,
+  calculateOrderValue,
+} from "../../utils/orderManagement";
 
-const OrderDetails = ({ order }) => {
+const OrderDetails = ({ rawOrders }) => {
+  const orders = aggregateOrders(rawOrders);
+  const orderValue = calculateOrderValue(orders);
+
   const renderOrderItem = ({ item }) => (
     <ThemedView style={styles.orderItem}>
       <ThemedText style={styles.itemName}>{item.name}</ThemedText>
@@ -19,15 +26,13 @@ const OrderDetails = ({ order }) => {
     <ThemedView style={styles.container}>
       <ThemedText style={styles.title}>Order Details</ThemedText>
       <FlatList
-        data={order.orders}
+        data={orders}
         renderItem={renderOrderItem}
         keyExtractor={(item) => item.name.toString() + item.category.toString()}
       />
       <ThemedView style={styles.totalContainer}>
         <ThemedText style={styles.totalText}>Total:</ThemedText>
-        <ThemedText style={styles.totalAmount}>
-          ₹{order.orderValue?.toFixed(2)}
-        </ThemedText>
+        <ThemedText style={styles.totalAmount}>₹{orderValue}</ThemedText>
       </ThemedView>
     </ThemedView>
   );

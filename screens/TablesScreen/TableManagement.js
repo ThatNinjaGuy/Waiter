@@ -149,7 +149,7 @@ const TableManagement = ({ table, onUpdateTable, onClose }) => {
         >
           <ThemedText style={styles.updateButtonText}>Book Table</ThemedText>
         </ThemedButton>
-        <OrderDetails order={table} />
+        <OrderDetails rawOrders={table.orders} />
       </ThemedView>
     </View>
   );

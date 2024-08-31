@@ -96,6 +96,7 @@ const RestaurantTablesScreen = () => {
   };
 
   const updateTableDetails = async (id, updatedItem) => {
+    console.log(id, updatedItem);
     try {
       const itemRef = doc(db, "tables/", id);
       await updateDoc(itemRef, updatedItem);
@@ -129,7 +130,10 @@ const RestaurantTablesScreen = () => {
   };
 
   const calculateOrderValue = (orders) => {
-    return orders.reduce((total, order) => total + order.itemValue, 0);
+    return orders.reduce(
+      (total, order) => total + order.price * order.quantity,
+      0
+    );
   };
 
   const calculateTotalOrderCount = (orders) => {
@@ -141,12 +145,13 @@ const RestaurantTablesScreen = () => {
     if (tableIndex !== -1) {
       const updatedTable = { ...tables[tableIndex], orders };
       updatedTable.orderValue = calculateOrderValue(orders);
-      updatedTable.totalOrders = calculateTotalOrderCount(orders);
+      updatedTable.orderCount = calculateTotalOrderCount(orders);
       const newTables = [...tables];
       newTables[tableIndex] = updatedTable;
+      console.log(updatedTable);
       setTables(newTables);
       updateTableDetails(selectedTable.id, updatedTable);
-    }
+    } else console.error("Couldn't find table");
   };
 
   const updateSearch = (searchText) => {
