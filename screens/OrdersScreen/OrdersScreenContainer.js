@@ -31,7 +31,7 @@ const OrdersScreenContainer = () => {
             const tableData = doc.data();
             const tableNumber = tableData.number;
             const tableNote = tableData.notes;
-            if (tableData.orders && Array.isArray(tableData.orders)) {
+            if (tableData.orders) {
               // Add table ID to each order for reference
               const tableOrders = tableData.orders.map((order) => ({
                 ...order,
