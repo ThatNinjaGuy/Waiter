@@ -85,19 +85,29 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
     else return "rgba(95, 95, 123, 0.8)";
   };
 
+  const totalOrdersCount = (orders) => {
+    return orders ? orders.length : 0;
+  };
+
+  const completedOrdersCount = (orders) => {
+    return !orders
+      ? 0
+      : orders.filter((order) => (order.status = "COMPLETE")).length;
+  };
+
   const renderTableItem = ({ item }) => (
     <ThemedButton
       style={[styles.tableItem, { width: layoutParams.itemWidth }]}
       onPress={() => onTablePress(item)}
       lightBackgroundColor={getLightBackgroundColor(
         item.status,
-        item.orderCount,
-        item.totalOrders
+        completedOrdersCount(item.orders),
+        totalOrdersCount(item.orders)
       )}
       darkBackgroundColor={getDarkBackgroundColor(
         item.status,
-        item.orderCount,
-        item.totalOrders
+        completedOrdersCount(item.orders),
+        totalOrdersCount(item.orders)
       )}
     >
       <ThemedText style={styles.tableNumber}>Table - {item.number}</ThemedText>
@@ -118,13 +128,14 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
         </View>
         <View style={styles.rightColumn}>
           <ThemedText style={styles.tableDetails}>
-            Orders: {item.orderCount || 0}/{item.totalOrders || 0}
+            Orders: {completedOrdersCount(item.orders) || 0}/
+            {totalOrdersCount(item.orders) || 0}
           </ThemedText>
           <ThemedText style={styles.tableDetails}>
             {item.status === "Occupied" &&
-            item.orderCount &&
-            item.totalOrders &&
-            item.orderCount < item.totalOrders
+            completedOrdersCount(item.orders) &&
+            totalOrdersCount(item.orders) &&
+            completedOrdersCount(item.orders) < totalOrdersCount(item.orders)
               ? `ETA: ${item.eta ? Math.floor(item.eta / 60) : 0}${
                   item.eta ? ":" : ""
                 }${item.eta ? String(item.eta % 60).padStart(2, "0") : ""} min`

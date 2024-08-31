@@ -59,8 +59,6 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
   // Update orders whenever rawOrders changes
   useEffect(() => {
     const aggOrders = aggregateOrders(rawOrders);
-    console.log(rawOrders);
-    console.log(aggOrders);
     setOrders(aggOrders);
   }, [rawOrders]);
 
@@ -93,7 +91,6 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
   };
 
   const addItem = (item) => {
-    console.log(item);
     // Add new item to rawOrders with status ACTIVE and current timestamp
     const newItem = {
       ...item,

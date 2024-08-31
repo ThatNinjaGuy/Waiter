@@ -31,9 +31,12 @@ export function aggregateOrders(rawOrders) {
 }
 
 export function calculateOrderValue(orders) {
-  const value = orders.reduce((val, b) => {
-    return val + b.itemValue;
-  }, 0); // Provide an initial value of 0 for the accumulator
-  console.log(value);
-  return value;
+  return orders.reduce(
+    (total, order) => total + order.price * order.quantity,
+    0
+  );
+}
+
+export function calculateTotalOrderCount(orders) {
+  return orders.reduce((total, order) => total + order.quantity, 0);
 }

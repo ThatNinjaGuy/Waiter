@@ -59,8 +59,6 @@ const RestaurantTablesScreen = () => {
       item.number = item.number ? item.number : tables.length + 1;
       item.searchableKey = item.number;
       item.status = "Available";
-      item.orderCount = 0;
-      item.totalOrders = 0;
       const docRef = doc(collection(db, "tables/"));
       batch.set(docRef, item);
       newItems.push({ ...item, id: docRef.id });
@@ -129,23 +127,10 @@ const RestaurantTablesScreen = () => {
     setTableInfoOptionClicked(false);
   };
 
-  const calculateOrderValue = (orders) => {
-    return orders.reduce(
-      (total, order) => total + order.price * order.quantity,
-      0
-    );
-  };
-
-  const calculateTotalOrderCount = (orders) => {
-    return orders.reduce((total, order) => total + order.quantity, 0);
-  };
-
   const handleTableOrderUpdate = (orders) => {
     const tableIndex = tables.findIndex((t) => t.id === selectedTable.id);
     if (tableIndex !== -1) {
       const updatedTable = { ...tables[tableIndex], orders };
-      updatedTable.orderValue = calculateOrderValue(orders);
-      updatedTable.orderCount = calculateTotalOrderCount(orders);
       const newTables = [...tables];
       newTables[tableIndex] = updatedTable;
       console.log(updatedTable);
