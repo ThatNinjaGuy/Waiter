@@ -32,10 +32,10 @@ export default function HomeScreen() {
   }, []);
 
   const navigationItems = [
+    { title: "Staffs", onPress: () => navigation.navigate("staffs") },
+    { title: "Tables", onPress: () => navigation.navigate("tables") },
     { title: "Menu", onPress: () => navigation.navigate("menu") },
     { title: "Orders", onPress: () => navigation.navigate("orders") },
-    { title: "Staffs", onPress: () => navigation.navigate("staffs") },
-    { title: "Inventory", onPress: () => navigation.navigate("inventory") },
   ];
 
   const renderHeader = () => (

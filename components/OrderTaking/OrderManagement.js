@@ -9,14 +9,28 @@ import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseB
 import { ThemedView } from "../common/ThemedView";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
+import { aggregateOrders } from "@/utils/orderManagement";
+import { generateUUID } from "@/utils/uuidGenerator";
 
 const OrderManagement = ({ items, onClose, updateOrder }) => {
-  const [selectedCategory, setSelectedCategory] = useState(0);
-  const [selectedMenu, setSelectedMenu] = useState();
-  const [orders, setOrders] = useState(items ? items : []);
-
   const [menuItems, setMenuItems] = useState([]);
+  const [selectedMenu, setSelectedMenu] = useState();
+
   const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(0);
+
+  const [rawOrders, setRawOrders] = useState(items ? items : []);
+  const [orders, setOrders] = useState([]);
+
+  const { width } = useWindowDimensions();
+  const isLargeScreen = width > 768; // Adjust the breakpoint as needed
+
+  useEffect(() => {
+    if (selectedCategory == 0) return setSelectedMenu(getFavoriteItems());
+    setSelectedMenu(
+      menuItems.filter((item) => item.category === categories[selectedCategory])
+    );
+  }, [selectedCategory, menuItems]);
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -42,67 +56,66 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
     fetchMenuItems();
   }, []);
 
+  // Update orders whenever rawOrders changes
   useEffect(() => {
-    if (selectedCategory == 0) return setSelectedMenu(getFavoriteItems());
-    setSelectedMenu(
-      menuItems.filter((item) => item.category === categories[selectedCategory])
-    );
-  }, [selectedCategory, menuItems]);
+    const aggOrders = aggregateOrders(rawOrders);
+    setOrders(aggOrders);
+  }, [rawOrders]);
 
-  useEffect(() => updateOrder(orders), [orders]);
+  // Update Firebase whenever orders change
+  useEffect(() => {
+    updateOrder(rawOrders);
+  }, [rawOrders]);
 
   const onSidebarItemClicked = (item, idx) => {
     setSelectedCategory(idx);
   };
 
-  const onMenuItemClick = (item, index) => {
-    const idx = getItemIndexInOrderBook(item);
-    if (idx === -1) {
-      // Add new item to the order
-      item.quantity = 1;
-      item.itemValue = item.price * item.quantity;
-      setOrders([...orders, item]);
-    } else increaseQuantity(idx);
+  const onMenuItemClick = (item) => {
+    const orderItem = {
+      id: generateUUID(),
+      menuItemId: item.id,
+      name: item.name,
+      category: item.category,
+      cuisine: item.cuisine,
+      price: item.price,
+      searchableKey: item.searchableKey,
+      dietaryPreference: item.type,
+      image: item.image,
+      quantity: 1,
+      status: "ACTIVE",
+      itemValue: parseFloat(item.price) || 0, // Convert price to a number,
+      orderTimestamp: Date.now(),
+    };
+    addItem(orderItem);
   };
 
-  const getItemIndexInOrderBook = (item) => {
-    return orders.findIndex(
+  const addItem = (item) => {
+    setRawOrders([...rawOrders, item]);
+  };
+
+  const removeItem = (item) => {
+    // Find the first item with the same name, category, and status ACTIVE
+    const index = rawOrders.findIndex(
       (orderItem) =>
-        orderItem.name === item.name && orderItem.category === item.category
+        orderItem.name === item.name &&
+        orderItem.category === item.category &&
+        orderItem.status === "ACTIVE"
     );
-  };
 
-  const increaseQuantity = (index) => {
-    const newOrderItems = [...orders];
-    newOrderItems[index].quantity += 1;
-    newOrderItems[index].itemValue =
-      newOrderItems[index].price * newOrderItems[index].quantity;
-    setOrders(newOrderItems);
-  };
-
-  const decreaseQuantity = (index) => {
-    const newOrderItems = [...orders];
-    if (newOrderItems[index].quantity > 1) {
-      newOrderItems[index].quantity -= 1;
-      newOrderItems[index].itemValue =
-        newOrderItems[index].price * newOrderItems[index].quantity;
-      setOrders(newOrderItems);
-    } else removeItem(index);
-  };
-
-  const removeItem = (index) => {
-    const newOrders = [...orders]; // Create a copy of the orders array
-    newOrders.splice(index, 1); // Remove the item at the specified index
-    setOrders(newOrders); // Update the state with the new array
+    if (index !== -1) {
+      const newOrders = [...rawOrders]; // Create a copy of the orders array
+      newOrders.splice(index, 1); // Remove the item at the specified index
+      setRawOrders(newOrders); // Update the state with the new array
+    } else {
+      console.log("No active item found to decrease quantity.");
+    }
   };
 
   const getFavoriteItems = () => {
     return menuItems;
     // return menuItems.filter((item) => item.orderCountPercentile > 70);
   };
-
-  const { width } = useWindowDimensions();
-  const isLargeScreen = width > 768; // Adjust the breakpoint as needed
 
   return (
     <ThemedView style={styles.mainContainer}>
@@ -137,9 +150,8 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
           <OrderDetails
             orders={orders}
             style={styles.orderDetails}
-            increaseQuantity={increaseQuantity}
-            decreaseQuantity={decreaseQuantity}
-            removeItem={removeItem}
+            increaseQuantity={addItem}
+            decreaseQuantity={removeItem}
           />
           <PaymentOptions style={styles.paymentOptions} onSave={onClose} />
         </ThemedView>

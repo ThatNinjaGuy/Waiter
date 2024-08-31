@@ -4,6 +4,10 @@ import { ThemedView } from "@/components/common/ThemedView";
 import React, { useMemo, useState, useCallback, useEffect } from "react";
 import { useWindowDimensions, FlatList, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import {
+  calculateTotalOrderCount,
+  completedOrdersCount,
+} from "@/utils/orderManagement";
 
 const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
   const { width } = useWindowDimensions();
@@ -91,13 +95,13 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
       onPress={() => onTablePress(item)}
       lightBackgroundColor={getLightBackgroundColor(
         item.status,
-        item.orderCount,
-        item.totalOrders
+        completedOrdersCount(item.orders),
+        calculateTotalOrderCount(item.orders)
       )}
       darkBackgroundColor={getDarkBackgroundColor(
         item.status,
-        item.orderCount,
-        item.totalOrders
+        completedOrdersCount(item.orders),
+        calculateTotalOrderCount(item.orders)
       )}
     >
       <ThemedText style={styles.tableNumber}>Table - {item.number}</ThemedText>
@@ -118,13 +122,15 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
         </View>
         <View style={styles.rightColumn}>
           <ThemedText style={styles.tableDetails}>
-            Orders: {item.orderCount || 0}/{item.totalOrders || 0}
+            Orders: {completedOrdersCount(item.orders) || 0}/
+            {calculateTotalOrderCount(item.orders) || 0}
           </ThemedText>
           <ThemedText style={styles.tableDetails}>
             {item.status === "Occupied" &&
-            item.orderCount &&
-            item.totalOrders &&
-            item.orderCount < item.totalOrders
+            completedOrdersCount(item.orders) &&
+            calculateTotalOrderCount(item.orders) &&
+            completedOrdersCount(item.orders) <
+              calculateTotalOrderCount(item.orders)
               ? `ETA: ${item.eta ? Math.floor(item.eta / 60) : 0}${
                   item.eta ? ":" : ""
                 }${item.eta ? String(item.eta % 60).padStart(2, "0") : ""} min`

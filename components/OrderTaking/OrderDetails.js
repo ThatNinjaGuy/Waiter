@@ -1,49 +1,53 @@
-import React, { useState, useEffect } from "react";
 import { StyleSheet, FlatList, Platform } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { ThemedView } from "../common/ThemedView";
 import { ThemedText } from "../common/ThemedText";
 import ThemedButton from "../common/ThemedButton";
+import { generateUUID } from "@/utils/uuidGenerator";
 
 const OrderDetails = ({
   style,
   orders,
   increaseQuantity,
   decreaseQuantity,
-  removeItem,
 }) => {
-  const [orderItems, setOrderItems] = useState(orders);
+  const handleIncreaseQuantityClick = (item) => {
+    const orderItem = {
+      id: generateUUID(),
+      menuItemId: item.menuItemId,
+      name: item.name,
+      category: item.category,
+      cuisine: item.cuisine,
+      price: item.price,
+      searchableKey: item.searchableKey,
+      dietaryPreference: item.dietaryPreference,
+      image: item.image,
+      quantity: 1,
+      status: "ACTIVE",
+      itemValue: parseFloat(item.price) || 0, // Convert price to a number,
+      orderTimestamp: Date.now(),
+    };
+    increaseQuantity(orderItem);
+  };
 
-  useEffect(() => {
-    setOrderItems(orders);
-  }, [orders]);
-
-  const renderOrderItem = ({ item, index }) => (
+  const renderOrderItem = ({ item }) => (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.orderItem}>
-        <ThemedButton
-          onPress={() => removeItem(index)}
-          style={styles.removeItemButton}
-        >
-          <Icon name="close" size={30} color="#f00" />
-        </ThemedButton>
         <ThemedView style={styles.itemDetailsContainer}>
           <ThemedText style={styles.itemName}>{item.name}</ThemedText>
-          <ThemedText style={styles.itemPrice}>
-            @ ₹ {item.price.toFixed(2)}
-          </ThemedText>
+          <ThemedText style={styles.itemPrice}>@ ₹ {item.price}</ThemedText>
         </ThemedView>
         <ThemedView style={styles.quantityContainer}>
           <ThemedView style={styles.quantityManipulator}>
             <ThemedButton
-              onPress={() => decreaseQuantity(index)}
+              onPress={() => decreaseQuantity(item)}
               style={styles.quantityButton}
             >
               <Icon name="remove" size={24} color="#000" />
             </ThemedButton>
             <ThemedText style={styles.quantityText}>{item.quantity}</ThemedText>
             <ThemedButton
-              onPress={() => increaseQuantity(index)}
+              onPress={() => handleIncreaseQuantityClick(item)}
               style={styles.quantityButton}
             >
               <Icon name="add" size={24} color="#000" />
@@ -59,7 +63,7 @@ const OrderDetails = ({
 
   return (
     <ThemedView style={[styles.orderDetails, style]}>
-      {orders.length === 0 ? (
+      {!orders || orders.length === 0 ? (
         <>
           <ThemedText>No item selected</ThemedText>
           <ThemedText>Please select item from left menu item</ThemedText>

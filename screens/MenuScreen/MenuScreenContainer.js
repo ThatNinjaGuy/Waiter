@@ -116,7 +116,6 @@ const MenuScreenContainer = () => {
   };
 
   const addMenuItem = (item) => {
-    console.log(item);
     addMenuItems([item]);
   };
 
