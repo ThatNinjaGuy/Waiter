@@ -19,11 +19,16 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(0);
 
-  const [rawOrders, setRawOrders] = useState(items ? items : []);
-  const [orders, setOrders] = useState([]);
+  const [rawOrders, setRawOrders] = useState([]);
+  const [orders, setOrders] = useState();
+  const [updateFlag, setUpdateFlag] = useState(false);
 
   const { width } = useWindowDimensions();
   const isLargeScreen = width > 768; // Adjust the breakpoint as needed
+
+  useEffect(() => {
+    setRawOrders(items);
+  }, [items]);
 
   useEffect(() => {
     if (selectedCategory == 0) return setSelectedMenu(getFavoriteItems());
@@ -58,13 +63,15 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
 
   // Update orders whenever rawOrders changes
   useEffect(() => {
-    const aggOrders = aggregateOrders(rawOrders);
-    setOrders(aggOrders);
+    setOrders(aggregateOrders(rawOrders));
   }, [rawOrders]);
 
   // Update Firebase whenever orders change
   useEffect(() => {
-    updateOrder(rawOrders);
+    if (updateFlag) {
+      updateOrder(rawOrders);
+      setUpdateFlag(false);
+    }
   }, [rawOrders]);
 
   const onSidebarItemClicked = (item, idx) => {
@@ -92,6 +99,7 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
 
   const addItem = (item) => {
     setRawOrders([...rawOrders, item]);
+    setUpdateFlag(true);
   };
 
   const removeItem = (item) => {
@@ -107,6 +115,7 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
       const newOrders = [...rawOrders]; // Create a copy of the orders array
       newOrders.splice(index, 1); // Remove the item at the specified index
       setRawOrders(newOrders); // Update the state with the new array
+      setUpdateFlag(true);
     } else {
       console.log("No active item found to decrease quantity.");
     }
