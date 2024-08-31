@@ -133,7 +133,11 @@ const RestaurantTablesScreen = () => {
   const handleTableOrderUpdate = (orders) => {
     const tableIndex = tables.findIndex((t) => t.id === selectedTable.id);
     if (tableIndex !== -1) {
-      const updatedTable = { ...tables[tableIndex], orders };
+      const updatedTable = {
+        ...tables[tableIndex],
+        orders,
+        status: "Occupied",
+      };
       const newTables = [...tables];
       newTables[tableIndex] = updatedTable;
       console.log(updatedTable);

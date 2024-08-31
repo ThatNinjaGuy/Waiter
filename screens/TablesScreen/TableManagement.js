@@ -45,6 +45,7 @@ const TableManagement = ({ table, onUpdateTable, onClose }) => {
       bookingTime: isBookingNow ? new Date() : bookingTime,
       waiter,
       notes,
+      status: "Occupied",
     });
   };
 
