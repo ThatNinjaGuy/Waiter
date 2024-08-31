@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FlatList } from "react-native";
 import TableList from "./TableList";
 import {
@@ -9,6 +9,7 @@ import {
   updateDoc,
   query,
   onSnapshot,
+  RefreshControl,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import TableManagement from "./TableManagement";
@@ -32,6 +33,22 @@ const RestaurantTablesScreen = () => {
 
   const [tableAdd, setTableAdd] = useState(false);
   const [tableInfoOptionClicked, setTableInfoOptionClicked] = useState(false);
+
+  // const [refreshing, setRefreshing] = useState(false);
+
+  // const onRefresh = useCallback(() => {
+  //   setRefreshing(true);
+  //   // Implement your data refresh logic here
+  //   // For example, refetch tables, orders, etc.
+  //   setTimeout(() => {
+  //     // After refreshing data:
+  //     setRefreshing(false);
+  //   }, 2000);
+  // }, []);
+
+  // const refreshControl = (
+  //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+  // );
 
   useEffect(() => {
     const fetchAllTables = async () => {
