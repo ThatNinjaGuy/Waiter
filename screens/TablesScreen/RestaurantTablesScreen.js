@@ -33,7 +33,9 @@ const RestaurantTablesScreen = () => {
   useEffect(() => {
     const fetchAllTables = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "tables/"));
+        const querySnapshot = await getDocs(
+          collection(db, "hotel-details/seating-arrangement/tables/")
+        );
         const items = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -59,7 +61,9 @@ const RestaurantTablesScreen = () => {
       item.number = item.number ? item.number : tables.length + 1;
       item.searchableKey = item.number;
       item.status = "Available";
-      const docRef = doc(collection(db, "tables/"));
+      const docRef = doc(
+        collection(db, "hotel-details/seating-arrangement/tables/")
+      );
       batch.set(docRef, item);
       newItems.push({ ...item, id: docRef.id });
     });
@@ -85,7 +89,7 @@ const RestaurantTablesScreen = () => {
 
   const deleteTableDetails = async (id) => {
     try {
-      await deleteDoc(doc(db, "tables/", id));
+      await deleteDoc(doc(db, "hotel-details/seating-arrangement/tables/", id));
       setTables(tables.filter((item) => item.id !== id));
       console.log("Document successfully deleted!");
     } catch (error) {
@@ -96,7 +100,7 @@ const RestaurantTablesScreen = () => {
   const updateTableDetails = async (id, updatedItem) => {
     console.log(id, updatedItem);
     try {
-      const itemRef = doc(db, "tables/", id);
+      const itemRef = doc(db, "hotel-details/seating-arrangement/tables/", id);
       await updateDoc(itemRef, updatedItem);
       setTables(
         tables.map((item) =>

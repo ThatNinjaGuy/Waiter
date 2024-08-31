@@ -31,12 +31,19 @@ export function aggregateOrders(rawOrders) {
 }
 
 export function calculateOrderValue(orders) {
-  return orders.reduce(
-    (total, order) => total + order.price * order.quantity,
-    0
-  );
+  return !orders
+    ? 0
+    : orders.reduce((total, order) => total + order.price * order.quantity, 0);
 }
 
 export function calculateTotalOrderCount(orders) {
-  return orders.reduce((total, order) => total + order.quantity, 0);
+  return !orders
+    ? 0
+    : orders.reduce((total, order) => total + order.quantity, 0);
+}
+
+export function completedOrdersCount(orders) {
+  return !orders
+    ? 0
+    : orders.filter((order) => order.status !== "ACTIVE").length;
 }

@@ -91,15 +91,6 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
   };
 
   const addItem = (item) => {
-    // Add new item to rawOrders with status ACTIVE and current timestamp
-    const newItem = {
-      ...item,
-      menuItemId: item.id,
-      quantity: 1,
-      status: "ACTIVE",
-      itemValue: parseFloat(item.price) || 0, // Convert price to a number,
-      orderTimestamp: Date.now(),
-    };
     setRawOrders([...rawOrders, item]);
   };
 

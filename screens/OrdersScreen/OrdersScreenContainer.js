@@ -18,7 +18,10 @@ const OrdersScreenContainer = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const tablesRef = collection(db, "tables");
+        const tablesRef = collection(
+          db,
+          "hotel-details/seating-arrangement/tables"
+        );
         const q = query(tablesRef);
 
         // Set up real-time listener
@@ -67,7 +70,11 @@ const OrdersScreenContainer = () => {
     );
     try {
       // Find the table document
-      const tableDocRef = doc(db, "tables", tableId);
+      const tableDocRef = doc(
+        db,
+        "hotel-details/seating-arrangement/tables",
+        tableId
+      );
 
       // Get the current orders
       const tableSnapshot = await getDoc(tableDocRef);

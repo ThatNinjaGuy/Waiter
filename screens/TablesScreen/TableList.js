@@ -4,6 +4,10 @@ import { ThemedView } from "@/components/common/ThemedView";
 import React, { useMemo, useState, useCallback, useEffect } from "react";
 import { useWindowDimensions, FlatList, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import {
+  calculateTotalOrderCount,
+  completedOrdersCount,
+} from "@/utils/orderManagement";
 
 const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
   const { width } = useWindowDimensions();
@@ -85,16 +89,6 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
     else return "rgba(95, 95, 123, 0.8)";
   };
 
-  const totalOrdersCount = (orders) => {
-    return orders ? orders.length : 0;
-  };
-
-  const completedOrdersCount = (orders) => {
-    return !orders
-      ? 0
-      : orders.filter((order) => (order.status = "COMPLETE")).length;
-  };
-
   const renderTableItem = ({ item }) => (
     <ThemedButton
       style={[styles.tableItem, { width: layoutParams.itemWidth }]}
@@ -102,12 +96,12 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
       lightBackgroundColor={getLightBackgroundColor(
         item.status,
         completedOrdersCount(item.orders),
-        totalOrdersCount(item.orders)
+        calculateTotalOrderCount(item.orders)
       )}
       darkBackgroundColor={getDarkBackgroundColor(
         item.status,
         completedOrdersCount(item.orders),
-        totalOrdersCount(item.orders)
+        calculateTotalOrderCount(item.orders)
       )}
     >
       <ThemedText style={styles.tableNumber}>Table - {item.number}</ThemedText>
@@ -129,13 +123,14 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
         <View style={styles.rightColumn}>
           <ThemedText style={styles.tableDetails}>
             Orders: {completedOrdersCount(item.orders) || 0}/
-            {totalOrdersCount(item.orders) || 0}
+            {calculateTotalOrderCount(item.orders) || 0}
           </ThemedText>
           <ThemedText style={styles.tableDetails}>
             {item.status === "Occupied" &&
             completedOrdersCount(item.orders) &&
-            totalOrdersCount(item.orders) &&
-            completedOrdersCount(item.orders) < totalOrdersCount(item.orders)
+            calculateTotalOrderCount(item.orders) &&
+            completedOrdersCount(item.orders) <
+              calculateTotalOrderCount(item.orders)
               ? `ETA: ${item.eta ? Math.floor(item.eta / 60) : 0}${
                   item.eta ? ":" : ""
                 }${item.eta ? String(item.eta % 60).padStart(2, "0") : ""} min`
