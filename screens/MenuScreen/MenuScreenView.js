@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FlatList, StyleSheet } from "react-native";
-import MenuItem from "../../components/MenuItem/MenuItem";
-import CustomModal from "../../components/CustomModal/CustomModal";
+import MenuItems from "@/components/MenuItems/MenuItems";
+import CustomModal from "@/components/CustomModal/CustomModal";
 import { searchByNameKey } from "@/screens/common/searchCriteria";
 import styles from "@/screens/common/styles";
 import CustomSearchBar from "@/screens/common/SearchBar";
@@ -149,7 +149,7 @@ const MenuScreenView = ({
           <ThemedText>Add Menu Item</ThemedText>
         </ThemedButton>
       </ThemedView>
-      <MenuItem items={filteredItems} onEdit={() => handleEditItem(item)} />
+      <MenuItems items={filteredItems} onEdit={handleEditItem} />
       <CategoryManagementPopup
         visible={isPopupVisible}
         onClose={() => setPopupVisible(false)}
