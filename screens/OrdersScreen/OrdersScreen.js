@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { FlatList, StyleSheet, Pressable, RefreshControl } from "react-native";
+import { FlatList, StyleSheet, RefreshControl } from "react-native";
 import useResponsiveLayout from "@/hooks/useResponsiveLayout";
 import { ThemedView } from "@/components/common/ThemedView";
 import { ThemedText } from "@/components/common/ThemedText";
@@ -42,7 +42,7 @@ const OrdersScreen = ({ orders, onCompleteOrder }) => {
   );
 
   return (
-    <ThemedView style={{ flex: 1 }}>
+    <ThemedView style={styles.container}>
       <FlatList
         key={key} // Force re-render when numColumns changes
         data={filteredOrders}
@@ -65,6 +65,10 @@ const OrdersScreen = ({ orders, onCompleteOrder }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+  },
   listContent: {
     padding: 8,
   },
