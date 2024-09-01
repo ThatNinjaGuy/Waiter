@@ -8,7 +8,6 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
-import { ThemedText } from "@/components/common/ThemedText";
 import OrdersScreen from "./OrdersScreen";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 

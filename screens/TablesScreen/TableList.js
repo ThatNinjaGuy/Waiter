@@ -12,10 +12,14 @@ import {
   getLightBgColorWithTableStatus,
   getDarkBgColorWithTableStatus,
 } from "@/utils/colorPicker";
-import useResponsiveLayout from "./hooks/useResponsiveLayout";
+import useResponsiveLayout from "@/hooks/useResponsiveLayout";
 
 const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
-  const { layoutParams, key } = useResponsiveLayout();
+  const { layoutParams, key } = useResponsiveLayout({
+    initialItemWidth: 300,
+    minItemWidth: 250,
+    itemMargin: 20,
+  });
 
   // Sort the tables array by item.number
   const sortedTables = useMemo(() => {
@@ -171,6 +175,8 @@ const styles = StyleSheet.create({
   tableDetails: {
     fontSize: 14,
     marginBottom: 2,
+    lineHeight: 20, // Adjust based on your font size
+    flex: 1, // This will make the text expand to fill the container
   },
   ordered: {
     backgroundColor: "rgba(38, 149, 59, 0.8)", // Light green
@@ -201,6 +207,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 10,
     marginBottom: 5,
+    height: 40,
   },
 });
 

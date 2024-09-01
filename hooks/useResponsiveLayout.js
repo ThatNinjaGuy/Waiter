@@ -1,18 +1,21 @@
 import { useState, useEffect, useCallback } from "react";
 import { useWindowDimensions } from "react-native";
 
-const useResponsiveLayout = () => {
+const useResponsiveLayout = ({
+  initialItemWidth = 300,
+  minItemWidth = 300,
+  itemMargin = 20,
+}) => {
   const { width } = useWindowDimensions();
   const [layoutParams, setLayoutParams] = useState({
-    itemWidth: 300,
+    itemWidth: initialItemWidth,
     numColumns: 1,
     containerPadding: 0,
   });
   const [key, setKey] = useState(0);
 
   const calculateLayout = useCallback(() => {
-    let itemWidth = 300; // Initial fixed width for each item
-    const itemMargin = 20;
+    let itemWidth = initialItemWidth;
     const numColumns = Math.max(
       1,
       Math.floor((width - itemMargin) / (itemWidth + itemMargin))
@@ -20,12 +23,14 @@ const useResponsiveLayout = () => {
     let containerPadding = (width - numColumns * (itemWidth + itemMargin)) / 2;
 
     if (containerPadding > itemMargin) {
-      itemWidth += (containerPadding - itemMargin) / numColumns;
-      containerPadding = itemMargin;
+      const extraSpace = containerPadding - itemMargin;
+      const potentialNewItemWidth = itemWidth + extraSpace / numColumns;
+      itemWidth = Math.max(minItemWidth, potentialNewItemWidth);
+      containerPadding = (width - numColumns * (itemWidth + itemMargin)) / 2;
     }
 
     return { itemWidth, numColumns, containerPadding };
-  }, [width]);
+  }, [width, initialItemWidth, minItemWidth, itemMargin]);
 
   useEffect(() => {
     const newLayoutParams = calculateLayout();
