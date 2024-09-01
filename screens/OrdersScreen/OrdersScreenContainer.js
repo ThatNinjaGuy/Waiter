@@ -100,11 +100,7 @@ const OrdersScreenContainer = () => {
     return <LoadingScreen />;
   }
 
-  return (
-    <>
-      <OrdersScreen orders={orders} onCompleteOrder={handleCompleteOrder} />
-    </>
-  );
+  return <OrdersScreen orders={orders} onCompleteOrder={handleCompleteOrder} />;
 };
 
 export default OrdersScreenContainer;

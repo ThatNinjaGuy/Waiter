@@ -1,31 +1,18 @@
-import React, { useState, useEffect, useCallback } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  Pressable,
-  RefreshControl,
-  Dimensions,
-} from "react-native";
+import React, { useState, useCallback } from "react";
+import { FlatList, StyleSheet, Pressable, RefreshControl } from "react-native";
+import useResponsiveLayout from "@/hooks/useResponsiveLayout";
+import { ThemedView } from "@/components/common/ThemedView";
+import { ThemedText } from "@/components/common/ThemedText";
+import ThemedButton from "@/components/common/ThemedButton";
 
 const OrdersScreen = ({ orders, onCompleteOrder }) => {
   const [refreshing, setRefreshing] = useState(false);
 
-  const calculateNumColumns = () => {
-    const screenWidth = Dimensions.get("window").width;
-    return Math.floor(screenWidth / 250); // Adjust 250 to fit your design
-  };
-  const [numColumns, setNumColumns] = useState(calculateNumColumns());
-
-  useEffect(() => {
-    const updateLayout = () => {
-      setNumColumns(calculateNumColumns());
-    };
-
-    const subscription = Dimensions.addEventListener("change", updateLayout);
-    return () => subscription?.remove();
-  }, []);
+  const { layoutParams, key } = useResponsiveLayout({
+    initialItemWidth: 300,
+    minItemWidth: 250,
+    itemMargin: 20,
+  });
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -33,36 +20,47 @@ const OrdersScreen = ({ orders, onCompleteOrder }) => {
   }, []);
 
   const renderOrder = ({ item }) => (
-    <View style={styles.card}>
-      <View style={styles.headerRow}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.quantity}>{item.tableNumber}</Text>
-      </View>
-      <Text style={styles.tableNumber}>Qty: {item.quantity}</Text>
-      <Text style={styles.notes}>Notes: {item.tableNote}</Text>
-      <Pressable
-        style={styles.completeButton}
+    <ThemedView style={[styles.card, { width: layoutParams.itemWidth }]}>
+      <ThemedView style={styles.headerRow}>
+        <ThemedText style={styles.itemName}>{item.name}</ThemedText>
+        <ThemedText style={styles.quantity}>{item.tableNumber}</ThemedText>
+      </ThemedView>
+      <ThemedText style={styles.tableNumber}>Qty: {item.quantity}</ThemedText>
+      <ThemedText style={styles.notes}>Notes: {item.tableNote}</ThemedText>
+      <ThemedButton
         onPress={() => onCompleteOrder(item.id, item.tableId)}
+        style={styles.completeButton}
       >
-        <Text style={styles.completeButtonText}>Complete Order</Text>
-      </Pressable>
-    </View>
+        <ThemedText style={styles.completeButtonText}>
+          Complete Order
+        </ThemedText>
+      </ThemedButton>
+    </ThemedView>
   );
   const filteredOrders = orders.filter(
     (order) => !order.status || order.status === "ACTIVE"
   );
+
   return (
-    <FlatList
-      data={filteredOrders}
-      renderItem={renderOrder}
-      keyExtractor={(item, index) => `order-${index}-${item.id}`}
-      contentContainerStyle={styles.listContent}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-      numColumns={numColumns}
-      key={numColumns} // Force re-render when numColumns changes
-    />
+    <ThemedView style={{ flex: 1 }}>
+      <FlatList
+        key={key} // Force re-render when numColumns changes
+        data={filteredOrders}
+        renderItem={renderOrder}
+        keyExtractor={(item) => item.id}
+        numColumns={layoutParams.numColumns}
+        contentContainerStyle={{
+          paddingHorizontal: layoutParams.containerPadding,
+        }}
+        columnWrapperStyle={
+          layoutParams.numColumns > 1 ? styles.row : undefined
+        }
+        style={styles.list}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      />
+    </ThemedView>
   );
 };
 
@@ -72,17 +70,16 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    backgroundColor: "white",
+    borderColor: "rgba(57, 60, 78, 0.31)",
+    borderWidth: 1, // Add a border for definitions
     borderRadius: 8,
     padding: 16,
     margin: 8,
     elevation: 4,
-    shadowColor: "#000",
+    shadowColor: "#fff", // Add shadow for depth
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
-    maxWidth: "100%",
-    minWidth: 200,
   },
   headerRow: {
     flexDirection: "row",
