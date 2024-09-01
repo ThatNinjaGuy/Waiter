@@ -149,16 +149,7 @@ const MenuScreenView = ({
           <ThemedText>Add Menu Item</ThemedText>
         </ThemedButton>
       </ThemedView>
-      <FlatList
-        data={filteredItems}
-        renderItem={({ item }) => (
-          <MenuItem
-            key={item.id}
-            item={item}
-            onEdit={() => handleEditItem(item)}
-          />
-        )}
-      />
+      <MenuItem items={filteredItems} onEdit={() => handleEditItem(item)} />
       <CategoryManagementPopup
         visible={isPopupVisible}
         onClose={() => setPopupVisible(false)}

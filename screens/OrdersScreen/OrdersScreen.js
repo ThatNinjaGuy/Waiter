@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { FlatList, StyleSheet, Pressable, RefreshControl } from "react-native";
+import { FlatList, StyleSheet, RefreshControl } from "react-native";
 import useResponsiveLayout from "@/hooks/useResponsiveLayout";
 import { ThemedView } from "@/components/common/ThemedView";
 import { ThemedText } from "@/components/common/ThemedText";
