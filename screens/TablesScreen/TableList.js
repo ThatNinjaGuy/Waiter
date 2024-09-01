@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     textAlign: "center",
+    color: "black",
   },
   tableDetailsContainer: {
     flexDirection: "row",
@@ -177,21 +178,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
     lineHeight: 20, // Adjust based on your font size
     flex: 1, // This will make the text expand to fill the container
-  },
-  ordered: {
-    backgroundColor: "rgba(38, 149, 59, 0.8)", // Light green
-  },
-  inProgress: {
-    backgroundColor: "rgba(142, 149, 38, 0.8)", // Light yellow
-  },
-  sitting: {
-    backgroundColor: "rgba(144, 38, 149, 0.8)", // Light red
-  },
-  reserved: {
-    backgroundColor: "rgba(38, 38, 149, 0.8)", // Light blue
-  },
-  empty: {
-    backgroundColor: "rgba(95, 95, 123, 0.8)", // Default grey
+    color: "black",
   },
   orderDetailsIcon: {
     position: "absolute",
