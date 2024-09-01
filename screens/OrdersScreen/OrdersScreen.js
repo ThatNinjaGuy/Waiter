@@ -4,7 +4,7 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  TouchableOpacity,
+  Pressable,
   RefreshControl,
   Dimensions,
 } from "react-native";
@@ -40,12 +40,12 @@ const OrdersScreen = ({ orders, onCompleteOrder }) => {
       </View>
       <Text style={styles.tableNumber}>Qty: {item.quantity}</Text>
       <Text style={styles.notes}>Notes: {item.tableNote}</Text>
-      <TouchableOpacity
+      <Pressable
         style={styles.completeButton}
         onPress={() => onCompleteOrder(item.id, item.tableId)}
       >
         <Text style={styles.completeButtonText}>Complete Order</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
   const filteredOrders = orders.filter(

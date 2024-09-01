@@ -103,7 +103,8 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
   };
 
   const addItem = (item) => {
-    setRawOrders([...rawOrders, item]);
+    const newOrders = rawOrders ? [...rawOrders, item] : [item];
+    setRawOrders(newOrders);
     setUpdateFlag(true);
   };
 
