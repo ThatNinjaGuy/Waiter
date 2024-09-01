@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
     zIndex: 999, // Ensure it's on top of other components
   },
   animation: {
-    width: width * 0.2, // Adjust size as needed
-    height: width * 0.2,
+    width: width * 0.4, // Adjust size as needed
+    height: width * 0.4,
   },
   text: {
     marginTop: 20,
