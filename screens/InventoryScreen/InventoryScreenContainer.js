@@ -10,8 +10,11 @@ import {
 import { db } from "@/firebase/firebaseConfig";
 import InventoryScreenView from "./InventoryScreenView";
 import { generateUniqueKey } from "@/utils/keyGenerator";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
 const InventoryScreenContainer = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const [inventoryItems, setInventoryItems] = useState([]);
 
   useEffect(() => {
@@ -25,11 +28,13 @@ const InventoryScreenContainer = () => {
           ...doc.data(),
         }));
         setInventoryItems(items);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching inventory items:", error);
       }
     };
 
+    setIsLoading(true);
     fetchInventoryItems();
   }, []);
 
@@ -83,6 +88,10 @@ const InventoryScreenContainer = () => {
       console.error("Error updating document: ", error);
     }
   };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <InventoryScreenView

@@ -11,8 +11,11 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import { aggregateOrders } from "@/utils/orderManagement";
 import { generateUUID } from "@/utils/uuidGenerator";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 const OrderManagement = ({ items, onClose, updateOrder }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const [menuItems, setMenuItems] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState();
 
@@ -48,6 +51,7 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
           ...doc.data(),
         }));
         setMenuItems(items);
+        setIsLoading(false);
         // Creating a unique list of categories
         setCategories([
           "Favorites",
@@ -58,6 +62,7 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
       }
     };
 
+    setIsLoading(true);
     fetchMenuItems();
   }, []);
 
@@ -125,6 +130,10 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
     return menuItems;
     // return menuItems.filter((item) => item.orderCountPercentile > 70);
   };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <ThemedView style={styles.mainContainer}>

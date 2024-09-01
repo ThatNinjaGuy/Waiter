@@ -20,8 +20,11 @@ import OrderManagement from "@/components/OrderTaking/OrderManagement";
 import { ThemedView } from "@/components/common/ThemedView";
 import ThemedButton from "@/components/common/ThemedButton";
 import { ThemedText } from "@/components/common/ThemedText";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
 const RestaurantTablesScreen = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const [tables, setTables] = useState([]);
 
   const [selectedTable, setSelectedTable] = useState(null);
@@ -49,6 +52,7 @@ const RestaurantTablesScreen = () => {
             allTables.push({ id: doc.id, ...doc.data() });
           });
           setTables(allTables);
+          setIsLoading(false);
         });
         // Clean up the listener on component unmount
         return () => unsubscribe();
@@ -57,6 +61,7 @@ const RestaurantTablesScreen = () => {
       }
     };
 
+    setIsLoading(true);
     fetchAllTables();
   }, []);
 
@@ -187,6 +192,10 @@ const RestaurantTablesScreen = () => {
     setTableInfoOptionClicked(false);
     setTableAdd(false);
   };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <ThemedView style={styles.mainContainer}>
