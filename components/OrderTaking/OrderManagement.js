@@ -172,7 +172,11 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
             increaseQuantity={addItem}
             decreaseQuantity={removeItem}
           />
-          <PaymentOptions style={styles.paymentOptions} onSave={onClose} />
+          <PaymentOptions
+            style={styles.paymentOptions}
+            onSave={onClose}
+            onCancel={onClose}
+          />
         </ThemedView>
       </ThemedView>
     </ThemedView>

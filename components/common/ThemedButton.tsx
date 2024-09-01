@@ -11,7 +11,7 @@ import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 export type ThemedButtonProps = PressableProps & {
   lightBackgroundColor?: string;
   darkBackgroundColor?: string;
-  type?: "default" | "primary" | "secondary";
+  type?: "default" | "primary" | "secondary" | "danger" | "success";
   style?: ViewStyle; // Accept additional styles
 };
 
@@ -35,6 +35,8 @@ export function ThemedButton({
         type === "default" ? styles.default : undefined,
         type === "primary" ? styles.primary : undefined,
         type === "secondary" ? styles.secondary : undefined,
+        type === "danger" ? styles.danger : undefined,
+        type === "success" ? styles.success : undefined,
         style, // Merge the passed styles
       ]}
       {...rest}
@@ -64,6 +66,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(170, 183, 225, 0.5)",
+  },
+  danger: {
+    padding: 10,
+    borderRadius: wp("1%"),
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 89, 77, 0.79)",
+  },
+  success: {
+    padding: 10,
+    borderRadius: wp("1%"),
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 248, 31, 0.8)",
   },
 });
 
