@@ -1,8 +1,8 @@
 import ThemedButton from "@/components/common/ThemedButton";
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
-import React, { useMemo, useState, useCallback, useEffect } from "react";
-import { useWindowDimensions, FlatList, StyleSheet, View } from "react-native";
+import React, { useMemo } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import {
   calculateTotalOrderCount,
@@ -12,38 +12,10 @@ import {
   getLightBgColorWithTableStatus,
   getDarkBgColorWithTableStatus,
 } from "@/utils/colorPicker";
+import useResponsiveLayout from "./hooks/useResponsiveLayout";
 
 const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
-  const { width } = useWindowDimensions();
-  const [layoutParams, setLayoutParams] = useState({
-    itemWidth: 300,
-    numColumns: 1,
-    containerPadding: 0,
-  });
-  const [key, setKey] = useState(0);
-
-  const calculateLayout = useCallback(() => {
-    let itemWidth = 300; // Initial fixed width for each item
-    const itemMargin = 20;
-    const numColumns = Math.max(
-      1,
-      Math.floor((width - itemMargin) / (itemWidth + itemMargin))
-    );
-    let containerPadding = (width - numColumns * (itemWidth + itemMargin)) / 2;
-
-    if (containerPadding > itemMargin) {
-      itemWidth += (containerPadding - itemMargin) / numColumns;
-      containerPadding = itemMargin;
-    }
-
-    return { itemWidth, numColumns, containerPadding };
-  }, [width]);
-
-  useEffect(() => {
-    const newLayoutParams = calculateLayout();
-    setLayoutParams(newLayoutParams);
-    setKey((prevKey) => prevKey + 1); // Update key to force re-render
-  }, [calculateLayout]);
+  const { layoutParams, key } = useResponsiveLayout();
 
   // Sort the tables array by item.number
   const sortedTables = useMemo(() => {
@@ -78,7 +50,7 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
       totalOrders
     );
 
-    const timeDisplay =
+    const tableWaitTime =
       status === "Occupied" && completedOrders < totalOrders
         ? `ETA: ${eta ? Math.floor(eta / 60) : 0}:${
             eta ? String(eta % 60).padStart(2, "0") : ""
@@ -86,6 +58,7 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
         : `TTLO: ${ttlo ? Math.floor(ttlo / 60) : 0}:${
             ttlo ? String(ttlo % 60).padStart(2, "0") : ""
           } min`;
+
     return (
       <ThemedButton
         style={[styles.tableItem, { width: layoutParams.itemWidth }]}
@@ -110,7 +83,7 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
             <ThemedText style={styles.tableDetails}>
               Orders: {completedOrders}/{totalOrders}
             </ThemedText>
-            <ThemedText style={styles.tableDetails}>{timeDisplay}</ThemedText>
+            <ThemedText style={styles.tableDetails}>{tableWaitTime}</ThemedText>
             <ThemedText style={styles.tableDetails}>
               Bill: ₹ {orderValue || 0}
             </ThemedText>
