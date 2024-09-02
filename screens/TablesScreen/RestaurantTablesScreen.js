@@ -193,6 +193,10 @@ const RestaurantTablesScreen = () => {
     setTableAdd(false);
   };
 
+  const handleCompleteOrder = () => {
+    setTableInfoOptionClicked(true);
+  };
+
   if (isLoading) {
     return <LoadingScreen />;
   }
@@ -243,6 +247,7 @@ const RestaurantTablesScreen = () => {
           items={selectedTable?.orders}
           onClose={handleTableInfoClose}
           updateOrder={handleTableOrderUpdate}
+          handleCompleteOrder={handleCompleteOrder}
           style={styles.container}
         />
       )}

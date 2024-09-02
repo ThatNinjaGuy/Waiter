@@ -4,13 +4,17 @@ import { ThemedView } from "../common/ThemedView";
 import { ThemedText } from "../common/ThemedText";
 import ThemedButton from "../common/ThemedButton";
 
-const PaymentOptions = ({ onSave, style, onCancel }) => {
+const PaymentOptions = ({ onSave, style, onCancel, completeOrder }) => {
   return (
     <ThemedView style={[styles.paymentOptions, style]}>
       <ThemedButton style={styles.button} onPress={onCancel} type="danger">
         <ThemedText>Cancel</ThemedText>
       </ThemedButton>
-      <ThemedButton style={styles.button} onPress={onSave} type="primary">
+      <ThemedButton
+        style={styles.button}
+        onPress={completeOrder}
+        type="primary"
+      >
         <ThemedText>Generate Bill</ThemedText>
       </ThemedButton>
       <ThemedButton style={styles.button} onPress={onSave} type="success">

@@ -13,7 +13,12 @@ import { aggregateOrders } from "@/utils/orderManagement";
 import { generateUUID } from "@/utils/uuidGenerator";
 import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
-const OrderManagement = ({ items, onClose, updateOrder }) => {
+const OrderManagement = ({
+  items,
+  onClose,
+  updateOrder,
+  handleCompleteOrder,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [menuItems, setMenuItems] = useState([]);
@@ -176,6 +181,7 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
             style={styles.paymentOptions}
             onSave={onClose}
             onCancel={onClose}
+            completeOrder={handleCompleteOrder}
           />
         </ThemedView>
       </ThemedView>
