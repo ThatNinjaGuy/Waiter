@@ -61,7 +61,6 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
     });
   };
 
-  // const [bill, setBill] = useState(false);
   const handleGenerateBillClick = () => {
     const restaurantName = "Thorat Barbeque";
     const orderItems = table.orders;
@@ -72,7 +71,6 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
       waiter,
       notes,
     };
-    // setBill(true);
     generatePDF(restaurantName, guestName, orderItems, tableData);
   };
 
@@ -87,18 +85,20 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
               <ThemedText style={styles.label}>Name:</ThemedText>
               <TextInput
                 style={styles.input}
-                value={guestName}
                 onChangeText={setGuestNameCallback}
-              />
+              >
+                <ThemedText>{guestName}</ThemedText>
+              </TextInput>
             </ThemedView>
             <ThemedView style={styles.inputFieldContainer}>
               <ThemedText style={styles.label}>Mobile:</ThemedText>
               <TextInput
                 style={styles.input}
-                value={guestMobile}
                 onChangeText={setGuestMobileCallback}
                 inputMode="phone-pad"
-              />
+              >
+                <ThemedText>{guestMobile}</ThemedText>
+              </TextInput>
             </ThemedView>
           </ThemedView>
           <ThemedView style={styles.inputContainer}>
@@ -106,10 +106,11 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
               <ThemedText style={styles.label}>Guests:</ThemedText>
               <TextInput
                 style={styles.input}
-                value={guests.toString()}
                 onChangeText={setGuestsCallback}
                 inputMode="numeric"
-              />
+              >
+                <ThemedText>{guests.toString()}</ThemedText>
+              </TextInput>
             </ThemedView>
             <ThemedView style={styles.inputFieldContainer}>
               <ThemedText style={styles.label}>Occasion:</ThemedText>
@@ -155,40 +156,42 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
             </ThemedView>
             <ThemedView style={styles.inputFieldContainer}>
               <ThemedText style={styles.label}>Server:</ThemedText>
-              <TextInput
-                style={styles.input}
-                value={waiter}
-                onChangeText={setWaiterCallback}
-              />
+              <TextInput style={styles.input} onChangeText={setWaiterCallback}>
+                <ThemedText>{waiter}</ThemedText>
+              </TextInput>
             </ThemedView>
           </ThemedView>
           <ThemedView style={styles.notesContainer}>
             <ThemedText style={styles.label}>Notes:</ThemedText>
             <TextInput
               style={[styles.input, styles.notesInput]}
-              value={notes}
               onChangeText={setNotesCallback}
               multiline
-            />
+            >
+              <ThemedText>{notes}</ThemedText>
+            </TextInput>
           </ThemedView>
           <ThemedView style={styles.buttonsContainer}>
+            <ThemedButton
+              style={styles.updateButton}
+              onPress={onClose}
+              type="danger"
+            >
+              <ThemedText style={styles.updateButtonText}>CANCEL</ThemedText>
+            </ThemedButton>
             <ThemedButton
               style={styles.updateButton}
               onPress={handleGenerateBillClick}
               type="primary"
             >
-              <ThemedText style={styles.updateButtonText}>
-                Generate Bill
-              </ThemedText>
+              <ThemedText style={styles.updateButtonText}>BILL</ThemedText>
             </ThemedButton>
             <ThemedButton
               style={styles.updateButton}
               onPress={handleUpdate}
               type="success"
             >
-              <ThemedText style={styles.updateButtonText}>
-                Book Table
-              </ThemedText>
+              <ThemedText style={styles.updateButtonText}>BOOK</ThemedText>
             </ThemedButton>
           </ThemedView>
           <OrderDetails rawOrders={table.orders} />
@@ -245,6 +248,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 5,
+    fontWeight: "bold",
   },
   input: {
     borderWidth: 1,
@@ -271,7 +275,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 5,
     alignItems: "center",
-    width: "45%",
+    width: "30%",
   },
   updateButtonText: {
     fontSize: 16,
@@ -297,6 +301,15 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+
+  overlay: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    right: 10,
+    bottom: 10,
+    justifyContent: "center",
   },
 });
 
