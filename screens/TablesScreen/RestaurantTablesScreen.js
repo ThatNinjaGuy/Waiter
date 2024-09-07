@@ -146,7 +146,6 @@ const RestaurantTablesScreen = () => {
   };
 
   const handleUpdateTable = (updatedTable) => {
-    updatedTable.status = "Occupied";
     setTables(tables.map((t) => (t.id === updatedTable.id ? updatedTable : t)));
     updateTableDetails(updatedTable.id, updatedTable);
     setSelectedTable(null);

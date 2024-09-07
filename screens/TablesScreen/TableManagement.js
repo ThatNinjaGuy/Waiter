@@ -51,7 +51,8 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
     setIsBookingNow(true);
   }, [table]);
 
-  const handleUpdate = () => {
+  const handleUpdate = (orderStatus) => {
+    console.log(orderStatus);
     onUpdateTable({
       ...table,
       guestName,
@@ -61,11 +62,15 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
       bookingTime: isBookingNow ? new Date() : bookingTime,
       waiter,
       notes,
-      status: "Occupied",
+      status: orderStatus,
     });
   };
 
   const handleGenerateBillClick = async () => {
+    // Mark the table as free, indicating order has completed
+    handleUpdate("Available");
+
+    // Generate bill
     const restaurantName = "Thorat Barbeque";
     const orderItems = table.orders;
     const tableData = {
@@ -81,7 +86,7 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
       console.log("Bill generated successfully");
     } catch (error) {
       console.error("Error generating bill:", error);
-      alert("Failed to generate bill. Please try again.");
+      // alert("Failed to generate bill. Please try again.");
     }
   };
 
@@ -200,7 +205,7 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
             </ThemedButton>
             <ThemedButton
               style={styles.updateButton}
-              onPress={handleUpdate}
+              onPress={() => handleUpdate("Occupied")}
               type="success"
             >
               <ThemedText style={styles.updateButtonText}>BOOK</ThemedText>
@@ -340,7 +345,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexGrow: 1,
-    padding: 20,
+    padding: 10,
   },
   orderDetailsContainer: {
     marginTop: 20,
