@@ -46,5 +46,5 @@ export function calculateTotalOrderCount(orders) {
 export function completedOrdersCount(orders) {
   return !orders
     ? 0
-    : orders.filter((order) => order.status !== "ACTIVE").length;
+    : orders.filter((order) => order.status == "COMPLETE").length;
 }
