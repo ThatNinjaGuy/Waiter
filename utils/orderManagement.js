@@ -48,3 +48,9 @@ export function completedOrdersCount(orders) {
     ? 0
     : orders.filter((order) => order.status == "COMPLETE").length;
 }
+
+export function activeOrdersCount(orders) {
+  return !orders
+    ? 0
+    : orders.filter((order) => order.status == "ACTIVE").length;
+}
