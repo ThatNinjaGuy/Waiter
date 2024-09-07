@@ -132,6 +132,14 @@ const generatePDF = async (
 </html>
 `;
 
+    // if (Platform.OS === "web") {
+    //   const iframe = document.createElement("iframe");
+    //   iframe.style.display = "none";
+    //   document.body.appendChild(iframe);
+    //   iframe.contentDocument.write(htmlContent);
+    //   iframe.contentDocument.close();
+    //   iframe.contentWindow.print();
+    // } else {
     const { uri } = await Print.printToFileAsync({ html: htmlContent });
 
     if (!(await Sharing.isAvailableAsync())) {
@@ -143,6 +151,7 @@ const generatePDF = async (
 
     console.log("PDF generated successfully");
     return uri;
+    // }
   } catch (error) {
     console.error("Failed to generate PDF:", error);
   }
