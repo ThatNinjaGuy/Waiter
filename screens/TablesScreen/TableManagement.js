@@ -65,7 +65,7 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
     });
   };
 
-  const handleGenerateBillClick = () => {
+  const handleGenerateBillClick = async () => {
     const restaurantName = "Thorat Barbeque";
     const orderItems = table.orders;
     const tableData = {
@@ -75,7 +75,14 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
       waiter,
       notes,
     };
-    generatePDF(restaurantName, guestName, orderItems, tableData);
+
+    try {
+      await generatePDF(restaurantName, guestName, orderItems, tableData);
+      console.log("Bill generated successfully");
+    } catch (error) {
+      console.error("Error generating bill:", error);
+      alert("Failed to generate bill. Please try again.");
+    }
   };
 
   const renderHeader = useCallback(
@@ -118,7 +125,6 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
               <Picker
                 selectedValue={occasion}
                 style={[
-                  styles.picker,
                   styles.input,
                   { color: textColor, backgroundColor: bgColor },
                 ]}
@@ -243,7 +249,8 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     margin: 10,
     gap: 10,
-    maxWidth: "40%",
+    minWidth: "40%",
+    maxWidth: "50%",
   },
   notesContainer: {
     flexDirection: "row",
@@ -257,6 +264,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   input: {
+    width: "100%",
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,

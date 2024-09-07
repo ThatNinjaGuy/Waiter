@@ -1,5 +1,33 @@
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
+import { aggregateOrders, calculateOrderValue } from "@/utils/orderManagement";
+
+let isSharing = false;
+const sharingQueue = [];
+
+const shareWithQueue = async (uri) => {
+  if (isSharing) {
+    return new Promise((resolve, reject) => {
+      sharingQueue.push({ uri, resolve, reject });
+    });
+  }
+
+  isSharing = true;
+  try {
+    await Sharing.shareAsync(uri);
+  } catch (error) {
+    console.error("Sharing failed:", error);
+    throw error;
+  } finally {
+    isSharing = false;
+    if (sharingQueue.length > 0) {
+      const nextShare = sharingQueue.shift();
+      shareWithQueue(nextShare.uri)
+        .then(nextShare.resolve)
+        .catch(nextShare.reject);
+    }
+  }
+};
 
 const generatePDF = async (
   restaurantName,
@@ -7,6 +35,8 @@ const generatePDF = async (
   orderItems,
   tableData
 ) => {
+  const orders = aggregateOrders(orderItems);
+  const orderValue = calculateOrderValue(orders);
   try {
     const htmlContent = `
 <html>
@@ -89,27 +119,25 @@ const generatePDF = async (
           <th>Price</th>
           <th>Total</th>
         </tr>
-        ${orderItems
+        ${orders
           .map(
             (item) => `
           <tr>
             <td>${item.name}</td>
             <td>x${item.quantity}</td>
-            <td>₹${item.price.toFixed(2)}</td>
-            <td>$${(item.quantity * item.price).toFixed(2)}</td>
+            <td>₹${item.price}</td>
+            <td>₹${item.itemValue}</td>
           </tr>
         `
           )
           .join("")}
         <tr class="total">
           <td>Total</td>
-            <td colspan="2">x${orderItems.reduce(
+            <td colspan="2">x${orders.reduce(
               (sum, item) => sum + item.quantity,
               0
             )}</td>
-          <td>₹${orderItems
-            .reduce((sum, item) => sum + item.quantity * item.price, 0)
-            .toFixed(2)}</td>
+          <td>₹${orderValue}</td>
         </tr>
       </table>
     </div>
@@ -147,13 +175,13 @@ const generatePDF = async (
       return;
     }
 
-    await Sharing.shareAsync(uri);
+    await shareWithQueue(uri);
 
-    console.log("PDF generated successfully");
+    console.log("PDF generated and shared successfully");
     return uri;
-    // }
   } catch (error) {
-    console.error("Failed to generate PDF:", error);
+    console.error("Failed to generate or share PDF:", error);
+    throw error;
   }
 };
 
