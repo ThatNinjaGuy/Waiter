@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { TextInput, StyleSheet, Switch, View, ScrollView } from "react-native";
+import { TextInput, StyleSheet, Switch, View, FlatList } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseButton";
@@ -221,8 +221,25 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
       isBookingNow,
     ]
   );
+  const renderFooter = useCallback(
+    () => (
+      <View style={styles.orderDetailsContainer}>
+        <OrderDetails rawOrders={table.orders} />
+      </View>
+    ),
+    [table.orders]
+  );
 
-  return <ScrollView>{renderHeader()}</ScrollView>;
+  return (
+    <FlatList
+      data={[]} // We don't need actual data items
+      renderItem={null} // We don't need to render list items
+      ListHeaderComponent={renderHeader}
+      ListFooterComponent={renderFooter}
+      contentContainerStyle={styles.contentContainer}
+    />
+  );
+  // return <ScrollView>{renderHeader()}</ScrollView>;
 });
 
 const styles = StyleSheet.create({
@@ -320,6 +337,13 @@ const styles = StyleSheet.create({
     right: 10,
     bottom: 10,
     justifyContent: "center",
+  },
+  contentContainer: {
+    flexGrow: 1,
+    padding: 20,
+  },
+  orderDetailsContainer: {
+    marginTop: 20,
   },
 });
 
