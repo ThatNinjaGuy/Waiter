@@ -25,11 +25,20 @@ export default function HomeScreen() {
 
   useEffect(() => {
     const fetchHotelDetails = async () => {
-      const hotelDetails = await fetchHotelData();
-      if (hotelDetails) {
-        setHotel(hotelDetails[0]);
-        setNotifications(hotelDetails[1].notifications || []);
-        setOverviewItems(hotelDetails[1].overviewItems || []);
+      const hotelDetailsArray = await fetchHotelData();
+      if (hotelDetailsArray) {
+        console.log("Hotel details fetched", hotelDetailsArray);
+
+        // Convert array to an object
+        const hotelDetails = hotelDetailsArray.reduce((acc, item) => {
+          acc[item.id] = item;
+          return acc;
+        }, {});
+
+        // Access details using keys
+        setHotel(hotelDetails["details"]);
+        setNotifications(hotelDetails["homeScreenItems"].notifications || []);
+        setOverviewItems(hotelDetails["homeScreenItems"].overviewItems || []);
         setIsLoading(false);
       }
     };
