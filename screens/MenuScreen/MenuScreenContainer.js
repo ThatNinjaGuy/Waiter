@@ -13,8 +13,11 @@ import {
 import { db } from "@/firebase/firebaseConfig";
 import MenuScreenView from "./MenuScreenView";
 import { generateUniqueKey } from "@/utils/keyGenerator";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
 const MenuScreenContainer = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const [menuItems, setMenuItems] = useState([]);
   const [menuItemCategories, setMenuItemCategories] = useState([]);
 
@@ -42,6 +45,7 @@ const MenuScreenContainer = () => {
         if (docSnap.exists()) {
           const categories = docSnap.data().categories || []; // Extract categories array
           setMenuItemCategories(categories); // Set the state with the categories
+          setIsLoading(false);
         } else {
           console.error("No such document!");
         }
@@ -50,6 +54,7 @@ const MenuScreenContainer = () => {
       }
     };
 
+    setIsLoading(true);
     fetchMenuItems();
     fetchMenuItemCategories();
   }, []);
@@ -143,6 +148,10 @@ const MenuScreenContainer = () => {
       console.error("Error updating document: ", error);
     }
   };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <MenuScreenView

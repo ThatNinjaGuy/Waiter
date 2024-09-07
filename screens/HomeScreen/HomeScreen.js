@@ -12,13 +12,17 @@ import Overview from "@/components/Overview";
 import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
 import { useNavigation } from "@react-navigation/native";
 import { fetchHotelData } from "@/firebase/queries";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [hotel, setHotel] = useState();
+
   const [notifications, setNotifications] = useState([]);
   const [overviewItems, setOverviewItems] = useState([]);
+
   useEffect(() => {
     const fetchHotelDetails = async () => {
       const hotelDetails = await fetchHotelData();
@@ -26,8 +30,11 @@ export default function HomeScreen() {
         setHotel(hotelDetails[0]);
         setNotifications(hotelDetails[1].notifications || []);
         setOverviewItems(hotelDetails[1].overviewItems || []);
+        setIsLoading(false);
       }
     };
+
+    setIsLoading(true);
     fetchHotelDetails();
   }, []);
 
@@ -76,6 +83,10 @@ export default function HomeScreen() {
       </ThemedView>
     </View>
   );
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <FlatList

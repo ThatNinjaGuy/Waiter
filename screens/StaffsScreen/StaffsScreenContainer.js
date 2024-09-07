@@ -10,8 +10,11 @@ import {
 import { db } from "@/firebase/firebaseConfig";
 import StaffScreenView from "./StaffScreenView";
 import { generateUniqueKey } from "@/utils/keyGenerator";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
 const StaffsScreenContainer = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const [staffs, setStaffs] = useState([]);
 
   useEffect(() => {
@@ -25,11 +28,13 @@ const StaffsScreenContainer = () => {
           ...doc.data(),
         }));
         setStaffs(items);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching staffs:", error);
       }
     };
 
+    setIsLoading(true);
     fetchStaffs();
   }, []);
 
@@ -81,6 +86,10 @@ const StaffsScreenContainer = () => {
       console.error("Error updating document: ", error);
     }
   };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <StaffScreenView

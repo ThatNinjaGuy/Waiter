@@ -11,19 +11,32 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import { aggregateOrders } from "@/utils/orderManagement";
 import { generateUUID } from "@/utils/uuidGenerator";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
-const OrderManagement = ({ items, onClose, updateOrder }) => {
+const OrderManagement = ({
+  items,
+  onClose,
+  updateOrder,
+  handleCompleteOrder,
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const [menuItems, setMenuItems] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState();
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(0);
 
-  const [rawOrders, setRawOrders] = useState(items ? items : []);
-  const [orders, setOrders] = useState([]);
+  const [rawOrders, setRawOrders] = useState([]);
+  const [orders, setOrders] = useState();
+  const [updateFlag, setUpdateFlag] = useState(false);
 
   const { width } = useWindowDimensions();
   const isLargeScreen = width > 768; // Adjust the breakpoint as needed
+
+  useEffect(() => {
+    setRawOrders(items);
+  }, [items]);
 
   useEffect(() => {
     if (selectedCategory == 0) return setSelectedMenu(getFavoriteItems());
@@ -43,6 +56,7 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
           ...doc.data(),
         }));
         setMenuItems(items);
+        setIsLoading(false);
         // Creating a unique list of categories
         setCategories([
           "Favorites",
@@ -53,18 +67,21 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
       }
     };
 
+    setIsLoading(true);
     fetchMenuItems();
   }, []);
 
   // Update orders whenever rawOrders changes
   useEffect(() => {
-    const aggOrders = aggregateOrders(rawOrders);
-    setOrders(aggOrders);
+    setOrders(aggregateOrders(rawOrders));
   }, [rawOrders]);
 
   // Update Firebase whenever orders change
   useEffect(() => {
-    updateOrder(rawOrders);
+    if (updateFlag) {
+      updateOrder(rawOrders);
+      setUpdateFlag(false);
+    }
   }, [rawOrders]);
 
   const onSidebarItemClicked = (item, idx) => {
@@ -91,7 +108,9 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
   };
 
   const addItem = (item) => {
-    setRawOrders([...rawOrders, item]);
+    const newOrders = rawOrders ? [...rawOrders, item] : [item];
+    setRawOrders(newOrders);
+    setUpdateFlag(true);
   };
 
   const removeItem = (item) => {
@@ -107,6 +126,7 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
       const newOrders = [...rawOrders]; // Create a copy of the orders array
       newOrders.splice(index, 1); // Remove the item at the specified index
       setRawOrders(newOrders); // Update the state with the new array
+      setUpdateFlag(true);
     } else {
       console.log("No active item found to decrease quantity.");
     }
@@ -116,6 +136,10 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
     return menuItems;
     // return menuItems.filter((item) => item.orderCountPercentile > 70);
   };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <ThemedView style={styles.mainContainer}>
@@ -153,7 +177,12 @@ const OrderManagement = ({ items, onClose, updateOrder }) => {
             increaseQuantity={addItem}
             decreaseQuantity={removeItem}
           />
-          <PaymentOptions style={styles.paymentOptions} onSave={onClose} />
+          <PaymentOptions
+            style={styles.paymentOptions}
+            onSave={onClose}
+            onCancel={onClose}
+            completeOrder={handleCompleteOrder}
+          />
         </ThemedView>
       </ThemedView>
     </ThemedView>

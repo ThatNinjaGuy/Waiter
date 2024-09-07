@@ -4,24 +4,22 @@ import { ThemedView } from "../common/ThemedView";
 import { ThemedText } from "../common/ThemedText";
 import ThemedButton from "../common/ThemedButton";
 
-const PaymentOptions = ({ onSave, style }) => {
+const PaymentOptions = ({ onSave, style, onCancel, completeOrder }) => {
   return (
     <ThemedView style={[styles.paymentOptions, style]}>
-      <ThemedButton style={styles.button} onPress={onSave} type="secondary">
-        <ThemedText>Save</ThemedText>
+      <ThemedButton style={styles.button} onPress={onCancel} type="danger">
+        <ThemedText>Cancel</ThemedText>
       </ThemedButton>
-      <ThemedButton style={styles.button} onPress={onSave} type="secondary">
-        <ThemedText>Save & Print</ThemedText>
+      <ThemedButton
+        style={styles.button}
+        onPress={completeOrder}
+        type="primary"
+      >
+        <ThemedText>Generate Bill</ThemedText>
       </ThemedButton>
-      <ThemedButton style={styles.button} onPress={onSave} type="secondary">
-        <ThemedText>Save & eBill</ThemedText>
-      </ThemedButton>
-      <ThemedButton style={styles.button} onPress={onSave} type="secondary">
+      <ThemedButton style={styles.button} onPress={onSave} type="success">
         <ThemedText>KOT</ThemedText>
       </ThemedButton>
-      {/* <Pressable style={styles.button} onPress={onSave}>
-        <ThemedText>Hold</ThemedText>
-      </Pressable> */}
     </ThemedView>
   );
 };
@@ -39,7 +37,7 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 2,
     borderRadius: 5,
-    minWidth: "15%",
+    width: "30%",
   },
 });
 

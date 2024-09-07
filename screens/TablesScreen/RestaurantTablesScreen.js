@@ -3,11 +3,12 @@ import { FlatList } from "react-native";
 import TableList from "./TableList";
 import {
   collection,
-  getDocs,
   writeBatch,
   doc,
   deleteDoc,
   updateDoc,
+  query,
+  onSnapshot,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import TableManagement from "./TableManagement";
@@ -19,39 +20,61 @@ import OrderManagement from "@/components/OrderTaking/OrderManagement";
 import { ThemedView } from "@/components/common/ThemedView";
 import ThemedButton from "@/components/common/ThemedButton";
 import { ThemedText } from "@/components/common/ThemedText";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
 const RestaurantTablesScreen = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const [tables, setTables] = useState([]);
 
   const [selectedTable, setSelectedTable] = useState(null);
   const [search, setSearch] = useState("");
+
   const [filteredItems, setFilteredItems] = useState(tables);
   const [selectedFilter, setSelectedFilter] = useState("All");
+
   const [tableAdd, setTableAdd] = useState(false);
   const [tableInfoOptionClicked, setTableInfoOptionClicked] = useState(false);
 
   useEffect(() => {
     const fetchAllTables = async () => {
       try {
-        const querySnapshot = await getDocs(
-          collection(db, "hotel-details/seating-arrangement/tables/")
+        const tablesRef = collection(
+          db,
+          "hotel-details/seating-arrangement/tables/"
         );
-        const items = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setTables(items);
+        const q = query(tablesRef);
+
+        // Set up real-time listener
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const allTables = [];
+          querySnapshot.docs.forEach((doc) => {
+            allTables.push({ id: doc.id, ...doc.data() });
+          });
+          setTables(allTables);
+          setIsLoading(false);
+        });
+        // Clean up the listener on component unmount
+        return () => unsubscribe();
       } catch (error) {
         console.error("Error fetching tables:", error);
       }
     };
 
+    setIsLoading(true);
     fetchAllTables();
   }, []);
 
   useEffect(() => {
     setFilteredItems(tables);
+    refreshSelectedTable();
   }, [tables]);
+
+  const refreshSelectedTable = () => {
+    if (!selectedTable) return;
+    const updatedTable = tables.find((t) => t.id === selectedTable.id);
+    setSelectedTable(updatedTable);
+  };
 
   const addNewTable = async (items) => {
     const batch = writeBatch(db);
@@ -140,7 +163,6 @@ const RestaurantTablesScreen = () => {
       };
       const newTables = [...tables];
       newTables[tableIndex] = updatedTable;
-      console.log(updatedTable);
       setTables(newTables);
       updateTableDetails(selectedTable.id, updatedTable);
     } else console.error("Couldn't find table");
@@ -170,6 +192,14 @@ const RestaurantTablesScreen = () => {
     setTableInfoOptionClicked(false);
     setTableAdd(false);
   };
+
+  const handleCompleteOrder = () => {
+    setTableInfoOptionClicked(true);
+  };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <ThemedView style={styles.mainContainer}>
@@ -217,6 +247,7 @@ const RestaurantTablesScreen = () => {
           items={selectedTable?.orders}
           onClose={handleTableInfoClose}
           updateOrder={handleTableOrderUpdate}
+          handleCompleteOrder={handleCompleteOrder}
           style={styles.container}
         />
       )}

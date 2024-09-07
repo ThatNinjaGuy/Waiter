@@ -8,8 +8,8 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
-import { ThemedText } from "@/components/common/ThemedText";
 import OrdersScreen from "./OrdersScreen";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
 const OrdersScreenContainer = () => {
   const [orders, setOrders] = useState([]);
@@ -20,7 +20,7 @@ const OrdersScreenContainer = () => {
       try {
         const tablesRef = collection(
           db,
-          "hotel-details/seating-arrangement/tables"
+          "hotel-details/seating-arrangement/tables/"
         );
         const q = query(tablesRef);
 
@@ -31,7 +31,7 @@ const OrdersScreenContainer = () => {
             const tableData = doc.data();
             const tableNumber = tableData.number;
             const tableNote = tableData.notes;
-            if (tableData.orders && Array.isArray(tableData.orders)) {
+            if (tableData.orders) {
               // Add table ID to each order for reference
               const tableOrders = tableData.orders.map((order) => ({
                 ...order,
@@ -69,7 +69,7 @@ const OrdersScreenContainer = () => {
       // Find the table document
       const tableDocRef = doc(
         db,
-        "hotel-details/seating-arrangement/tables",
+        "hotel-details/seating-arrangement/tables/",
         tableId
       );
 
@@ -97,14 +97,10 @@ const OrdersScreenContainer = () => {
   };
 
   if (loading) {
-    return <ThemedText>Loading orders...</ThemedText>;
+    return <LoadingScreen />;
   }
 
-  return (
-    <>
-      <OrdersScreen orders={orders} onCompleteOrder={handleCompleteOrder} />
-    </>
-  );
+  return <OrdersScreen orders={orders} onCompleteOrder={handleCompleteOrder} />;
 };
 
 export default OrdersScreenContainer;
