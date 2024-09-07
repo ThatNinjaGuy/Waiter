@@ -51,8 +51,7 @@ const OrdersScreenContainer = () => {
 
           // Sort orders by timestamp if available
           allOrders.sort(
-            (a, b) =>
-              (b.timestamp?.toMillis() || 0) - (a.timestamp?.toMillis() || 0)
+            (a, b) => (a.orderTimestamp || 0) - (b.orderTimestamp || 0)
           );
 
           notifyOrdersUpdated(allOrders);
