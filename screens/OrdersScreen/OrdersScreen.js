@@ -43,6 +43,7 @@ const OrdersScreen = ({ orders, onCompleteOrder }) => {
 
   return (
     <ThemedView style={styles.container}>
+      <ThemedText>Pending Orders: {filteredOrders.length}</ThemedText>
       <FlatList
         key={key} // Force re-render when numColumns changes
         data={filteredOrders}

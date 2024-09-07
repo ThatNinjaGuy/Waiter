@@ -8,8 +8,12 @@ import { ThemedText } from "@/components/common/ThemedText";
 import ThemedButton from "@/components/common/ThemedButton";
 import OrderDetails from "./OrderDetails";
 import generatePDF from "@/utils/generatePDF";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
+  const textColor = useThemeColor({}, "text");
+  const bgColor = useThemeColor({}, "background");
+
   const [guests, setGuests] = useState(table?.guests ?? 0);
   const [notes, setNotes] = useState(table?.notes ?? "");
   const [waiter, setWaiter] = useState(table?.waiter ?? "");
@@ -84,39 +88,40 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
             <ThemedView style={styles.inputFieldContainer}>
               <ThemedText style={styles.label}>Name:</ThemedText>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: textColor }]}
                 onChangeText={setGuestNameCallback}
-              >
-                <ThemedText>{guestName}</ThemedText>
-              </TextInput>
+                value={guestName}
+              />
             </ThemedView>
             <ThemedView style={styles.inputFieldContainer}>
               <ThemedText style={styles.label}>Mobile:</ThemedText>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: textColor }]}
                 onChangeText={setGuestMobileCallback}
                 inputMode="phone-pad"
-              >
-                <ThemedText>{guestMobile}</ThemedText>
-              </TextInput>
+                value={guestMobile}
+              />
             </ThemedView>
           </ThemedView>
           <ThemedView style={styles.inputContainer}>
             <ThemedView style={styles.inputFieldContainer}>
               <ThemedText style={styles.label}>Guests:</ThemedText>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: textColor }]}
                 onChangeText={setGuestsCallback}
                 inputMode="numeric"
-              >
-                <ThemedText>{guests.toString()}</ThemedText>
-              </TextInput>
+                value={guests.toString()}
+              />
             </ThemedView>
             <ThemedView style={styles.inputFieldContainer}>
               <ThemedText style={styles.label}>Occasion:</ThemedText>
               <Picker
                 selectedValue={occasion}
-                style={styles.picker}
+                style={[
+                  styles.picker,
+                  styles.input,
+                  { color: textColor, backgroundColor: bgColor },
+                ]}
                 onValueChange={setOccasionCallback}
               >
                 <Picker.Item label="Friends" value="Friends" />
@@ -156,20 +161,21 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
             </ThemedView>
             <ThemedView style={styles.inputFieldContainer}>
               <ThemedText style={styles.label}>Server:</ThemedText>
-              <TextInput style={styles.input} onChangeText={setWaiterCallback}>
-                <ThemedText>{waiter}</ThemedText>
-              </TextInput>
+              <TextInput
+                style={[styles.input, { color: textColor }]}
+                onChangeText={setWaiterCallback}
+                value={waiter}
+              />
             </ThemedView>
           </ThemedView>
           <ThemedView style={styles.notesContainer}>
             <ThemedText style={styles.label}>Notes:</ThemedText>
             <TextInput
-              style={[styles.input, styles.notesInput]}
+              style={[styles.input, styles.notesInput, { color: textColor }]}
               onChangeText={setNotesCallback}
               multiline
-            >
-              <ThemedText>{notes}</ThemedText>
-            </TextInput>
+              value={notes}
+            />
           </ThemedView>
           <ThemedView style={styles.buttonsContainer}>
             <ThemedButton
@@ -233,8 +239,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   inputFieldContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "column",
+    alignItems: "flex-start",
     margin: 10,
     gap: 10,
     maxWidth: "40%",
@@ -260,10 +266,6 @@ const styles = StyleSheet.create({
   notesInput: {
     height: 60,
     width: "90%",
-  },
-  picker: {
-    height: 50,
-    width: "100%",
   },
   radioContainer: {
     flexDirection: "row",
