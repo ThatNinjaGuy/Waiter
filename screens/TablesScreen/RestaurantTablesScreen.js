@@ -13,9 +13,9 @@ import {
 import { db } from "@/firebase/firebaseConfig";
 import TableManagement from "./TableManagement";
 import AddTable from "./AddTable";
-import { searchOrder } from "@/screens/common/searchCriteria";
+import { searchOrder } from "@/utils/searchCriteria";
 import styles from "@/screens/common/styles";
-import CustomSearchBar from "@/screens/common/SearchBar";
+import CustomSearchBar from "@/components/common/SearchBar";
 import OrderManagement from "@/components/OrderTaking/OrderManagement";
 import { ThemedView } from "@/components/common/ThemedView";
 import ThemedButton from "@/components/common/ThemedButton";
