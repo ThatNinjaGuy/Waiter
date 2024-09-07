@@ -6,7 +6,7 @@ let isSharing = false;
 const sharingQueue = [];
 
 const shareWithQueue = async (uri) => {
-  if (isSharing) {
+  if (isSharing && uri.uri) {
     return new Promise((resolve, reject) => {
       sharingQueue.push({ uri, resolve, reject });
     });
@@ -168,17 +168,21 @@ const generatePDF = async (
     //   iframe.contentDocument.close();
     //   iframe.contentWindow.print();
     // } else {
-    const { uri } = await Print.printToFileAsync({ html: htmlContent });
+    const result = await Print.printToFileAsync({ html: htmlContent });
+
+    if (!result || !result.uri) {
+      throw new Error("Failed to generate PDF: No URI returned");
+    }
 
     if (!(await Sharing.isAvailableAsync())) {
       alert("Sharing isn't available on your platform");
       return;
     }
 
-    await shareWithQueue(uri);
+    await shareWithQueue(result.uri);
 
     console.log("PDF generated and shared successfully");
-    return uri;
+    return result.uri;
   } catch (error) {
     console.error("Failed to generate or share PDF:", error);
     throw error;

@@ -135,6 +135,20 @@ const RestaurantTablesScreen = () => {
     }
   };
 
+  const addCompletedOrder = async (order) => {
+    const batch = writeBatch(db);
+    const docRef = doc(
+      collection(db, "hotel-details/completed-orders/orders/")
+    );
+    batch.set(docRef, order);
+    try {
+      await batch.commit();
+      console.log("Batch write successful");
+    } catch (error) {
+      console.error("Error writing batch:", error);
+    }
+  };
+
   const handleTablePress = (table) => {
     setSelectedTable(table);
     setTableInfoOptionClicked(false);
@@ -145,7 +159,43 @@ const RestaurantTablesScreen = () => {
     setTableInfoOptionClicked(true);
   };
 
+  const archiveOrders = (table) => {
+    table.orders = table.orders.map((o) => {
+      return { ...o, status: "COMPLETE" };
+    });
+    addCompletedOrder(table);
+  };
+
+  const cleanupTable = (table) => {
+    table = {
+      ...table,
+      bookingTime: null,
+      guestMobile: null,
+      guestName: null,
+      guests: null,
+      notes: null,
+      occasion: null,
+      orderValue: 0,
+      totalOrders: 0,
+      waiter: null,
+      orders: [],
+    };
+    return table;
+  };
+
+  const markOrderAsCompleted = (updatedTable) => {
+    if (
+      selectedTable.status === "Occupied" &&
+      updatedTable.status === "Available"
+    ) {
+      archiveOrders(updatedTable);
+      updatedTable = cleanupTable(updatedTable);
+    }
+    return updatedTable;
+  };
+
   const handleUpdateTable = (updatedTable) => {
+    updatedTable = markOrderAsCompleted(updatedTable);
     setTables(tables.map((t) => (t.id === updatedTable.id ? updatedTable : t)));
     updateTableDetails(updatedTable.id, updatedTable);
     setSelectedTable(null);

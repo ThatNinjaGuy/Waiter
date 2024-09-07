@@ -52,7 +52,6 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
   }, [table]);
 
   const handleUpdate = (orderStatus) => {
-    console.log(orderStatus);
     onUpdateTable({
       ...table,
       guestName,
