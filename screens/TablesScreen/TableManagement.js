@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { TextInput, StyleSheet, Switch, View, ScrollView } from "react-native";
+import { TextInput, StyleSheet, Switch, View, FlatList } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseButton";
@@ -65,7 +65,7 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
     });
   };
 
-  const handleGenerateBillClick = () => {
+  const handleGenerateBillClick = async () => {
     const restaurantName = "Thorat Barbeque";
     const orderItems = table.orders;
     const tableData = {
@@ -75,7 +75,14 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
       waiter,
       notes,
     };
-    generatePDF(restaurantName, guestName, orderItems, tableData);
+
+    try {
+      await generatePDF(restaurantName, guestName, orderItems, tableData);
+      console.log("Bill generated successfully");
+    } catch (error) {
+      console.error("Error generating bill:", error);
+      alert("Failed to generate bill. Please try again.");
+    }
   };
 
   const renderHeader = useCallback(
@@ -118,7 +125,6 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
               <Picker
                 selectedValue={occasion}
                 style={[
-                  styles.picker,
                   styles.input,
                   { color: textColor, backgroundColor: bgColor },
                 ]}
@@ -215,8 +221,25 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
       isBookingNow,
     ]
   );
+  const renderFooter = useCallback(
+    () => (
+      <View style={styles.orderDetailsContainer}>
+        <OrderDetails rawOrders={table.orders} />
+      </View>
+    ),
+    [table.orders]
+  );
 
-  return <ScrollView>{renderHeader()}</ScrollView>;
+  return (
+    <FlatList
+      data={[]} // We don't need actual data items
+      renderItem={null} // We don't need to render list items
+      ListHeaderComponent={renderHeader}
+      ListFooterComponent={renderFooter}
+      contentContainerStyle={styles.contentContainer}
+    />
+  );
+  // return <ScrollView>{renderHeader()}</ScrollView>;
 });
 
 const styles = StyleSheet.create({
@@ -243,7 +266,8 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     margin: 10,
     gap: 10,
-    maxWidth: "40%",
+    minWidth: "40%",
+    maxWidth: "50%",
   },
   notesContainer: {
     flexDirection: "row",
@@ -257,6 +281,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   input: {
+    width: "100%",
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
@@ -312,6 +337,13 @@ const styles = StyleSheet.create({
     right: 10,
     bottom: 10,
     justifyContent: "center",
+  },
+  contentContainer: {
+    flexGrow: 1,
+    padding: 20,
+  },
+  orderDetailsContainer: {
+    marginTop: 20,
   },
 });
 

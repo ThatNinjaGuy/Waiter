@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
-import React, { useEffect } from "react";
+import React from "react";
 import { StyleSheet, FlatList } from "react-native";
 import {
   aggregateOrders,
@@ -41,7 +41,6 @@ const OrderDetails = ({ rawOrders }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    // backgroundColor: "#f8f8f8",
     borderRadius: 8,
     marginBottom: 16,
   },

@@ -7,6 +7,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import {
   calculateTotalOrderCount,
   completedOrdersCount,
+  calculateOrderValue,
 } from "@/utils/orderManagement";
 import {
   getLightBgColorWithTableStatus,
@@ -37,11 +38,11 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
       status,
       eta,
       ttlo,
-      orderValue,
     } = item;
 
     const completedOrders = completedOrdersCount(orders);
     const totalOrders = calculateTotalOrderCount(orders);
+    const orderValue = calculateOrderValue(orders);
 
     const lightBackgroundColor = getLightBgColorWithTableStatus(
       status,
