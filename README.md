@@ -27,6 +27,10 @@ This project is a React Native application for managing a restaurant menu. It us
 - **Batch Operations**: Efficiently add multiple items using batch write operations.
 - **User-Friendly Interface**: Simple and intuitive UI for managing menu items.
 
+## Demo
+
+![Demo Video](https://youtu.be/LKAiczIF8vA)
+
 ## Screenshots
 
 ### Dashboard
