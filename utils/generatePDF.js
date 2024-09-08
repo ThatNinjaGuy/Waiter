@@ -141,33 +141,12 @@ const generatePDF = async (
         </tr>
       </table>
     </div>
-
-    ${
-      tableData.notes
-        ? `
-      <div class="section">
-        <h2>Notes</h2>
-        <p class="notes">${tableData.notes}</p>
-      </div>
-    `
-        : ""
-    }
-
     <div class="section">
       <p>Thank you for dining with us!</p>
     </div>
   </body>
 </html>
 `;
-
-    // if (Platform.OS === "web") {
-    //   const iframe = document.createElement("iframe");
-    //   iframe.style.display = "none";
-    //   document.body.appendChild(iframe);
-    //   iframe.contentDocument.write(htmlContent);
-    //   iframe.contentDocument.close();
-    //   iframe.contentWindow.print();
-    // } else {
     const result = await Print.printToFileAsync({ html: htmlContent });
 
     if (!result || !result.uri) {
