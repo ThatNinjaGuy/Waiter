@@ -10,6 +10,12 @@ import {
 import { db } from "@/firebase/firebaseConfig";
 import OrdersScreen from "./OrdersScreen";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
+import Toast from "react-native-toast-message";
+import { View } from "react-native";
+import {
+  completedOrdersCount,
+  activeOrdersCount,
+} from "@/utils/orderManagement";
 
 const OrdersScreenContainer = () => {
   const [orders, setOrders] = useState([]);
@@ -45,9 +51,10 @@ const OrdersScreenContainer = () => {
 
           // Sort orders by timestamp if available
           allOrders.sort(
-            (a, b) =>
-              (b.timestamp?.toMillis() || 0) - (a.timestamp?.toMillis() || 0)
+            (a, b) => (a.orderTimestamp || 0) - (b.orderTimestamp || 0)
           );
+
+          notifyOrdersUpdated(allOrders);
 
           setOrders(allOrders);
           setLoading(false);
@@ -63,6 +70,34 @@ const OrdersScreenContainer = () => {
 
     fetchOrders();
   }, []);
+
+  const notifyOrdersUpdated = (allOrders) => {
+    // If count of order increased, new order has come in. So, notify
+    if (activeOrdersCount(orders) < activeOrdersCount(allOrders)) {
+      Toast.show({
+        type: "success",
+        text1: "New Order recieved",
+        position: "bottom",
+        visibilityTime: 2500,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
+      });
+    }
+
+    // If count of completed orders increased, an order has been completed. So, notify
+    if (completedOrdersCount(orders) < completedOrdersCount(allOrders)) {
+      Toast.show({
+        type: "success",
+        text1: "Order ready",
+        position: "bottom",
+        visibilityTime: 2500,
+        autoHide: true,
+        topOffset: 30,
+        bottomOffset: 40,
+      });
+    }
+  };
 
   const handleCompleteOrder = async (orderId, tableId) => {
     try {
@@ -100,7 +135,12 @@ const OrdersScreenContainer = () => {
     return <LoadingScreen />;
   }
 
-  return <OrdersScreen orders={orders} onCompleteOrder={handleCompleteOrder} />;
+  return (
+    <View style={{ flex: 1 }}>
+      <OrdersScreen orders={orders} onCompleteOrder={handleCompleteOrder} />
+      <Toast />
+    </View>
+  );
 };
 
 export default OrdersScreenContainer;

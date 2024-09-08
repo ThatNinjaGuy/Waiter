@@ -19,6 +19,10 @@ const OrdersScreen = ({ orders, onCompleteOrder }) => {
     setTimeout(() => setRefreshing(false), 2000);
   }, []);
 
+  const filteredOrders = orders.filter(
+    (order) => !order.status || order.status === "ACTIVE"
+  );
+
   const renderOrder = ({ item }) => (
     <ThemedView style={[styles.card, { width: layoutParams.itemWidth }]}>
       <ThemedView style={styles.headerRow}>
@@ -36,9 +40,6 @@ const OrdersScreen = ({ orders, onCompleteOrder }) => {
         </ThemedText>
       </ThemedButton>
     </ThemedView>
-  );
-  const filteredOrders = orders.filter(
-    (order) => !order.status || order.status === "ACTIVE"
   );
 
   return (
