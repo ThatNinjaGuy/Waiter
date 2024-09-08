@@ -16,43 +16,45 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
   const textColor = useThemeColor({}, "text");
   const bgColor = useThemeColor({}, "background");
 
-  const [guests, setGuests] = useState(table?.guests ?? 0);
-  const [notes, setNotes] = useState(table?.notes ?? "");
-  const [waiter, setWaiter] = useState(table?.waiter ?? "");
-  const [guestName, setGuestName] = useState(table?.guestName ?? "");
-  const [guestMobile, setGuestMobile] = useState(table?.guestMobile ?? "");
-  const [occasion, setOccasion] = useState(table?.occasion ?? "Birthday");
-  const [bookingTime, setBookingTime] = useState(new Date());
-  const [isBookingNow, setIsBookingNow] = useState(true);
+  const [formData, setFormData] = useState({
+    guests: table?.guests ?? 0,
+    notes: table?.notes ?? "",
+    waiter: table?.waiter ?? "",
+    guestName: table?.guestName ?? "",
+    guestMobile: table?.guestMobile ?? "",
+    occasion: table?.occasion ?? "Birthday",
+    bookingTime: new Date(),
+    isBookingNow: true,
+  });
+
   const [staffs, setStaffs] = useState([]);
 
-  const setGuestsCallback = useCallback((value) => setGuests(value), []);
-  const setNotesCallback = useCallback((value) => setNotes(value), []);
-  const setWaiterCallback = useCallback((value) => setWaiter(value), []);
-  const setGuestNameCallback = useCallback((value) => setGuestName(value), []);
-  const setGuestMobileCallback = useCallback(
-    (value) => setGuestMobile(value),
-    []
-  );
-  const setOccasionCallback = useCallback((value) => setOccasion(value), []);
-  const setBookingTimeCallback = useCallback(
-    (value) => setBookingTime(value),
-    []
-  );
-  const setIsBookingNowCallback = useCallback(
-    (value) => setIsBookingNow(value),
-    []
-  );
+  const updateFormData = useCallback((field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  }, []);
+
   useEffect(() => {
-    setGuests(table?.guests ? table?.guests : 0);
-    setNotes(table?.notes ? table?.notes : "");
-    setGuestName(table?.guestName ? table?.guestName : "");
-    setGuestMobile(table?.guestMobile ? table?.guestMobile : "");
-    setOccasion(table?.occasion ? table?.occasion : "Friends");
-    setWaiter(table?.waiter ? table?.waiter : "");
-    setBookingTime(new Date());
-    setIsBookingNow(true);
+    setFormData({
+      guests: table?.guests ?? 0,
+      notes: table?.notes ?? "",
+      waiter: table?.waiter ?? "",
+      guestName: table?.guestName ?? "",
+      guestMobile: table?.guestMobile ?? "",
+      occasion: table?.occasion ?? "Friends",
+      bookingTime: new Date(),
+      isBookingNow: true,
+    });
   }, [table]);
+
+  const handleUpdate = (orderStatus) => {
+    onUpdateTable({
+      ...table,
+      ...formData,
+      guests: parseInt(formData.guests, 10),
+      bookingTime: formData.isBookingNow ? new Date() : formData.bookingTime,
+      status: orderStatus,
+    });
+  };
 
   useEffect(() => {
     const fetchAllStaffs = async () => {
@@ -72,20 +74,6 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
 
     fetchAllStaffs();
   }, []);
-
-  const handleUpdate = (orderStatus) => {
-    onUpdateTable({
-      ...table,
-      guestName,
-      guestMobile,
-      guests: parseInt(guests, 10),
-      occasion,
-      bookingTime: isBookingNow ? new Date() : bookingTime,
-      waiter,
-      notes,
-      status: orderStatus,
-    });
-  };
 
   const handleGenerateBillClick = async () => {
     // Mark the table as free, indicating order has completed
@@ -111,6 +99,66 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
     }
   };
 
+  const MemoizedInput = React.memo(
+    ({ style, onChangeText, value, ...props }) => (
+      <TextInput
+        style={style}
+        onChangeText={onChangeText}
+        value={value}
+        {...props}
+      />
+    )
+  );
+
+  const MemoizedPicker = React.memo(
+    ({ selectedValue, style, onValueChange, children }) => (
+      <Picker
+        selectedValue={selectedValue}
+        style={style}
+        onValueChange={onValueChange}
+      >
+        {children}
+      </Picker>
+    )
+  );
+
+  const MemoizedSwitch = React.memo(({ value, onValueChange }) => (
+    <Switch value={value} onValueChange={onValueChange} />
+  ));
+
+  const MemoizedDateTimePicker = React.memo(({ value, onChange }) => (
+    <DateTimePicker
+      value={value}
+      mode="time"
+      display="default"
+      onChange={onChange}
+    />
+  ));
+
+  const TimeSelection = React.memo(
+    ({ formData, updateFormData, bookingTime, styles }) => (
+      <ThemedView style={styles.inputFieldContainer}>
+        <ThemedText style={styles.label}>Time:</ThemedText>
+        <ThemedView style={styles.radioContainer}>
+          <ThemedText>Later</ThemedText>
+          <MemoizedSwitch
+            value={formData.isBookingNow}
+            onValueChange={(value) => updateFormData("isBookingNow", value)}
+          />
+          <ThemedText>Now</ThemedText>
+          {!formData.isBookingNow && (
+            <MemoizedDateTimePicker
+              value={bookingTime}
+              onChange={(event, selectedDate) =>
+                updateFormData("bookingTime", selectedDate || bookingTime)
+              }
+            />
+          )}
+        </ThemedView>
+      </ThemedView>
+    )
+  );
+
   const renderHeader = useCallback(
     () => (
       <View>
@@ -120,41 +168,41 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
           <ThemedView style={styles.inputContainer}>
             <ThemedView style={styles.inputFieldContainer}>
               <ThemedText style={styles.label}>Name:</ThemedText>
-              <TextInput
+              <MemoizedInput
                 style={[styles.input, { color: textColor }]}
-                onChangeText={setGuestNameCallback}
-                value={guestName}
+                onChangeText={(value) => updateFormData("guestName", value)}
+                value={formData.guestName}
               />
             </ThemedView>
             <ThemedView style={styles.inputFieldContainer}>
               <ThemedText style={styles.label}>Mobile:</ThemedText>
-              <TextInput
+              <MemoizedInput
                 style={[styles.input, { color: textColor }]}
-                onChangeText={setGuestMobileCallback}
+                onChangeText={(value) => updateFormData("guestMobile", value)}
                 inputMode="phone-pad"
-                value={guestMobile}
+                value={formData.guestMobile}
               />
             </ThemedView>
           </ThemedView>
           <ThemedView style={styles.inputContainer}>
             <ThemedView style={styles.inputFieldContainer}>
               <ThemedText style={styles.label}>Guests:</ThemedText>
-              <TextInput
+              <MemoizedInput
                 style={[styles.input, { color: textColor }]}
-                onChangeText={setGuestsCallback}
+                onChangeText={(value) => updateFormData("guests", value)}
                 inputMode="numeric"
-                value={guests.toString()}
+                value={formData.guests.toString()}
               />
             </ThemedView>
             <ThemedView style={styles.inputFieldContainer}>
               <ThemedText style={styles.label}>Occasion:</ThemedText>
-              <Picker
-                selectedValue={occasion}
+              <MemoizedPicker
+                selectedValue={formData.occasion}
                 style={[
                   styles.input,
                   { color: textColor, backgroundColor: bgColor },
                 ]}
-                onValueChange={setOccasionCallback}
+                onValueChange={(value) => updateFormData("occasion", value)}
               >
                 <Picker.Item label="Friends" value="Friends" />
                 <Picker.Item label="Family" value="Family" />
@@ -166,40 +214,25 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
                   value="Family and Friends"
                 />
                 <Picker.Item label="Other" value="Other" />
-              </Picker>
+              </MemoizedPicker>
             </ThemedView>
           </ThemedView>
           <ThemedView style={styles.inputContainer}>
-            <ThemedView style={styles.inputFieldContainer}>
-              <ThemedText style={styles.label}>Time:</ThemedText>
-              <ThemedView style={styles.radioContainer}>
-                <ThemedText>Later</ThemedText>
-                <Switch
-                  value={isBookingNow}
-                  onValueChange={setIsBookingNowCallback}
-                />
-                <ThemedText>Now</ThemedText>
-                {!isBookingNow && (
-                  <DateTimePicker
-                    value={bookingTime}
-                    mode="time"
-                    display="default"
-                    onChange={(event, selectedDate) =>
-                      setBookingTimeCallback(selectedDate || bookingTime)
-                    }
-                  />
-                )}
-              </ThemedView>
-            </ThemedView>
+            <TimeSelection
+              formData={formData}
+              updateFormData={updateFormData}
+              bookingTime={formData.bookingTime}
+              styles={styles}
+            />
             <ThemedView style={styles.inputFieldContainer}>
               <ThemedText style={styles.label}>Server :</ThemedText>
-              <Picker
-                selectedValue={waiter}
+              <MemoizedPicker
+                selectedValue={formData.waiter}
                 style={[
                   styles.input,
-                  { color: "black", backgroundColor: "white" },
+                  { color: textColor, backgroundColor: bgColor },
                 ]}
-                onValueChange={(value) => setWaiterCallback(value)}
+                onValueChange={(value) => updateFormData("waiter", value)}
               >
                 {staffs.length > 0 ? (
                   staffs.map((staff) => (
@@ -213,16 +246,16 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
                   <Picker.Item label="Loading..." value="" />
                 )}
                 <Picker.Item label="Other" value="Other" key="Other" />
-              </Picker>
+              </MemoizedPicker>
             </ThemedView>
           </ThemedView>
           <ThemedView style={styles.notesContainer}>
             <ThemedText style={styles.label}>Notes:</ThemedText>
-            <TextInput
+            <MemoizedInput
               style={[styles.input, styles.notesInput, { color: textColor }]}
-              onChangeText={setNotesCallback}
+              onChangeText={(value) => updateFormData("notes", value)}
               multiline
-              value={notes}
+              value={formData.notes}
             />
           </ThemedView>
           <ThemedView style={styles.buttonsContainer}>
@@ -251,16 +284,7 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
         </ThemedView>
       </View>
     ),
-    [
-      guests,
-      notes,
-      waiter,
-      guestName,
-      guestMobile,
-      occasion,
-      bookingTime,
-      isBookingNow,
-    ]
+    [[formData, staffs, updateFormData, table?.number]]
   );
   const renderFooter = useCallback(
     () => (
