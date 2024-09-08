@@ -37,3 +37,28 @@ export const getLightBgColorWithTableStatus = (
   else if (status == "Reserved") return "rgba(14, 46, 233, 0.44)";
   else return "rgba(27, 12, 11, 0.56)";
 };
+
+export const getLightBgColorForFilter = (filter) => {
+  console.log(filter);
+  const colorMap = {
+    Available: "rgba(27, 12, 11, 0.56)",
+    Occupied: "rgba(0, 248, 31, 0.8)",
+    Reserved: "rgba(14, 46, 233, 0.44)",
+  };
+  console.log(colorMap[filter] || "#CCCCCC");
+
+  // Default color if the filter doesn't match any category
+  return colorMap[filter] || "#CCCCCC";
+};
+
+export const getDarkBgColorForFilter = (filter) => {
+  const colorMap = {
+    All: "#FF5733",
+    Available: "rgba(27, 12, 11, 0.56)",
+    Occupied: "rgba(0, 248, 31, 0.8)",
+    Reserved: "rgba(14, 46, 233, 0.44)",
+  };
+
+  // Default color if the filter doesn't match any category
+  return colorMap[filter] || "#CCCCCC";
+};

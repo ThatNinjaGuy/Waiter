@@ -22,6 +22,7 @@ export default StyleSheet.create({
     flexGrow: 0,
   },
   filterButton: {
+    width: 100,
     padding: 10,
     borderRadius: 20,
     marginHorizontal: 5,
@@ -30,6 +31,9 @@ export default StyleSheet.create({
     backgroundColor: "#4CAF50",
   },
   filterButtonText: {
+    fontWeight: "bold",
+  },
+  selectedFilterButtonText: {
     fontWeight: "bold",
   },
   searchContainer: {

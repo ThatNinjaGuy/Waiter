@@ -21,6 +21,10 @@ import { ThemedView } from "@/components/common/ThemedView";
 import ThemedButton from "@/components/common/ThemedButton";
 import { ThemedText } from "@/components/common/ThemedText";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
+import {
+  getDarkBgColorForFilter,
+  getLightBgColorForFilter,
+} from "@/utils/colorPicker";
 
 const RestaurantTablesScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -232,8 +236,7 @@ const RestaurantTablesScreen = () => {
   };
 
   const getUniqueFilters = () => {
-    const roles = tables?.map((item) => item.status);
-    return ["All", ...new Set(roles)];
+    return ["All", "Occupied", "Available", "Reserved"];
   };
 
   const handleTableInfoClose = () => {
@@ -274,12 +277,23 @@ const RestaurantTablesScreen = () => {
                 <ThemedButton
                   style={[
                     styles.filterButton,
-                    selectedFilter === item && styles.selectedFilterButton,
+                    {
+                      opacity: selectedFilter === item ? 1 : 0.6,
+                      transform: [{ scale: selectedFilter === item ? 1.1 : 1 }],
+                    },
                   ]}
+                  lightBackgroundColor={getLightBgColorForFilter(item)}
+                  darkBackgroundColor={getDarkBgColorForFilter(item)}
                   onPress={() => filterBySelectedFilter(item)}
                   type="secondary"
                 >
-                  <ThemedText style={styles.filterButtonText}>
+                  <ThemedText
+                    style={
+                      selectedFilter === item
+                        ? styles.selectedFilterButtonText
+                        : null
+                    }
+                  >
                     {item}
                   </ThemedText>
                 </ThemedButton>
