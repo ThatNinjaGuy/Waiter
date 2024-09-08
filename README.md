@@ -29,8 +29,7 @@ This project is a React Native application for managing a restaurant menu. It us
 
 ## Demo
 
-![Demo Video](https://youtu.be/LKAiczIF8vA)
-[![Waiter Demo](https://img.youtube.com/vi/LKAiczIF8vA/0.jpg)](https://www.youtube.com/watch?v=LKAiczIF8vA)
+[![Waiter App Demo](https://img.youtube.com/vi/LKAiczIF8vA/0.jpg)](https://www.youtube.com/watch?v=LKAiczIF8vA)
 
 ## Screenshots
 
