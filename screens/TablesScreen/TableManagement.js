@@ -16,42 +16,31 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
   const textColor = useThemeColor({}, "text");
   const bgColor = useThemeColor({}, "background");
 
-  const [guests, setGuests] = useState(table?.guests ?? 0);
-  const [notes, setNotes] = useState(table?.notes ?? "");
-  const [waiter, setWaiter] = useState(table?.waiter ?? "");
-  const [guestName, setGuestName] = useState(table?.guestName ?? "");
-  const [guestMobile, setGuestMobile] = useState(table?.guestMobile ?? "");
-  const [occasion, setOccasion] = useState(table?.occasion ?? "Birthday");
-  const [bookingTime, setBookingTime] = useState(new Date());
-  const [isBookingNow, setIsBookingNow] = useState(true);
+  // Local state for form inputs
+  const [localInputs, setLocalInputs] = useState({
+    guests: table?.guests ?? 0,
+    notes: table?.notes ?? "",
+    waiter: table?.waiter ?? "",
+    guestName: table?.guestName ?? "",
+    guestMobile: table?.guestMobile ?? "",
+    occasion: table?.occasion ?? "Friends",
+    bookingTime: new Date(),
+    isBookingNow: true,
+  });
+
   const [staffs, setStaffs] = useState([]);
 
-  const setGuestsCallback = useCallback((value) => setGuests(value), []);
-  const setNotesCallback = useCallback((value) => setNotes(value), []);
-  const setWaiterCallback = useCallback((value) => setWaiter(value), []);
-  const setGuestNameCallback = useCallback((value) => setGuestName(value), []);
-  const setGuestMobileCallback = useCallback(
-    (value) => setGuestMobile(value),
-    []
-  );
-  const setOccasionCallback = useCallback((value) => setOccasion(value), []);
-  const setBookingTimeCallback = useCallback(
-    (value) => setBookingTime(value),
-    []
-  );
-  const setIsBookingNowCallback = useCallback(
-    (value) => setIsBookingNow(value),
-    []
-  );
   useEffect(() => {
-    setGuests(table?.guests ? table?.guests : 0);
-    setNotes(table?.notes ? table?.notes : "");
-    setGuestName(table?.guestName ? table?.guestName : "");
-    setGuestMobile(table?.guestMobile ? table?.guestMobile : "");
-    setOccasion(table?.occasion ? table?.occasion : "Friends");
-    setWaiter(table?.waiter ? table?.waiter : "");
-    setBookingTime(new Date());
-    setIsBookingNow(true);
+    setLocalInputs({
+      guests: table?.guests ?? 0,
+      notes: table?.notes ?? "",
+      waiter: table?.waiter ?? "",
+      guestName: table?.guestName ?? "",
+      guestMobile: table?.guestMobile ?? "",
+      occasion: table?.occasion ?? "Friends",
+      bookingTime: new Date(),
+      isBookingNow: true,
+    });
   }, [table]);
 
   useEffect(() => {
@@ -73,202 +62,202 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
     fetchAllStaffs();
   }, []);
 
+  const handleInputChange = (field, value) => {
+    setLocalInputs((prev) => ({ ...prev, [field]: value }));
+  };
+
   const handleUpdate = (orderStatus) => {
     onUpdateTable({
       ...table,
-      guestName,
-      guestMobile,
-      guests: parseInt(guests, 10),
-      occasion,
-      bookingTime: isBookingNow ? new Date() : bookingTime,
-      waiter,
-      notes,
+      ...localInputs,
+      guests: parseInt(localInputs.guests, 10) || 0, // Add fallback for NaN
+      bookingTime: localInputs.isBookingNow
+        ? new Date()
+        : localInputs.bookingTime,
       status: orderStatus,
     });
   };
 
   const handleGenerateBillClick = async () => {
-    // Mark the table as free, indicating order has completed
-    handleUpdate("Available");
-
-    // Generate bill
-    const restaurantName = "Thorat Barbeque";
-    const orderItems = table.orders;
-    const tableData = {
-      number: table.number,
-      guests,
-      occasion,
-      waiter,
-      notes,
-    };
-
     try {
-      await generatePDF(restaurantName, guestName, orderItems, tableData);
-      console.log("Bill generated successfully");
+      handleUpdate("Available");
+      await generateBill();
     } catch (error) {
       console.error("Error generating bill:", error);
       // alert("Failed to generate bill. Please try again.");
     }
   };
 
-  const renderHeader = useCallback(
-    () => (
-      <View>
-        <ThemedView style={styles.container}>
-          <FloatingCloseButton onClose={onClose} />
-          <ThemedText style={styles.title}>Table {table?.number}</ThemedText>
-          <ThemedView style={styles.inputContainer}>
-            <ThemedView style={styles.inputFieldContainer}>
-              <ThemedText style={styles.label}>Name:</ThemedText>
-              <TextInput
-                style={[styles.input, { color: textColor }]}
-                onChangeText={setGuestNameCallback}
-                value={guestName}
-              />
-            </ThemedView>
-            <ThemedView style={styles.inputFieldContainer}>
-              <ThemedText style={styles.label}>Mobile:</ThemedText>
-              <TextInput
-                style={[styles.input, { color: textColor }]}
-                onChangeText={setGuestMobileCallback}
-                inputMode="phone-pad"
-                value={guestMobile}
-              />
-            </ThemedView>
-          </ThemedView>
-          <ThemedView style={styles.inputContainer}>
-            <ThemedView style={styles.inputFieldContainer}>
-              <ThemedText style={styles.label}>Guests:</ThemedText>
-              <TextInput
-                style={[styles.input, { color: textColor }]}
-                onChangeText={setGuestsCallback}
-                inputMode="numeric"
-                value={guests.toString()}
-              />
-            </ThemedView>
-            <ThemedView style={styles.inputFieldContainer}>
-              <ThemedText style={styles.label}>Occasion:</ThemedText>
-              <Picker
-                selectedValue={occasion}
-                style={[
-                  styles.input,
-                  { color: textColor, backgroundColor: bgColor },
-                ]}
-                onValueChange={setOccasionCallback}
-              >
-                <Picker.Item label="Friends" value="Friends" />
-                <Picker.Item label="Family" value="Family" />
-                <Picker.Item label="Party" value="Party" />
-                <Picker.Item label="Office Party" value="Office Party" />
-                <Picker.Item label="Official" value="Official" />
-                <Picker.Item
-                  label="Family & Friends"
-                  value="Family and Friends"
-                />
-                <Picker.Item label="Other" value="Other" />
-              </Picker>
-            </ThemedView>
-          </ThemedView>
-          <ThemedView style={styles.inputContainer}>
-            <ThemedView style={styles.inputFieldContainer}>
-              <ThemedText style={styles.label}>Time:</ThemedText>
-              <ThemedView style={styles.radioContainer}>
-                <ThemedText>Later</ThemedText>
-                <Switch
-                  value={isBookingNow}
-                  onValueChange={setIsBookingNowCallback}
-                />
-                <ThemedText>Now</ThemedText>
-                {!isBookingNow && (
-                  <DateTimePicker
-                    value={bookingTime}
-                    mode="time"
-                    display="default"
-                    onChange={(event, selectedDate) =>
-                      setBookingTimeCallback(selectedDate || bookingTime)
-                    }
-                  />
-                )}
-              </ThemedView>
-            </ThemedView>
-            <ThemedView style={styles.inputFieldContainer}>
-              <ThemedText style={styles.label}>Server :</ThemedText>
-              <Picker
-                selectedValue={waiter}
-                style={[
-                  styles.input,
-                  { color: "black", backgroundColor: "white" },
-                ]}
-                onValueChange={(value) => setWaiterCallback(value)}
-              >
-                {staffs.length > 0 ? (
-                  staffs.map((staff) => (
-                    <Picker.Item
-                      label={staff.name}
-                      value={staff.name}
-                      key={staff.id}
-                    />
-                  ))
-                ) : (
-                  <Picker.Item label="Loading..." value="" />
-                )}
-                <Picker.Item label="Other" value="Other" key="Other" />
-              </Picker>
-            </ThemedView>
-          </ThemedView>
-          <ThemedView style={styles.notesContainer}>
-            <ThemedText style={styles.label}>Notes:</ThemedText>
+  const generateBill = async () => {
+    const restaurantName = "Thorat Barbeque";
+    const orderItems = table.orders;
+    const tableData = {
+      number: table.number,
+      ...localInputs,
+    };
+    await generatePDF(
+      restaurantName,
+      localInputs.guestName,
+      orderItems,
+      tableData
+    );
+    console.log("Bill generated successfully");
+    // alert("Bill generated successfully");
+  };
+
+  const TimeSelection = React.memo(({ bookingTime, styles }) => {
+    return (
+      <ThemedView style={styles.inputFieldContainer}>
+        <ThemedText style={styles.label}>Time:</ThemedText>
+        <ThemedView style={styles.radioContainer}>
+          <ThemedText>Later</ThemedText>
+          <Switch
+            value={localInputs.isBookingNow}
+            onValueChange={(value) => handleInputChange("isBookingNow", value)}
+          />
+          <ThemedText>Now</ThemedText>
+          {!localInputs.isBookingNow && (
+            <DateTimePicker
+              value={bookingTime}
+              onChange={(value) =>
+                handleInputChange("bookingTime", value || bookingTime)
+              }
+              mode="time"
+              display="default"
+            />
+          )}
+        </ThemedView>
+      </ThemedView>
+    );
+  });
+
+  const renderHeader = (
+    <View>
+      <ThemedView style={styles.container}>
+        <FloatingCloseButton onClose={onClose} />
+        <ThemedText style={styles.title}>Table {table?.number}</ThemedText>
+        <ThemedView style={styles.inputContainer}>
+          <ThemedView style={styles.inputFieldContainer}>
+            <ThemedText style={styles.label}>Name:</ThemedText>
             <TextInput
-              style={[styles.input, styles.notesInput, { color: textColor }]}
-              onChangeText={setNotesCallback}
-              multiline
-              value={notes}
+              style={[styles.input, { color: textColor }]}
+              onChangeText={(value) => handleInputChange("guestName", value)}
+              value={localInputs.guestName}
             />
           </ThemedView>
-          <ThemedView style={styles.buttonsContainer}>
-            <ThemedButton
-              style={styles.updateButton}
-              onPress={onClose}
-              type="danger"
-            >
-              <ThemedText style={styles.updateButtonText}>CANCEL</ThemedText>
-            </ThemedButton>
-            <ThemedButton
-              style={styles.updateButton}
-              onPress={handleGenerateBillClick}
-              type="primary"
-            >
-              <ThemedText style={styles.updateButtonText}>BILL</ThemedText>
-            </ThemedButton>
-            <ThemedButton
-              style={styles.updateButton}
-              onPress={() => handleUpdate("Occupied")}
-              type="success"
-            >
-              <ThemedText style={styles.updateButtonText}>BOOK</ThemedText>
-            </ThemedButton>
+          <ThemedView style={styles.inputFieldContainer}>
+            <ThemedText style={styles.label}>Mobile:</ThemedText>
+            <TextInput
+              style={[styles.input, { color: textColor }]}
+              onChangeText={(value) => handleInputChange("guestMobile", value)}
+              inputMode="phone-pad"
+              value={localInputs.guestMobile}
+            />
           </ThemedView>
         </ThemedView>
-      </View>
-    ),
-    [
-      guests,
-      notes,
-      waiter,
-      guestName,
-      guestMobile,
-      occasion,
-      bookingTime,
-      isBookingNow,
-    ]
+        <ThemedView style={styles.inputContainer}>
+          <ThemedView style={styles.inputFieldContainer}>
+            <ThemedText style={styles.label}>Guests:</ThemedText>
+            <TextInput
+              style={[styles.input, { color: textColor }]}
+              onChangeText={(value) => handleInputChange("guests", value)}
+              inputMode="numeric"
+              value={localInputs.guests.toString()}
+            />
+          </ThemedView>
+          <ThemedView style={styles.inputFieldContainer}>
+            <ThemedText style={styles.label}>Occasion:</ThemedText>
+            <Picker
+              selectedValue={localInputs.occasion}
+              style={[
+                styles.input,
+                { color: textColor, backgroundColor: bgColor },
+              ]}
+              onValueChange={(value) => handleInputChange("occasion", value)}
+            >
+              <Picker.Item label="Friends" value="Friends" />
+              <Picker.Item label="Family" value="Family" />
+              <Picker.Item label="Party" value="Party" />
+              <Picker.Item label="Office Party" value="Office Party" />
+              <Picker.Item label="Official" value="Official" />
+              <Picker.Item
+                label="Family & Friends"
+                value="Family and Friends"
+              />
+              <Picker.Item label="Other" value="Other" />
+            </Picker>
+          </ThemedView>
+        </ThemedView>
+        <ThemedView style={styles.inputContainer}>
+          <TimeSelection
+            bookingTime={localInputs.bookingTime}
+            styles={styles}
+          />
+          <ThemedView style={styles.inputFieldContainer}>
+            <ThemedText style={styles.label}>Server :</ThemedText>
+            <Picker
+              selectedValue={localInputs.waiter}
+              style={[
+                styles.input,
+                { color: textColor, backgroundColor: bgColor },
+              ]}
+              onValueChange={(value) => handleInputChange("waiter", value)}
+            >
+              {staffs.length > 0 ? (
+                staffs.map((staff) => (
+                  <Picker.Item
+                    label={staff.name}
+                    value={staff.name}
+                    key={staff.id}
+                  />
+                ))
+              ) : (
+                <Picker.Item label="Loading..." value="" />
+              )}
+              <Picker.Item label="Other" value="Other" key="Other" />
+            </Picker>
+          </ThemedView>
+        </ThemedView>
+        <ThemedView style={styles.notesContainer}>
+          <ThemedText style={styles.label}>Notes:</ThemedText>
+          <TextInput
+            style={[styles.input, styles.notesInput, { color: textColor }]}
+            onChangeText={(value) => handleInputChange("notes", value)}
+            multiline
+            value={localInputs.notes}
+          />
+        </ThemedView>
+        <ThemedView style={styles.buttonsContainer}>
+          <ThemedButton
+            style={styles.updateButton}
+            onPress={onClose}
+            type="danger"
+          >
+            <ThemedText style={styles.updateButtonText}>CANCEL</ThemedText>
+          </ThemedButton>
+          <ThemedButton
+            style={styles.updateButton}
+            onPress={handleGenerateBillClick}
+            type="primary"
+          >
+            <ThemedText style={styles.updateButtonText}>BILL</ThemedText>
+          </ThemedButton>
+          <ThemedButton
+            style={styles.updateButton}
+            onPress={() => handleUpdate("Occupied")}
+            type="success"
+          >
+            <ThemedText style={styles.updateButtonText}>BOOK</ThemedText>
+          </ThemedButton>
+        </ThemedView>
+      </ThemedView>
+    </View>
   );
-  const renderFooter = useCallback(
-    () => (
-      <View style={styles.orderDetailsContainer}>
-        <OrderDetails rawOrders={table.orders} />
-      </View>
-    ),
-    [table.orders]
+
+  const renderFooter = (
+    <View style={styles.orderDetailsContainer}>
+      <OrderDetails rawOrders={table.orders} />
+    </View>
   );
 
   return (
