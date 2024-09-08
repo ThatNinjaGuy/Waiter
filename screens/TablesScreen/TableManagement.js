@@ -9,6 +9,8 @@ import ThemedButton from "@/components/common/ThemedButton";
 import OrderDetails from "./OrderDetails";
 import generatePDF from "@/utils/generatePDF";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/firebase/firebaseConfig";
 
 const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
   const textColor = useThemeColor({}, "text");
@@ -22,6 +24,7 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
   const [occasion, setOccasion] = useState(table?.occasion ?? "Birthday");
   const [bookingTime, setBookingTime] = useState(new Date());
   const [isBookingNow, setIsBookingNow] = useState(true);
+  const [staffs, setStaffs] = useState([]);
 
   const setGuestsCallback = useCallback((value) => setGuests(value), []);
   const setNotesCallback = useCallback((value) => setNotes(value), []);
@@ -50,6 +53,25 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
     setBookingTime(new Date());
     setIsBookingNow(true);
   }, [table]);
+
+  useEffect(() => {
+    const fetchAllStaffs = async () => {
+      try {
+        const staffsSnapshot = await getDocs(
+          collection(db, "hotel-details/staff-details/staffs")
+        );
+        const items = staffsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setStaffs(items);
+      } catch (error) {
+        console.error("Error fetching tables:", error);
+      }
+    };
+
+    fetchAllStaffs();
+  }, []);
 
   const handleUpdate = (orderStatus) => {
     onUpdateTable({
@@ -170,12 +192,28 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
               </ThemedView>
             </ThemedView>
             <ThemedView style={styles.inputFieldContainer}>
-              <ThemedText style={styles.label}>Server:</ThemedText>
-              <TextInput
-                style={[styles.input, { color: textColor }]}
-                onChangeText={setWaiterCallback}
-                value={waiter}
-              />
+              <ThemedText style={styles.label}>Server :</ThemedText>
+              <Picker
+                selectedValue={waiter}
+                style={[
+                  styles.input,
+                  { color: "black", backgroundColor: "white" },
+                ]}
+                onValueChange={(value) => setWaiterCallback(value)}
+              >
+                {staffs.length > 0 ? (
+                  staffs.map((staff) => (
+                    <Picker.Item
+                      label={staff.name}
+                      value={staff.name}
+                      key={staff.id}
+                    />
+                  ))
+                ) : (
+                  <Picker.Item label="Loading..." value="" />
+                )}
+                <Picker.Item label="Other" value="Other" key="Other" />
+              </Picker>
             </ThemedView>
           </ThemedView>
           <ThemedView style={styles.notesContainer}>
@@ -210,7 +248,6 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
               <ThemedText style={styles.updateButtonText}>BOOK</ThemedText>
             </ThemedButton>
           </ThemedView>
-          <OrderDetails rawOrders={table.orders} />
         </ThemedView>
       </View>
     ),
@@ -243,7 +280,6 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
       contentContainerStyle={styles.contentContainer}
     />
   );
-  // return <ScrollView>{renderHeader()}</ScrollView>;
 });
 
 const styles = StyleSheet.create({
@@ -266,6 +302,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   inputFieldContainer: {
+    flex: 1,
     flexDirection: "column",
     alignItems: "flex-start",
     margin: 10,
