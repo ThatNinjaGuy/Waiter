@@ -74,6 +74,7 @@ const CategoryManagementPopup = ({
           </ThemedButton>
         </ThemedView>
         <FlatList
+          style={{ flex: 1 }}
           data={categories}
           renderItem={({ item }) => (
             <ThemedView style={styles.categoryItem}>
@@ -103,7 +104,7 @@ const CategoryManagementPopup = ({
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 20 },
+  container: { flex: 1, padding: 20 },
   title: { fontSize: 20, fontWeight: "bold" },
   input: { borderColor: "gray", borderWidth: 1, marginBottom: 10, padding: 8 },
   buttons: { flexDirection: "row", justifyContent: "space-between" },
