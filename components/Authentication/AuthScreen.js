@@ -13,28 +13,51 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "@/firebase/firebaseConfig";
+import { setDoc, doc } from "firebase/firestore";
+import { db } from "@/firebase/firebaseConfig";
+import { Picker } from "@react-native-picker/picker";
 
 const AuthScreen = () => {
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [role, setRole] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signInFailedError, setSignInFailedError] = useState();
+  const [isSignUpMode, setIsSignUpMode] = useState(false);
+
+  const toggleMode = () => {
+    setIsSignUpMode((prevMode) => !prevMode);
+  };
 
   const handleSignUp = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      // Create the user with email and password
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      // Add additional user details to Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        name: name,
+        age: age,
+        email: email,
+        role: role,
+        createdAt: Date.now(),
+      });
+
+      console.log("User signed up successfully with ID:", user.uid);
+      // You can navigate to the next screen or update UI here
     } catch (error) {
       console.error(error);
-      if (error.code === "auth/user-disabled") {
-        // Handle the specific case of a disabled user
+      if (error.code === "auth/email-already-in-use") {
         setSignInFailedError(
-          "This user account has been disabled. Please contact support."
+          "This email is already in use. Please try another one."
         );
-      } else if (error.code === "auth/invalid-credential") {
-        setSignInFailedError("Invalid credentials provided. Please try again.");
       } else {
-        // Handle other types of errors
-        console.error("Sign-in error:", error.message);
-        // You can set a generic error message for other types of errors
         setSignInFailedError(
           "An error occurred during sign-up. Please try again."
         );
@@ -44,7 +67,24 @@ const AuthScreen = () => {
 
   const handleSignIn = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      // const user = userCredential.user;
+
+      // Retrieve additional user details from Firestore
+      // const userDoc = await getDoc(doc(db, "users", user.uid));
+      // if (userDoc.exists()) {
+      //   const userData = userDoc.data();
+      //   console.log("User signed in:", user.uid, userData);
+      //   // You can store user data in state or context here
+      // } else {
+      //   console.log("No additional user data found");
+      // }
+
+      // Navigate to the next screen or update UI
     } catch (error) {
       console.error(error);
       if (error.code === "auth/user-disabled") {
@@ -54,9 +94,6 @@ const AuthScreen = () => {
       } else if (error.code === "auth/invalid-credential") {
         setSignInFailedError("Invalid credentials provided. Please try again.");
       } else {
-        // Handle other types of errors
-        console.error("Sign-in error:", error.message);
-        // You can set a generic error message for other types of errors
         setSignInFailedError(
           "An error occurred during sign-in. Please try again."
         );
@@ -69,7 +106,7 @@ const AuthScreen = () => {
       <View style={styles.background} />
       <View style={styles.contentContainer}>
         <Image
-          source={require("@/assets/images/adaptive-icon.png")} // Replace with your app's logo
+          source={require("@/assets/images/adaptive-icon.png")}
           style={styles.logo}
         />
         <Text style={styles.welcomeText}>Welcome to Waiter</Text>
@@ -89,6 +126,48 @@ const AuthScreen = () => {
           />
         </View>
 
+        {isSignUpMode && (
+          <>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputIcon}>👤</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Full Name"
+                value={name}
+                onChangeText={setName}
+                keyboardType="default"
+                autoCapitalize="words"
+              />
+            </View>
+
+            <View style={styles.rowContainer}>
+              <View style={styles.splitInputContainer}>
+                <Text style={styles.inputIcon}>🎂</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Age"
+                  value={age}
+                  onChangeText={setAge}
+                  keyboardType="number-pad"
+                />
+              </View>
+              <View style={styles.splitInputContainer}>
+                <Text style={styles.inputIcon}>👤</Text>
+                <Picker
+                  selectedValue={role}
+                  style={styles.picker}
+                  onValueChange={(itemValue) => setRole(itemValue)}
+                >
+                  <Picker.Item label="Select Role" value="" />
+                  <Picker.Item label="Manager" value="manager" />
+                  <Picker.Item label="Waiter" value="waiter" />
+                  <Picker.Item label="Chef" value="chef" />
+                </Picker>
+              </View>
+            </View>
+          </>
+        )}
+
         <View style={styles.inputContainer}>
           <Text style={styles.inputIcon}>🔒</Text>
           <TextInput
@@ -97,25 +176,30 @@ const AuthScreen = () => {
             value={password}
             onChangeText={setPassword}
             secureTextEntry
+            keyboardType="visible-password"
           />
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-          <Text style={styles.buttonText}>Sign In</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={isSignUpMode ? handleSignUp : handleSignIn}
+        >
+          <Text style={styles.buttonText}>
+            {isSignUpMode ? "Sign Up" : "Sign In"}
+          </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.button, styles.signUpButton]}
-          onPress={handleSignUp}
-        >
-          <Text style={[styles.buttonText, styles.signUpText]}>Sign Up</Text>
+        <TouchableOpacity onPress={toggleMode}>
+          <Text style={styles.toggleText}>
+            {isSignUpMode
+              ? "Already have an account! Sign In >>>"
+              : "Don't have an account? Sign Up >>>"}
+          </Text>
         </TouchableOpacity>
 
         {signInFailedError ? (
           <Text style={styles.termsText}>{signInFailedError}</Text>
-        ) : (
-          <></>
-        )}
+        ) : null}
       </View>
     </SafeAreaView>
   );
@@ -144,13 +228,14 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     backgroundColor: "white",
     borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    // Provides a shadow to seperate the background from the main view
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 3.84,
     elevation: 5,
   },
   logo: {
@@ -179,6 +264,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     width: "100%",
   },
+  rowContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 15,
+  },
+  splitInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    width: "48%",
+    height: 50,
+    borderWidth: 1,
+    borderColor: "#ccc",
+  },
+  picker: {
+    flex: 1,
+    height: 49,
+    color: "#333",
+    backgroundColor: "#f5f5f5",
+    borderRadius: 5,
+    borderWidth: 0,
+    paddingHorizontal: 5,
+  },
   inputIcon: {
     fontSize: 20,
     marginRight: 10,
@@ -202,19 +313,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-  signUpButton: {
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#007AFF",
-  },
-  signUpText: {
-    color: "#007AFF",
-  },
   termsText: {
     fontSize: 12,
     color: "red",
     textAlign: "center",
     marginTop: 20,
+  },
+  toggleText: {
+    color: "#007AFF",
+    fontSize: 12,
+    marginTop: 10,
+    textAlign: "center",
   },
 });
 
