@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   doc,
   getDoc,
@@ -16,6 +16,8 @@ import {
   completedOrdersCount,
   activeOrdersCount,
 } from "@/utils/orderManagement";
+import AuthContext from "@/components/Authentication/AuthProvider";
+import AuthScreen from "@/components/Authentication/AuthScreen";
 
 const OrdersScreenContainer = () => {
   const [orders, setOrders] = useState([]);
@@ -130,6 +132,9 @@ const OrdersScreenContainer = () => {
       console.error("Error updating order status:", error);
     }
   };
+
+  const { user } = useContext(AuthContext);
+  if (!user) return <AuthScreen />;
 
   if (loading) {
     return <LoadingScreen />;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -14,8 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { fetchHotelData } from "@/firebase/queries";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import AuthScreen from "@/components/Authentication/AuthScreen";
-import { auth } from "@/firebase/firebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
+import AuthContext from "@/components/Authentication/AuthProvider";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -25,16 +24,6 @@ export default function HomeScreen() {
 
   const [notifications, setNotifications] = useState([]);
   const [overviewItems, setOverviewItems] = useState([]);
-
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const subscriber = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      // if (initializing) setInitializing(false);
-    });
-    return subscriber;
-  }, []);
 
   useEffect(() => {
     const fetchHotelDetails = async () => {
@@ -104,22 +93,21 @@ export default function HomeScreen() {
     </View>
   );
 
+  // const { user } = useContext(AuthContext);
+  // if (!user) return <AuthScreen />;
+
   if (isLoading) {
     <LoadingScreen />;
   }
 
-  if (!user) {
-    return <AuthScreen />;
-  } else {
-    return (
-      <FlatList
-        data={[]} // empty data array since we only need the header component
-        ListHeaderComponent={renderHeader}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={null}
-      />
-    );
-  }
+  return (
+    <FlatList
+      data={[]} // empty data array since we only need the header component
+      ListHeaderComponent={renderHeader}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={null}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
