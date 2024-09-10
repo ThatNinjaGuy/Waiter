@@ -52,6 +52,8 @@ export default function HomeScreen() {
     { title: "Tables", onPress: () => navigation.navigate("tables") },
     { title: "Menu", onPress: () => navigation.navigate("menu") },
     { title: "Orders", onPress: () => navigation.navigate("orders") },
+    { title: "Inventory", onPress: () => navigation.navigate("inventory") },
+    { title: "Admin", onPress: () => navigation.navigate("admin") },
   ];
 
   const renderHeader = () => (

@@ -19,6 +19,7 @@ import { Picker } from "@react-native-picker/picker";
 
 const AuthScreen = () => {
   const [name, setName] = useState("");
+  const [mobile, setMobile] = useState();
   const [age, setAge] = useState("");
   const [role, setRole] = useState("");
   const [email, setEmail] = useState("");
@@ -46,6 +47,7 @@ const AuthScreen = () => {
         age: age,
         email: email,
         role: role,
+        mobile: mobile,
         createdAt: Date.now(),
       });
 
@@ -128,6 +130,16 @@ const AuthScreen = () => {
 
         {isSignUpMode && (
           <>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputIcon}>📞</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Mobile Number"
+                value={mobile}
+                onChangeText={setMobile}
+                keyboardType="phone-pad"
+              />
+            </View>
             <View style={styles.inputContainer}>
               <Text style={styles.inputIcon}>👤</Text>
               <TextInput
