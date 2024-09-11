@@ -16,15 +16,23 @@ import {
   doc,
   deleteDoc,
 } from "firebase/firestore";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 import { db } from "@/firebase/firebaseConfig";
-import { auth } from "@/firebase/firebaseConfig";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import { firebaseConfig } from "@/firebase/firebaseConfig";
 
 const ApproveSignUpRequestsScreen = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // Create a secondary app for user creation
+  const secondaryApp = initializeApp(firebaseConfig, "Secondary");
 
   useEffect(() => {
     const fetchAllSignupRequests = async () => {
@@ -58,12 +66,16 @@ const ApproveSignUpRequestsScreen = () => {
   const handleSignUp = async ({ email, password }) => {
     var errorMessage = "";
     try {
+      // Get auth from the secondary app
+      const secondaryAuth = getAuth(secondaryApp);
       // Create the user with email and password
       const userCredential = await createUserWithEmailAndPassword(
-        auth,
+        secondaryAuth,
         email,
         password
       );
+      // Immediately sign out the user from the secondary app
+      await signOut(secondaryAuth);
       return userCredential.user.uid;
       // You can navigate to the next screen or update UI here
     } catch (error) {
@@ -73,9 +85,7 @@ const ApproveSignUpRequestsScreen = () => {
           "This email is already in use. Please try another one."
         );
       } else {
-        throw new Error(
-          (errorMessage = "An error occurred during sign-up. Please try again.")
-        );
+        throw new Error("An error occurred during sign-up. Please try again.");
       }
     }
   };

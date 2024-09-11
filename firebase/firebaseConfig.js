@@ -22,4 +22,4 @@ const db = initializeFirestore(app, {
   synchronizeTabs: true,
 });
 
-export { auth, db };
+export { auth, db, firebaseConfig };
