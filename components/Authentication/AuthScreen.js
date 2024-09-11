@@ -7,13 +7,11 @@ import {
   Text,
   Image,
   SafeAreaView,
+  Alert,
 } from "react-native";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase/firebaseConfig";
-import { setDoc, doc } from "firebase/firestore";
+import { doc, writeBatch, collection } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import { Picker } from "@react-native-picker/picker";
 
@@ -24,79 +22,60 @@ const AuthScreen = () => {
   const [role, setRole] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [signInFailedError, setSignInFailedError] = useState();
+  const [authReqResponse, setAuthReqResponse] = useState();
   const [isSignUpMode, setIsSignUpMode] = useState(false);
 
   const toggleMode = () => {
     setIsSignUpMode((prevMode) => !prevMode);
   };
 
-  const handleSignUp = async () => {
+  const handleSignUpRequest = async () => {
+    const batch = writeBatch(db);
+    const docRef = doc(
+      collection(db, "hotel-details/staff-details/signup-requests")
+    );
+    batch.set(docRef, {
+      name: name,
+      age: age,
+      email: email,
+      role: role,
+      mobile: mobile,
+      password: password,
+      createdAt: Date.now(),
+    });
     try {
-      // Create the user with email and password
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
+      await batch.commit();
+      console.log("Batch write successful");
+      Alert.alert(
+        "Request submitted successfully",
+        "Your sign up request has been sent successfully. Please try to sign in when your manager approves the request."
       );
-      const user = userCredential.user;
-
-      // Add additional user details to Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        name: name,
-        age: age,
-        email: email,
-        role: role,
-        mobile: mobile,
-        createdAt: Date.now(),
-      });
-
-      console.log("User signed up successfully with ID:", user.uid);
-      // You can navigate to the next screen or update UI here
+      setAuthReqResponse(
+        "Try to sign in when your manager approves the request."
+      );
     } catch (error) {
-      console.error(error);
-      if (error.code === "auth/email-already-in-use") {
-        setSignInFailedError(
-          "This email is already in use. Please try another one."
-        );
-      } else {
-        setSignInFailedError(
-          "An error occurred during sign-up. Please try again."
-        );
-      }
+      console.error("Error writing batch:", error);
+      Alert.alert(
+        "Failed to submit request",
+        "An error occurred when submitting your sign up request. Please try again."
+      );
+      setAuthReqResponse("Please try again.");
     }
   };
 
   const handleSignIn = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      // const user = userCredential.user;
-
-      // Retrieve additional user details from Firestore
-      // const userDoc = await getDoc(doc(db, "users", user.uid));
-      // if (userDoc.exists()) {
-      //   const userData = userDoc.data();
-      //   console.log("User signed in:", user.uid, userData);
-      //   // You can store user data in state or context here
-      // } else {
-      //   console.log("No additional user data found");
-      // }
-
-      // Navigate to the next screen or update UI
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       console.error(error);
       if (error.code === "auth/user-disabled") {
-        setSignInFailedError(
+        setAuthReqResponse(
           "This user account has been disabled. Please contact support."
         );
       } else if (error.code === "auth/invalid-credential") {
-        setSignInFailedError("Invalid credentials provided. Please try again.");
+        setAuthReqResponse("Invalid credentials provided. Please try again.");
       } else {
-        setSignInFailedError(
+        setAuthReqResponse(
           "An error occurred during sign-in. Please try again."
         );
       }
@@ -171,9 +150,13 @@ const AuthScreen = () => {
                   onValueChange={(itemValue) => setRole(itemValue)}
                 >
                   <Picker.Item label="Select Role" value="" />
-                  <Picker.Item label="Manager" value="manager" />
-                  <Picker.Item label="Waiter" value="waiter" />
-                  <Picker.Item label="Chef" value="chef" />
+                  <Picker.Item label="Manager" value="Manager" />
+                  <Picker.Item label="Chef" value="Chef" />
+                  <Picker.Item label="Cook" value="Cook" />
+                  <Picker.Item label="Assistant" value="Assistant" />
+                  <Picker.Item label="Cleaner" value="Cleaner" />
+                  <Picker.Item label="Heler" value="Heler" />
+                  <Picker.Item label="Others" value="Others" />
                 </Picker>
               </View>
             </View>
@@ -194,7 +177,7 @@ const AuthScreen = () => {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={isSignUpMode ? handleSignUp : handleSignIn}
+          onPress={isSignUpMode ? handleSignUpRequest : handleSignIn}
         >
           <Text style={styles.buttonText}>
             {isSignUpMode ? "Sign Up" : "Sign In"}
@@ -209,8 +192,8 @@ const AuthScreen = () => {
           </Text>
         </TouchableOpacity>
 
-        {signInFailedError ? (
-          <Text style={styles.termsText}>{signInFailedError}</Text>
+        {authReqResponse ? (
+          <Text style={styles.termsText}>{authReqResponse}</Text>
         ) : null}
       </View>
     </SafeAreaView>

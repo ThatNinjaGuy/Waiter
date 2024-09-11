@@ -12,6 +12,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
+import ApproveSignUpRequestsScreen from "@/components/Authentication/ApproveSignUpRequestsScreen";
 
 const ProfileScreen = () => {
   const { width } = Dimensions.get("window");
@@ -26,9 +27,14 @@ const ProfileScreen = () => {
     email: "john.doe@restaurant.com",
     phone: "+1 234 567 8900",
   });
+  const [openApproveRequests, setOpenApproveRequests] = useState(false);
 
   const navigationOptions = [
-    { title: "Approve Sign Up Requests", icon: "person-add" },
+    {
+      title: "Approve Sign Up Requests",
+      icon: "person-add",
+      onPress: () => setOpenApproveRequests(true),
+    },
     {
       title: "Checkout Menu",
       icon: "restaurant-menu",
@@ -51,6 +57,8 @@ const ProfileScreen = () => {
     setIsEditing(!isEditing);
     // Implement edit functionality here
   };
+
+  if (openApproveRequests) return <ApproveSignUpRequestsScreen />;
 
   return (
     <ScrollView style={styles.container}>
