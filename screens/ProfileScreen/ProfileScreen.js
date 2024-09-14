@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -13,6 +13,9 @@ import { BlurView } from "expo-blur";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import ApproveSignUpRequestsScreen from "@/components/Authentication/ApproveSignUpRequestsScreen";
+import AuthContext from "@/components/Authentication/AuthProvider";
+import AuthScreen from "@/components/Authentication/AuthScreen";
+import UnauthorizedScreen from "@/components/Authentication/UnauthorizedScreen";
 
 const ProfileScreen = () => {
   const { width } = Dimensions.get("window");
@@ -57,6 +60,21 @@ const ProfileScreen = () => {
     setIsEditing(!isEditing);
     // Implement edit functionality here
   };
+
+  const { user } = useContext(AuthContext);
+  if (!user) return <AuthScreen />;
+
+  if (
+    user.staffDetails &&
+    !(
+      user.staffDetails.role === "Manager" ||
+      user.staffDetails.role === "Owner" ||
+      !user.staffDetails.role ||
+      user.staffDetails.role === ""
+    )
+  ) {
+    return <UnauthorizedScreen />;
+  }
 
   if (openApproveRequests) return <ApproveSignUpRequestsScreen />;
 

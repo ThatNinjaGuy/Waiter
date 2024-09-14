@@ -17,12 +17,12 @@ import { Picker } from "@react-native-picker/picker";
 
 const AuthScreen = () => {
   const [name, setName] = useState("");
-  const [mobile, setMobile] = useState();
+  const [mobile, setMobile] = useState("");
   const [age, setAge] = useState("");
   const [role, setRole] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [authReqResponse, setAuthReqResponse] = useState();
+  const [authReqResponse, setAuthReqResponse] = useState("");
   const [isSignUpMode, setIsSignUpMode] = useState(false);
 
   const toggleMode = () => {
@@ -151,8 +151,9 @@ const AuthScreen = () => {
                 >
                   <Picker.Item label="Select Role" value="" />
                   <Picker.Item label="Manager" value="Manager" />
-                  <Picker.Item label="Chef" value="Chef" />
+                  {/* <Picker.Item label="Chef" value="Chef" /> */}
                   <Picker.Item label="Cook" value="Cook" />
+                  <Picker.Item label="Waiter" value="Waiter" />
                   <Picker.Item label="Assistant" value="Assistant" />
                   <Picker.Item label="Cleaner" value="Cleaner" />
                   <Picker.Item label="Heler" value="Heler" />

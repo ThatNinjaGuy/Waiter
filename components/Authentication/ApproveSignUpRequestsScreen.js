@@ -64,7 +64,6 @@ const ApproveSignUpRequestsScreen = () => {
   }, []);
 
   const handleSignUp = async ({ email, password }) => {
-    var errorMessage = "";
     try {
       // Get auth from the secondary app
       const secondaryAuth = getAuth(secondaryApp);
@@ -131,11 +130,13 @@ const ApproveSignUpRequestsScreen = () => {
       addToStaffs(request);
       deleteRequest(request);
       console.log("Approval requests updated");
+      Alert.alert("Success", "Request approved successfully");
     } catch (error) {
-      console.error(error);
+      console.error("Error in handleApprove:", error);
       Alert.alert("Failed to approve request", error.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const renderItem = ({ item }) => (

@@ -13,6 +13,7 @@ import { generateUniqueKey } from "@/utils/keyGenerator";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import AuthScreen from "@/components/Authentication/AuthScreen";
+import UnauthorizedScreen from "@/components/Authentication/UnauthorizedScreen";
 
 const InventoryScreenContainer = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -93,6 +94,18 @@ const InventoryScreenContainer = () => {
 
   const { user } = useContext(AuthContext);
   if (!user) return <AuthScreen />;
+
+  if (
+    user.staffDetails &&
+    !(
+      user.staffDetails.role === "Manager" ||
+      user.staffDetails.role === "Owner" ||
+      !user.staffDetails.role ||
+      user.staffDetails.role === ""
+    )
+  ) {
+    return <UnauthorizedScreen />;
+  }
 
   if (isLoading) {
     return <LoadingScreen />;
