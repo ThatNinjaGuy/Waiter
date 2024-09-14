@@ -1,6 +1,12 @@
 import { initializeApp } from "firebase/app";
 import { initializeFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import {
+  getAuth,
+  initializeAuth,
+  getReactNativePersistence,
+} from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "react-native";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAN-nxJtF6ROGWMjLboI4dEBKDNGnsMIWg",
@@ -14,11 +20,26 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
+let auth;
+
+if (Platform.OS === "web") {
+  auth = getAuth(app);
+  // Set persistence for web
+  import("firebase/auth").then(
+    ({ browserLocalPersistence, setPersistence }) => {
+      setPersistence(auth, browserLocalPersistence);
+    }
+  );
+} else {
+  // Initialize auth with AsyncStorage persistence for React Native
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage),
+  });
+}
 
 // Initialize Firestore with persistent local cache
 const db = initializeFirestore(app, {
-  experimentalForceLongPolling: true, // Optional: Use if you face network issues
+  experimentalForceLongPolling: true,
   synchronizeTabs: true,
 });
 
