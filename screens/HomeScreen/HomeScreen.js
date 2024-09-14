@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -13,6 +13,8 @@ import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
 import { useNavigation } from "@react-navigation/native";
 import { fetchHotelData } from "@/firebase/queries";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
+import AuthScreen from "@/components/Authentication/AuthScreen";
+import AuthContext from "@/components/Authentication/AuthProvider";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -27,8 +29,6 @@ export default function HomeScreen() {
     const fetchHotelDetails = async () => {
       const hotelDetailsArray = await fetchHotelData();
       if (hotelDetailsArray) {
-        console.log("Hotel details fetched", hotelDetailsArray);
-
         // Convert array to an object
         const hotelDetails = hotelDetailsArray.reduce((acc, item) => {
           acc[item.id] = item;
@@ -52,6 +52,8 @@ export default function HomeScreen() {
     { title: "Tables", onPress: () => navigation.navigate("tables") },
     { title: "Menu", onPress: () => navigation.navigate("menu") },
     { title: "Orders", onPress: () => navigation.navigate("orders") },
+    { title: "Inventory", onPress: () => navigation.navigate("inventory") },
+    { title: "Admin", onPress: () => navigation.navigate("admin") },
   ];
 
   const renderHeader = () => (
@@ -93,8 +95,11 @@ export default function HomeScreen() {
     </View>
   );
 
+  // const { user } = useContext(AuthContext);
+  // if (!user) return <AuthScreen />;
+
   if (isLoading) {
-    return <LoadingScreen />;
+    <LoadingScreen />;
   }
 
   return (

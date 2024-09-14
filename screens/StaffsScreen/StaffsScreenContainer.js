@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   collection,
   getDocs,
@@ -11,6 +11,9 @@ import { db } from "@/firebase/firebaseConfig";
 import StaffScreenView from "./StaffScreenView";
 import { generateUniqueKey } from "@/utils/keyGenerator";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
+import AuthContext from "@/components/Authentication/AuthProvider";
+import AuthScreen from "@/components/Authentication/AuthScreen";
+import UnauthorizedScreen from "@/components/Authentication/UnauthorizedScreen";
 
 const StaffsScreenContainer = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -86,6 +89,21 @@ const StaffsScreenContainer = () => {
       console.error("Error updating document: ", error);
     }
   };
+
+  const { user } = useContext(AuthContext);
+  if (!user) return <AuthScreen />;
+
+  if (
+    user.staffDetails &&
+    !(
+      user.staffDetails.role === "Manager" ||
+      user.staffDetails.role === "Owner" ||
+      !user.staffDetails.role ||
+      user.staffDetails.role === ""
+    )
+  ) {
+    return <UnauthorizedScreen />;
+  }
 
   if (isLoading) {
     return <LoadingScreen />;

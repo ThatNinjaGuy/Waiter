@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FlatList } from "react-native";
 import TableList from "./TableList";
 import {
@@ -21,6 +21,8 @@ import { ThemedView } from "@/components/common/ThemedView";
 import ThemedButton from "@/components/common/ThemedButton";
 import { ThemedText } from "@/components/common/ThemedText";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
+import AuthContext from "@/components/Authentication/AuthProvider";
+import AuthScreen from "@/components/Authentication/AuthScreen";
 
 const RestaurantTablesScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -245,6 +247,9 @@ const RestaurantTablesScreen = () => {
   const handleCompleteOrder = () => {
     setTableInfoOptionClicked(true);
   };
+
+  const { user } = useContext(AuthContext);
+  if (!user) return <AuthScreen />;
 
   if (isLoading) {
     return <LoadingScreen />;
