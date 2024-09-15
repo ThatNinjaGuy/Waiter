@@ -102,7 +102,7 @@ const AuthScreen = () => {
             placeholder="Email"
             value={email}
             onChangeText={setEmail}
-            keyboardType="email-address"
+            inputMode="email-address"
             autoCapitalize="none"
           />
         </View>
@@ -116,7 +116,7 @@ const AuthScreen = () => {
                 placeholder="Mobile Number"
                 value={mobile}
                 onChangeText={setMobile}
-                keyboardType="phone-pad"
+                inputMode="phone-pad"
               />
             </View>
             <View style={styles.inputContainer}>
@@ -126,7 +126,6 @@ const AuthScreen = () => {
                 placeholder="Full Name"
                 value={name}
                 onChangeText={setName}
-                keyboardType="default"
                 autoCapitalize="words"
               />
             </View>
@@ -139,7 +138,7 @@ const AuthScreen = () => {
                   placeholder="Age"
                   value={age}
                   onChangeText={setAge}
-                  keyboardType="number-pad"
+                  inputMode="number-pad"
                 />
               </View>
               <View style={styles.splitInputContainer}>
@@ -172,7 +171,6 @@ const AuthScreen = () => {
             value={password}
             onChangeText={setPassword}
             secureTextEntry
-            keyboardType="visible-password"
           />
         </View>
 
