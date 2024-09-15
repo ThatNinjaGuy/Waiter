@@ -38,6 +38,7 @@ const MenuItems = ({ items, onEdit }) => {
               uri: image ? image : "https://dummyimage.com/650x450/cc00cc/fff",
             }}
             style={[styles.image, { width: layoutParams.itemWidth }]}
+            resizeMode="cover"
           />
           {searchableKey && (
             <ThemedText style={styles.key}>{searchableKey}</ThemedText>
@@ -113,7 +114,6 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 150,
-    resizeMode: "cover", // Ensures the image covers the container while maintaining aspect ratio
   },
   key: {
     position: "absolute",

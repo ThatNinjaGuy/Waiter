@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import MenuItem from "./MenuItem";
 import { ScrollView } from "react-native-gesture-handler";
-import { ThemedView } from "../common/ThemedView";
+import { ThemedView } from "../../common/ThemedView";
 
 const MenuItemGrid = ({ menuItems, onItemClick, style }) => {
   const [sortedMenuItems, setSortedMenuItems] = useState(null);
