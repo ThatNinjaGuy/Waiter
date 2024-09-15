@@ -8,7 +8,8 @@ import CustomSearchBar from "@/components/common/SearchBar";
 import { ThemedView } from "@/components/common/ThemedView";
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedButton } from "@/components/common/ThemedButton";
-import CategoryManagementPopup from "@/screens/MenuScreen/CategoryManagementPopup";
+import CategoryManagementPopup from "@/components/CategoryManagementPopup/CategoryManagementPopup";
+import { menuItemFormSchema } from "@/constants/formSchema";
 
 const MenuScreenView = ({
   menuItems,
@@ -27,62 +28,6 @@ const MenuScreenView = ({
   const [filteredItems, setFilteredItems] = useState(menuItems);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [isPopupVisible, setPopupVisible] = useState(false);
-
-  const formSchema = [
-    {
-      name: "searchableKey",
-      placeholder: "Key",
-      inputMode: "default",
-      type: "text",
-    },
-    {
-      name: "name",
-      placeholder: "Item Name",
-      inputMode: "default",
-      type: "text",
-    },
-    {
-      name: "type",
-      placeholder: "Type",
-      inputMode: "default",
-      type: "dropdown",
-      options: ["Veg", "Non-Veg", "Egg", "Vegan"],
-    },
-    {
-      name: "isAvailable",
-      placeholder: "Is Available?",
-      inputMode: "default",
-      type: "radio",
-      options: ["Yes", "No"],
-    },
-    {
-      name: "category",
-      placeholder: "Category",
-      inputMode: "default",
-      type: "dropdown",
-      options: categories,
-    },
-    {
-      name: "price",
-      placeholder: "Price",
-      inputMode: "numeric",
-      type: "text",
-      dataType: "numeric",
-    },
-    {
-      name: "cuisine",
-      placeholder: "Cuisine",
-      inputMode: "default",
-      type: "dropdown",
-      options: ["Indian", "Chinese", "Italian"],
-    },
-    {
-      name: "image",
-      placeholder: "Image URL",
-      inputMode: "default",
-      type: "text",
-    },
-  ];
 
   useEffect(() => {
     setFilteredItems(menuItems);
@@ -165,7 +110,7 @@ const MenuScreenView = ({
           onSave={handleSaveItem}
           onDelete={handleDeleteItem}
           item={currentItem}
-          schema={formSchema}
+          schema={menuItemFormSchema(categories)}
         />
       )}
       <ThemedView style={styles.filterListContainer}>
@@ -203,7 +148,7 @@ const buttonStyles = StyleSheet.create({
     flex: 1,
     borderRadius: 5,
     marginBottom: 5,
-    marginHorizontal: 2, // Optional: to add some space between buttons
+    marginHorizontal: 2,
   },
 });
 

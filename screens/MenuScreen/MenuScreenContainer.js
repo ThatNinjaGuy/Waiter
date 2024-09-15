@@ -26,7 +26,6 @@ const MenuScreenContainer = () => {
   useEffect(() => {
     setIsLoading(true);
     fetchMenuItems(setMenuItems, setIsLoading);
-    setIsLoading(false);
     fetchMenuItemCategories(setMenuItemCategories);
   }, []);
 
