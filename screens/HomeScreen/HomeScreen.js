@@ -37,8 +37,8 @@ export default function HomeScreen() {
 
         // Access details using keys
         setHotel(hotelDetails["details"]);
-        setNotifications(hotelDetails["homeScreenItems"].notifications || []);
-        setOverviewItems(hotelDetails["homeScreenItems"].overviewItems || []);
+        setNotifications(hotelDetails["homeScreenItems"]?.notifications || []);
+        setOverviewItems(hotelDetails["homeScreenItems"]?.overviewItems || []);
         setIsLoading(false);
       }
     };
@@ -77,6 +77,13 @@ export default function HomeScreen() {
         <ThemedView style={styles.section}>
           <View style={styles.titleContainer}>
             <ThemedText style={styles.title} type="title" setBackground={true}>
+              Welcome
+            </ThemedText>
+          </View>
+        </ThemedView>
+        {/* <ThemedView style={styles.section}>
+          <View style={styles.titleContainer}>
+            <ThemedText style={styles.title} type="title" setBackground={true}>
               Today's Overview
             </ThemedText>
           </View>
@@ -89,7 +96,7 @@ export default function HomeScreen() {
             </ThemedText>
           </View>
           <Notifications notifications={notifications} />
-        </ThemedView>
+        </ThemedView> */}
         <NavigationMenu items={navigationItems} />
       </ThemedView>
     </View>
@@ -128,11 +135,12 @@ const styles = StyleSheet.create({
     marginBottom: hp("2%"),
   },
   section: {
-    borderWidth: 0.5,
-    borderColor: "#ccc",
+    // borderWidth: 0.5,
+    // borderColor: "#ccc",
     borderRadius: 8,
     padding: 16,
     margin: 16,
+    marginTop: 40,
   },
   titleContainer: {
     position: "absolute",

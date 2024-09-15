@@ -1,7 +1,11 @@
 export function aggregateOrders(rawOrders) {
   if (!rawOrders || rawOrders.length === 0) return [];
 
-  const aggregatedOrders = rawOrders.reduce((acc, rawOrder) => {
+  const sortedOrders = rawOrders.sort(
+    (a, b) => b.orderTimestamp - a.orderTimestamp
+  );
+
+  const aggregatedOrders = sortedOrders.reduce((acc, rawOrder) => {
     const existingOrder = acc.find(
       (order) =>
         order.name === rawOrder.name && order.category === rawOrder.category

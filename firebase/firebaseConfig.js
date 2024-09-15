@@ -8,14 +8,18 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 
+// PROD configs
+// {Replace DEV configs for PROD builds}
+
+// DEV configs
 const firebaseConfig = {
-  apiKey: "AIzaSyAN-nxJtF6ROGWMjLboI4dEBKDNGnsMIWg",
-  authDomain: "waiter-44e49.firebaseapp.com",
-  projectId: "waiter-44e49",
-  storageBucket: "waiter-44e49.appspot.com",
-  messagingSenderId: "217705150330",
-  appId: "1:217705150330:web:cdba3b8696a30b1d5a08c3",
-  measurementId: "G-EDWY1LPV92",
+  apiKey: "AIzaSyBNlZDqGxMyI83DbW4hY0qd4KAJA3ynW2Q",
+  authDomain: "waiter-dev-ca07d.firebaseapp.com",
+  projectId: "waiter-dev-ca07d",
+  storageBucket: "waiter-dev-ca07d.appspot.com",
+  messagingSenderId: "699328756162",
+  appId: "1:699328756162:web:f11e002f4f3dd23bd23e5b",
+  measurementId: "G-F4YF1WECQR",
 };
 
 const app = initializeApp(firebaseConfig);
