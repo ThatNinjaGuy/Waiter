@@ -1,38 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
-import Sidebar from "@/components/Sidebar/Sidebar";
-import MenuItemGrid from "./MenuItemGrid";
-import OrderDetails from "./OrderDetails";
-import PaymentOptions from "./PaymentOptions";
-import HeaderSection from "./HeaderSection";
+import Sidebar from "@/components/OrderManagement/Sidebar/Sidebar";
+import MenuItemGrid from "@/components/OrderManagement/MenuItemGrid/MenuItemGrid";
+import OrderDetails from "@/components/OrderDetails/OrderDetails";
+import PaymentOptions from "@/components/OrderDetails/PaymentOptions";
+import HeaderSection from "@/components/OrderDetails/HeaderSection";
 import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseButton";
-import { ThemedView } from "../common/ThemedView";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/firebase/firebaseConfig";
+import { ThemedView } from "@/components/common/ThemedView";
 import { aggregateOrders } from "@/utils/orderManagement";
 import { generateUUID } from "@/utils/uuidGenerator";
-import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 const OrderManagement = ({
   items,
+  menuItems,
   onClose,
   updateOrder,
   handleCompleteOrder,
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [menuItems, setMenuItems] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState();
-
-  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(0);
-
   const [rawOrders, setRawOrders] = useState([]);
   const [orders, setOrders] = useState();
   const [updateFlag, setUpdateFlag] = useState(false);
 
   const { width } = useWindowDimensions();
-  const isLargeScreen = width > 768; // Adjust the breakpoint as needed
+  const isLargeScreen = width > 768;
+
+  const categories = [
+    "Favorites",
+    ...new Set(items ? items.map((item) => item.category) : []),
+  ];
 
   useEffect(() => {
     setRawOrders(items);
@@ -44,32 +41,6 @@ const OrderManagement = ({
       menuItems.filter((item) => item.category === categories[selectedCategory])
     );
   }, [selectedCategory, menuItems]);
-
-  useEffect(() => {
-    const fetchMenuItems = async () => {
-      try {
-        const querySnapshot = await getDocs(
-          collection(db, "hotel-details/menu/menu-items")
-        );
-        const items = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setMenuItems(items);
-        setIsLoading(false);
-        // Creating a unique list of categories
-        setCategories([
-          "Favorites",
-          ...new Set(items.map((item) => item.category)),
-        ]);
-      } catch (error) {
-        console.error("Error fetching menu items:", error);
-      }
-    };
-
-    setIsLoading(true);
-    fetchMenuItems();
-  }, []);
 
   // Update orders whenever rawOrders changes
   useEffect(() => {
@@ -136,10 +107,6 @@ const OrderManagement = ({
     return menuItems;
     // return menuItems.filter((item) => item.orderCountPercentile > 70);
   };
-
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
 
   return (
     <ThemedView style={styles.mainContainer}>

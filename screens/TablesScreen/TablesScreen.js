@@ -6,7 +6,7 @@ import TableManagement from "@/components/TableManagement/TableManagement";
 import { searchOrder } from "@/utils/searchCriteria";
 import styles from "@/screens/common/styles";
 import CustomSearchBar from "@/components/common/SearchBar";
-import OrderManagement from "@/components/OrderTaking/OrderManagement";
+import OrderManagement from "@/components/OrderManagement/OrderManagement";
 import { ThemedView } from "@/components/common/ThemedView";
 import ThemedButton from "@/components/common/ThemedButton";
 import { ThemedText } from "@/components/common/ThemedText";
@@ -18,6 +18,7 @@ import {
   addTable,
   updateTableDetails,
 } from "@/firebase/queries/tables";
+import { fetchMenuItems } from "@/firebase/queries/menuItems";
 import { addCompletedOrder } from "@/firebase/queries/completedOrder";
 import {
   markOrderAsCompleted,
@@ -35,10 +36,12 @@ const TablesScreen = () => {
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [tableAdd, setTableAdd] = useState(false);
   const [tableInfoOptionClicked, setTableInfoOptionClicked] = useState(false);
+  const [menuItems, setMenuItems] = useState([]);
 
   useEffect(() => {
     setIsLoading(true);
     fetchAllTables(setTables, setIsLoading);
+    fetchMenuItems(setMenuItems);
   }, []);
 
   useEffect(() => {
@@ -157,6 +160,7 @@ const TablesScreen = () => {
       {selectedTable && !tableInfoOptionClicked && (
         <OrderManagement
           items={selectedTable?.orders}
+          menuItems={menuItems}
           onClose={handleTableInfoClose}
           updateOrder={(orders) =>
             handleTableOrderUpdate(

@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { ThemedText } from "../common/ThemedText";
-import ThemedButton from "../common/ThemedButton";
+import { ThemedText } from "../../common/ThemedText";
+import ThemedButton from "../../common/ThemedButton";
 
 const SidebarItem = ({ title, style, onItemClick }) => {
   return (

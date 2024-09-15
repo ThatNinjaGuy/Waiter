@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
-import ThemedButton from "../common/ThemedButton";
-import { ThemedText } from "../common/ThemedText";
-import { ThemedView } from "../common/ThemedView";
+import ThemedButton from "../../common/ThemedButton";
+import { ThemedText } from "../../common/ThemedText";
+import { ThemedView } from "../../common/ThemedView";
 
 // Define the colors for different item types
 const typeColors = {
