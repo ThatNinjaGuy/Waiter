@@ -6,7 +6,7 @@ import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseB
 import { ThemedView } from "@/components/common/ThemedView";
 import { ThemedText } from "@/components/common/ThemedText";
 import ThemedButton from "@/components/common/ThemedButton";
-import OrderDetails from "./OrderDetails";
+import OrderDetails from "@/components/TableManagement/OrderDetails";
 import generatePDF from "@/utils/generatePDF";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { collection, getDocs } from "firebase/firestore";

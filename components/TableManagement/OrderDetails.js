@@ -2,10 +2,7 @@ import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
 import React from "react";
 import { StyleSheet, FlatList } from "react-native";
-import {
-  aggregateOrders,
-  calculateOrderValue,
-} from "../../utils/orderManagement";
+import { aggregateOrders, calculateOrderValue } from "@/utils/orderManagement";
 
 const OrderDetails = ({ rawOrders }) => {
   const orders = aggregateOrders(rawOrders);

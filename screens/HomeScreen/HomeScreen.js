@@ -77,13 +77,6 @@ export default function HomeScreen() {
         <ThemedView style={styles.section}>
           <View style={styles.titleContainer}>
             <ThemedText style={styles.title} type="title" setBackground={true}>
-              Welcome
-            </ThemedText>
-          </View>
-        </ThemedView>
-        {/* <ThemedView style={styles.section}>
-          <View style={styles.titleContainer}>
-            <ThemedText style={styles.title} type="title" setBackground={true}>
               Today's Overview
             </ThemedText>
           </View>
@@ -96,14 +89,14 @@ export default function HomeScreen() {
             </ThemedText>
           </View>
           <Notifications notifications={notifications} />
-        </ThemedView> */}
+        </ThemedView>
         <NavigationMenu items={navigationItems} />
       </ThemedView>
     </View>
   );
 
-  // const { user } = useContext(AuthContext);
-  // if (!user) return <AuthScreen />;
+  const { user } = useContext(AuthContext);
+  if (!user) return <AuthScreen />;
 
   if (isLoading) {
     <LoadingScreen />;
@@ -135,8 +128,8 @@ const styles = StyleSheet.create({
     marginBottom: hp("2%"),
   },
   section: {
-    // borderWidth: 0.5,
-    // borderColor: "#ccc",
+    borderWidth: 0.5,
+    borderColor: "#ccc",
     borderRadius: 8,
     padding: 16,
     margin: 16,
@@ -150,7 +143,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    // backgroundColor: "rgba(0, 0, 0, 0.8)",
     paddingHorizontal: 8,
   },
 });
