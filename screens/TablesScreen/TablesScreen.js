@@ -41,6 +41,7 @@ const TablesScreen = () => {
   useEffect(() => {
     setIsLoading(true);
     fetchAllTables(setTables, setIsLoading);
+    // Fetch menu items on the tables screen so no refetch is needed for each table
     fetchMenuItems(setMenuItems);
   }, []);
 
