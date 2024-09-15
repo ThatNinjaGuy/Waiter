@@ -48,12 +48,13 @@ const MenuScreenContainer = () => {
         if (docSnap.exists()) {
           const categories = docSnap.data().categories || []; // Extract categories array
           setMenuItemCategories(categories); // Set the state with the categories
-          setIsLoading(false);
         } else {
           console.error("No such document!");
         }
       } catch (error) {
         console.error("Error fetching menu item categories:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 

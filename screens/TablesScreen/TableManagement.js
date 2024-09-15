@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { TextInput, StyleSheet, Switch, View, FlatList } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -89,7 +89,7 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
   };
 
   const generateBill = async () => {
-    const restaurantName = "Thorat Barbeque";
+    const restaurantName = "Shree RAM VEG";
     const orderItems = table.orders;
     const tableData = {
       number: table.number,
