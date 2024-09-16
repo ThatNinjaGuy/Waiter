@@ -142,7 +142,11 @@ const OrdersScreenContainer = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <OrdersScreen orders={orders} updateOrderStatus={updateOrderStatus} />
+      <OrdersScreen
+        orders={orders}
+        updateOrderStatus={updateOrderStatus}
+        user={user}
+      />
       <Toast />
     </View>
   );
