@@ -5,9 +5,15 @@ import { ThemedView } from "@/components/common/ThemedView";
 import { ThemedText } from "@/components/common/ThemedText";
 import ThemedButton from "@/components/common/ThemedButton";
 
-const OrdersScreen = ({ orders, updateOrderStatus }) => {
+const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
   const [refreshing, setRefreshing] = useState(false);
-
+  const [activeTab, setActiveTab] = useState(
+    user.staffDetails &&
+      (user.staffDetails.role === "Cook" ||
+        user.staffDetails.role === "Manager")
+      ? "ACTIVE_ORDERS"
+      : "COMPLETED_ORDERS"
+  );
   const { layoutParams, key } = useResponsiveLayout({
     initialItemWidth: 300,
     minItemWidth: 250,
@@ -19,10 +25,13 @@ const OrdersScreen = ({ orders, updateOrderStatus }) => {
     setTimeout(() => setRefreshing(false), 2000);
   }, []);
 
-  const filteredOrders = orders.filter(
-    (order) =>
-      !order.status || order.status === "ACTIVE" || order.status === "PENDING"
-  );
+  const filteredOrders = orders.filter((order) => {
+    if (activeTab === "ACTIVE_ORDERS")
+      return (
+        !order.status || order.status === "ACTIVE" || order.status === "PENDING"
+      );
+    else return order.status === "CANCEL" || order.status === "READY";
+  });
 
   const renderOrder = ({ item }) => {
     const buttonConfigs = [];
@@ -37,7 +46,7 @@ const OrdersScreen = ({ orders, updateOrderStatus }) => {
         {
           text: "COMPLETE",
           type: "primary",
-          onPress: () => updateOrderStatus(item.id, item.tableId, "COMPLETE"),
+          onPress: () => updateOrderStatus(item.id, item.tableId, "READY"),
         }
       );
     } else if (item.status === "PENDING") {
@@ -45,14 +54,26 @@ const OrdersScreen = ({ orders, updateOrderStatus }) => {
         {
           text: "CANCEL",
           type: "danger",
-          onPress: () => updateOrderStatus(item.id, item.tableId, "CANCELLED"),
+          onPress: () => updateOrderStatus(item.id, item.tableId, "CANCEL"),
         },
         {
           text: "COMPLETE",
           type: "success",
-          onPress: () => updateOrderStatus(item.id, item.tableId, "COMPLETE"),
+          onPress: () => updateOrderStatus(item.id, item.tableId, "READY"),
         }
       );
+    } else if (item.status === "READY") {
+      buttonConfigs.push({
+        text: "DELIVERED",
+        type: "success",
+        onPress: () => updateOrderStatus(item.id, item.tableId, "COMPLETE"),
+      });
+    } else if (item.status === "CANCEL") {
+      buttonConfigs.push({
+        text: "CANCEL",
+        type: "danger",
+        onPress: () => updateOrderStatus(item.id, item.tableId, "CANCELLED"),
+      });
     }
 
     return (
@@ -73,7 +94,10 @@ const OrdersScreen = ({ orders, updateOrderStatus }) => {
               key={index}
               onPress={config.onPress}
               type={config.type}
-              style={styles.completeButton}
+              style={[
+                styles.completeButton,
+                buttonConfigs.length == 1 ? { width: "100%" } : undefined,
+              ]}
             >
               <ThemedText style={styles.completeButtonText}>
                 {config.text}
@@ -106,6 +130,26 @@ const OrdersScreen = ({ orders, updateOrderStatus }) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
+      <ThemedView style={[styles.footerContainer]}>
+        <ThemedButton
+          type={activeTab == "ACTIVE_ORDERS" ? "primary" : "default"}
+          style={styles.footerButton}
+          onPress={() => setActiveTab("ACTIVE_ORDERS")}
+        >
+          <ThemedText type="subtitle" style={[{ padding: 5, paddingTop: 10 }]}>
+            Active Orders
+          </ThemedText>
+        </ThemedButton>
+        <ThemedButton
+          type={activeTab == "COMPLETED_ORDERS" ? "primary" : "default"}
+          style={styles.footerButton}
+          onPress={() => setActiveTab("COMPLETED_ORDERS")}
+        >
+          <ThemedText type="subtitle" style={[{ padding: 5, paddingTop: 10 }]}>
+            Ready for Pickup
+          </ThemedText>
+        </ThemedButton>
+      </ThemedView>
     </ThemedView>
   );
 };
@@ -163,6 +207,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#666",
     marginBottom: 8,
+    paddingBottom: 10,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -170,15 +215,30 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   completeButton: {
-    padding: 10,
+    padding: 5,
     borderRadius: 5,
     alignItems: "center",
     marginTop: 8,
-    width: "45%",
+    minWidth: "45%",
     minHeight: 50,
   },
   completeButtonText: {
     fontWeight: "bold",
+  },
+  footerContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%", // Ensure full width
+  },
+  footerButton: {
+    flex: 1, // Take up half of the available space
+    borderColor: "#666",
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 10,
+    borderRadius: 0,
   },
 });
 
