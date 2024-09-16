@@ -3,6 +3,7 @@ import { ThemedView } from "@/components/common/ThemedView";
 import React from "react";
 import { StyleSheet, FlatList } from "react-native";
 import { aggregateOrders, calculateOrderValue } from "@/utils/orderManagement";
+import { INDIAN_RUPPEE_SYMBOL } from "@/constants/common";
 
 const OrderDetails = ({ rawOrders }) => {
   const orders = aggregateOrders(rawOrders);
@@ -12,9 +13,13 @@ const OrderDetails = ({ rawOrders }) => {
     <ThemedView style={styles.orderItem}>
       <ThemedText style={styles.itemName}>{item.name}</ThemedText>
       <ThemedText style={styles.itemQuantity}>x{item.quantity}</ThemedText>
-      <ThemedText style={styles.itemPrice}>₹{item.price.toFixed(2)}</ThemedText>
       <ThemedText style={styles.itemPrice}>
-        ₹{item.itemValue.toFixed(2)}
+        {INDIAN_RUPPEE_SYMBOL}
+        {item.price.toFixed(2)}
+      </ThemedText>
+      <ThemedText style={styles.itemPrice}>
+        {INDIAN_RUPPEE_SYMBOL}
+        {item.itemValue.toFixed(2)}
       </ThemedText>
     </ThemedView>
   );
@@ -29,7 +34,10 @@ const OrderDetails = ({ rawOrders }) => {
       />
       <ThemedView style={styles.totalContainer}>
         <ThemedText style={styles.totalText}>Total:</ThemedText>
-        <ThemedText style={styles.totalAmount}>₹{orderValue}</ThemedText>
+        <ThemedText style={styles.totalAmount}>
+          {INDIAN_RUPPEE_SYMBOL}
+          {orderValue}
+        </ThemedText>
       </ThemedView>
     </ThemedView>
   );

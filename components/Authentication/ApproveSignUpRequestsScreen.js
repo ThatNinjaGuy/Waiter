@@ -121,7 +121,6 @@ const ApproveSignUpRequestsScreen = () => {
   };
 
   const handleApprove = async (id) => {
-    console.log("id: ", id);
     const request = requests.find((item) => item.id === id);
     try {
       setLoading(true);

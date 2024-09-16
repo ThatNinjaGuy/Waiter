@@ -16,6 +16,7 @@ import ApproveSignUpRequestsScreen from "@/components/Authentication/ApproveSign
 import AuthContext from "@/components/Authentication/AuthProvider";
 import AuthScreen from "@/components/Authentication/AuthScreen";
 import UnauthorizedScreen from "@/components/Authentication/UnauthorizedScreen";
+import { DEFAULT_IMAGE } from "@/constants/common";
 
 const ProfileScreen = () => {
   const { width } = Dimensions.get("window");
@@ -97,7 +98,7 @@ const ProfileScreen = () => {
           >
             <View>
               <Image
-                source={{ uri: "https://dummyimage.com/650x450/cc00cc/fff" }}
+                source={{ uri: DEFAULT_IMAGE }}
                 style={[
                   styles.profileImage,
                   {

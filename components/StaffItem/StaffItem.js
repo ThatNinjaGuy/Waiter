@@ -3,14 +3,13 @@ import { View, Image } from "react-native";
 import styles from "./styles";
 import ThemedButton from "../common/ThemedButton";
 import { ThemedText } from "../common/ThemedText";
+import { DEFAULT_IMAGE } from "@/constants/common";
 
 const StaffItem = ({ item, onEdit }) => (
   <ThemedButton style={styles.container} onPress={onEdit} type="secondary">
     <Image
       source={{
-        uri: item.image
-          ? item.image
-          : "https://dummyimage.com/650x450/cc00cc/fff",
+        uri: item.image ? item.image : DEFAULT_IMAGE,
       }}
       style={styles.image}
     />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Image, StyleSheet } from "react-native";
 import { ThemedText } from "./common/ThemedText";
 import { ThemedView } from "./common/ThemedView";
+import { DEFAULT_IMAGE } from "@/constants/common";
 
 // Define the colors for different item types
 const typeColors = {
@@ -18,7 +19,7 @@ const UserProfile = ({ name, role, imageUrl, plan }) => {
     <ThemedView style={[styles.container, { backgroundColor: typeColor }]}>
       <Image
         source={{
-          uri: imageUrl || "https://dummyimage.com/650x450/cc00cc/fff",
+          uri: imageUrl || DEFAULT_IMAGE,
         }}
         style={styles.image}
       />

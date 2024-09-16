@@ -1,7 +1,7 @@
 import { collection, writeBatch, doc } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 
-const completedOrderPath = "hotel-details/completed-orders/orders/";
+export const completedOrderPath = "hotel-details/completed-orders/orders/";
 
 export const addCompletedOrder = async (order) => {
   const batch = writeBatch(db);
