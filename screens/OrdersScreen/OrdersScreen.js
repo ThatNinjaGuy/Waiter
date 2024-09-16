@@ -5,7 +5,7 @@ import { ThemedView } from "@/components/common/ThemedView";
 import { ThemedText } from "@/components/common/ThemedText";
 import ThemedButton from "@/components/common/ThemedButton";
 
-const OrdersScreen = ({ orders, onCompleteOrder }) => {
+const OrdersScreen = ({ orders, updateOrderStatus }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const { layoutParams, key } = useResponsiveLayout({
@@ -20,31 +20,76 @@ const OrdersScreen = ({ orders, onCompleteOrder }) => {
   }, []);
 
   const filteredOrders = orders.filter(
-    (order) => !order.status || order.status === "ACTIVE"
+    (order) =>
+      !order.status || order.status === "ACTIVE" || order.status === "PENDING"
   );
 
-  const renderOrder = ({ item }) => (
-    <ThemedView style={[styles.card, { width: layoutParams.itemWidth }]}>
-      <ThemedView style={styles.headerRow}>
-        <ThemedText style={styles.itemName}>{item.name}</ThemedText>
-        <ThemedText style={styles.quantity}>{item.tableNumber}</ThemedText>
+  const renderOrder = ({ item }) => {
+    const buttonConfigs = [];
+
+    if (item.status === "ACTIVE") {
+      buttonConfigs.push(
+        {
+          text: "ACCEPT",
+          type: "success",
+          onPress: () => updateOrderStatus(item.id, item.tableId, "PENDING"),
+        },
+        {
+          text: "COMPLETE",
+          type: "primary",
+          onPress: () => updateOrderStatus(item.id, item.tableId, "COMPLETE"),
+        }
+      );
+    } else if (item.status === "PENDING") {
+      buttonConfigs.push(
+        {
+          text: "CANCEL",
+          type: "danger",
+          onPress: () => updateOrderStatus(item.id, item.tableId, "CANCELLED"),
+        },
+        {
+          text: "COMPLETE",
+          type: "success",
+          onPress: () => updateOrderStatus(item.id, item.tableId, "COMPLETE"),
+        }
+      );
+    }
+
+    return (
+      <ThemedView style={[styles.card, { width: layoutParams.itemWidth }]}>
+        <ThemedView style={styles.headerRow}>
+          <ThemedView style={styles.infoContainer}>
+            <ThemedText style={styles.itemName}>{item.name}</ThemedText>
+            <ThemedText style={styles.tableNumber}>
+              Qty: {item.quantity}
+            </ThemedText>
+          </ThemedView>
+          <ThemedText style={styles.quantity}>{item.tableNumber}</ThemedText>
+        </ThemedView>
+        <ThemedText style={styles.notes}>Notes: {item.tableNote}</ThemedText>
+        <ThemedView style={styles.buttonContainer}>
+          {buttonConfigs.map((config, index) => (
+            <ThemedButton
+              key={index}
+              onPress={config.onPress}
+              type={config.type}
+              style={styles.completeButton}
+            >
+              <ThemedText style={styles.completeButtonText}>
+                {config.text}
+              </ThemedText>
+            </ThemedButton>
+          ))}
+        </ThemedView>
       </ThemedView>
-      <ThemedText style={styles.tableNumber}>Qty: {item.quantity}</ThemedText>
-      <ThemedText style={styles.notes}>Notes: {item.tableNote}</ThemedText>
-      <ThemedButton
-        onPress={() => onCompleteOrder(item.id, item.tableId)}
-        style={styles.completeButton}
-      >
-        <ThemedText style={styles.completeButtonText}>
-          Complete Order
-        </ThemedText>
-      </ThemedButton>
-    </ThemedView>
-  );
+    );
+  };
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedText>Pending Orders: {filteredOrders.length}</ThemedText>
+      <ThemedText type="subtitle" style={[{ padding: 5, paddingTop: 10 }]}>
+        Pending Orders: {filteredOrders.length}
+      </ThemedText>
       <FlatList
         key={key} // Force re-render when numColumns changes
         data={filteredOrders}
@@ -57,7 +102,6 @@ const OrdersScreen = ({ orders, onCompleteOrder }) => {
         columnWrapperStyle={
           layoutParams.numColumns > 1 ? styles.row : undefined
         }
-        style={styles.list}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
@@ -91,7 +135,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 8,
+  },
+  infoContainer: {
+    justifyContent: "space-between",
   },
   itemName: {
     fontSize: 18,
@@ -100,7 +146,11 @@ const styles = StyleSheet.create({
   quantity: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#4a90e2",
+    color: "#fff",
+    paddingHorizontal: 18,
+    paddingVertical: 11,
+    borderRadius: 50,
+    backgroundColor: "#666",
   },
   tableNumber: {
     fontSize: 16,
@@ -110,18 +160,24 @@ const styles = StyleSheet.create({
   notes: {
     fontSize: 14,
     fontStyle: "italic",
+    fontWeight: "bold",
     color: "#666",
     marginBottom: 8,
   },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   completeButton: {
-    backgroundColor: "#4a90e2",
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
     marginTop: 8,
+    width: "45%",
+    minHeight: 50,
   },
   completeButtonText: {
-    color: "white",
     fontWeight: "bold",
   },
 });

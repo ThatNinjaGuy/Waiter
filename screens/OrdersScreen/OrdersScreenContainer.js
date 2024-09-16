@@ -101,7 +101,7 @@ const OrdersScreenContainer = () => {
     }
   };
 
-  const handleCompleteOrder = async (orderId, tableId) => {
+  const updateOrderStatus = async (orderId, tableId, orderStatus) => {
     try {
       // Find the table document
       const tableDocRef = doc(
@@ -116,7 +116,7 @@ const OrdersScreenContainer = () => {
 
       // Find the order to update
       const updatedOrders = currentOrders.map((order) =>
-        order.id === orderId ? { ...order, status: "COMPLETE" } : order
+        order.id === orderId ? { ...order, status: orderStatus } : order
       );
 
       // Update the orders array in Firestore
@@ -125,7 +125,7 @@ const OrdersScreenContainer = () => {
       // Update local state
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
-          order.id === orderId ? { ...order, status: "COMPLETE" } : order
+          order.id === orderId ? { ...order, status: orderStatus } : order
         )
       );
     } catch (error) {
@@ -142,7 +142,7 @@ const OrdersScreenContainer = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <OrdersScreen orders={orders} onCompleteOrder={handleCompleteOrder} />
+      <OrdersScreen orders={orders} updateOrderStatus={updateOrderStatus} />
       <Toast />
     </View>
   );
