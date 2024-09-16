@@ -50,20 +50,17 @@ const Overview = () => {
 
             // Calculate order count and revenue for today
             if (orderDate >= midnightToday) {
-              console.log(orderDate, "Today");
               orderCountToday += data.totalOrders;
               revenueToday += data.orderValue;
             }
 
             // Calculate revenue for the last day
             if (orderDate >= lastDayStart && orderDate < midnightToday) {
-              console.log(orderDate, "Yesterday");
               revenueLastDay += data.orderValue;
             }
 
             // Calculate revenue for the last week
             if (orderDate >= lastWeekStart && orderDate < midnightToday) {
-              console.log(orderDate, "Week");
               revenueLastWeek += data.orderValue;
             }
           });

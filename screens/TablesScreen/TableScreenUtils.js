@@ -21,7 +21,6 @@ const archiveOrders = (table, addCompletedOrder) => {
     orderValue += o.price;
     return { ...o, status: "COMPLETE" };
   });
-  console.log(table);
   table.totalOrders = table.orders.length;
   table.orderValue = orderValue;
   addCompletedOrder(table);
