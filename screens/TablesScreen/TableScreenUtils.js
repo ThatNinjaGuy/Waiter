@@ -16,9 +16,14 @@ const cleanupTable = (table) => {
 };
 
 const archiveOrders = (table, addCompletedOrder) => {
+  let orderValue = 0;
   table.orders = table.orders.map((o) => {
+    orderValue += o.price;
     return { ...o, status: "COMPLETE" };
   });
+  console.log(table);
+  table.totalOrders = table.orders.length;
+  table.orderValue = orderValue;
   addCompletedOrder(table);
 };
 

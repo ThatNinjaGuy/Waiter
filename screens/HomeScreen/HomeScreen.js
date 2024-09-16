@@ -8,7 +8,7 @@ import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
 import UserProfile from "@/components/UserProfile";
 import Notifications from "@/components/Notifications/Notifications";
-import Overview from "@/components/Overview";
+import Overview from "@/components/RestaurantOverview/Overview";
 import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
 import { useNavigation } from "@react-navigation/native";
 import { fetchHotelData } from "@/firebase/queries";
@@ -19,11 +19,8 @@ import AuthContext from "@/components/Authentication/AuthProvider";
 export default function HomeScreen() {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
-
   const [hotel, setHotel] = useState();
-
-  const [notifications, setNotifications] = useState([]);
-  const [overviewItems, setOverviewItems] = useState([]);
+  // const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     const fetchHotelDetails = async () => {
@@ -37,8 +34,7 @@ export default function HomeScreen() {
 
         // Access details using keys
         setHotel(hotelDetails["details"]);
-        setNotifications(hotelDetails["homeScreenItems"]?.notifications || []);
-        setOverviewItems(hotelDetails["homeScreenItems"]?.overviewItems || []);
+        // setNotifications(hotelDetails["homeScreenItems"]?.notifications || []);
         setIsLoading(false);
       }
     };
@@ -80,16 +76,16 @@ export default function HomeScreen() {
               Today's Overview
             </ThemedText>
           </View>
-          <Overview overviewItems={overviewItems} />
+          <Overview />
         </ThemedView>
-        <ThemedView style={styles.section}>
+        {/* <ThemedView style={styles.section}>
           <View style={styles.titleContainer}>
             <ThemedText style={styles.title} type="title" setBackground={true}>
               Notifications
             </ThemedText>
           </View>
           <Notifications notifications={notifications} />
-        </ThemedView>
+        </ThemedView> */}
         <NavigationMenu items={navigationItems} />
       </ThemedView>
     </View>

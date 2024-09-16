@@ -4,6 +4,7 @@ import { ThemedView } from "../common/ThemedView";
 import { ThemedText } from "../common/ThemedText";
 import ThemedButton from "../common/ThemedButton";
 import { generateUUID } from "@/utils/uuidGenerator";
+import { INDIAN_RUPPEE_SYMBOL } from "@/constants/common";
 
 const OrderDetails = ({
   style,
@@ -35,7 +36,10 @@ const OrderDetails = ({
       <ThemedView style={styles.orderItem}>
         <ThemedView style={styles.itemDetailsContainer}>
           <ThemedText style={styles.itemName}>{item.name}</ThemedText>
-          <ThemedText style={styles.itemPrice}>@ ₹ {item.price}</ThemedText>
+          <ThemedText style={styles.itemPrice}>
+            @ {INDIAN_RUPPEE_SYMBOL}
+            {item.price}
+          </ThemedText>
         </ThemedView>
         <ThemedView style={styles.quantityContainer}>
           <ThemedView style={styles.quantityManipulator}>
@@ -54,7 +58,8 @@ const OrderDetails = ({
             </ThemedButton>
           </ThemedView>
           <ThemedText style={styles.totalItemPrice}>
-            ₹ {(item.price * item.quantity).toFixed(2)}
+            {INDIAN_RUPPEE_SYMBOL}
+            {(item.price * item.quantity).toFixed(2)}
           </ThemedText>
         </ThemedView>
       </ThemedView>

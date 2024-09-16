@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 
-const tablesPath = "hotel-details/seating-arrangement/tables/";
+export const tablesPath = "hotel-details/seating-arrangement/tables/";
 
 export const fetchAllTables = async (setTables, setIsLoading) => {
   try {

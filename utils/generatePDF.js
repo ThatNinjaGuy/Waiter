@@ -1,6 +1,7 @@
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import { aggregateOrders, calculateOrderValue } from "@/utils/orderManagement";
+import { INDIAN_RUPPEE_SYMBOL } from "@/constants/common";
 
 let isSharing = false;
 const sharingQueue = [];
@@ -125,8 +126,8 @@ const generatePDF = async (
           <tr>
             <td>${item.name}</td>
             <td>x${item.quantity}</td>
-            <td>₹${item.price}</td>
-            <td>₹${item.itemValue}</td>
+            <td>${INDIAN_RUPPEE_SYMBOL}${item.price}</td>
+            <td>${INDIAN_RUPPEE_SYMBOL}${item.itemValue}</td>
           </tr>
         `
           )
@@ -137,7 +138,7 @@ const generatePDF = async (
               (sum, item) => sum + item.quantity,
               0
             )}</td>
-          <td>₹${orderValue}</td>
+          <td>${INDIAN_RUPPEE_SYMBOL}${orderValue}</td>
         </tr>
       </table>
     </div>

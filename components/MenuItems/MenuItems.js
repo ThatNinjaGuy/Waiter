@@ -10,6 +10,7 @@ import { ThemedView } from "@/components/common/ThemedView";
 import { ThemedText } from "@/components/common/ThemedText";
 import useResponsiveLayout from "@/hooks/useResponsiveLayout";
 import ThemedButton from "@/components/common/ThemedButton";
+import { DEFAULT_IMAGE } from "@/constants/common";
 
 const MenuItems = ({ items, onEdit }) => {
   const [refreshing, setRefreshing] = useState(false);
@@ -35,7 +36,7 @@ const MenuItems = ({ items, onEdit }) => {
         <View style={styles.imageContainer}>
           <Image
             source={{
-              uri: image ? image : "https://dummyimage.com/650x450/cc00cc/fff",
+              uri: image ? image : DEFAULT_IMAGE,
             }}
             style={[styles.image, { width: layoutParams.itemWidth }]}
             resizeMode="cover"

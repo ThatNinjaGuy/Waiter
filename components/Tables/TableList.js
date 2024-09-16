@@ -14,6 +14,7 @@ import {
   getDarkBgColorWithTableStatus,
 } from "@/utils/colorPicker";
 import useResponsiveLayout from "@/hooks/useResponsiveLayout";
+import { INDIAN_RUPPEE_SYMBOL } from "@/constants/common";
 
 const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
   const { layoutParams, key } = useResponsiveLayout({
@@ -90,7 +91,8 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
             </ThemedText>
             <ThemedText style={styles.tableDetails}>{tableWaitTime}</ThemedText>
             <ThemedText style={styles.tableDetails}>
-              Bill: ₹ {orderValue || 0}
+              Bill: {INDIAN_RUPPEE_SYMBOL}
+              {orderValue || 0}
             </ThemedText>
           </View>
         </View>
