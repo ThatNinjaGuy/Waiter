@@ -14,6 +14,7 @@ import { auth } from "@/firebase/firebaseConfig";
 import { doc, writeBatch, collection } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import { Picker } from "@react-native-picker/picker";
+import { validateSignupRequest } from "@/utils/validations";
 
 const AuthScreen = () => {
   const [name, setName] = useState("");
@@ -30,6 +31,18 @@ const AuthScreen = () => {
   };
 
   const handleSignUpRequest = async () => {
+    const { isEmailValid, isPasswordValid } = validateSignupRequest(
+      email,
+      password
+    );
+    if (!isEmailValid) {
+      setAuthReqResponse("Email is invalid. Please check and try again.");
+      return;
+    }
+    if (!isPasswordValid) {
+      setAuthReqResponse("Password must have atleast 6 characters.");
+      return;
+    }
     const batch = writeBatch(db);
     const docRef = doc(
       collection(db, "hotel-details/staff-details/signup-requests")

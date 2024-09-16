@@ -83,6 +83,8 @@ const ApproveSignUpRequestsScreen = () => {
         throw new Error(
           "This email is already in use. Please try another one."
         );
+      } else if (error.code === "auth/weak-password") {
+        throw new Error("Password should have atleast 6 characters");
       } else {
         throw new Error("An error occurred during sign-up. Please try again.");
       }
