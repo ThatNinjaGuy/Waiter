@@ -1,9 +1,16 @@
+import {
+  ACTIVE_ORDERS,
+  COMPLETED_ORDERS,
+  CANCELLED_ORDERS,
+} from "@/constants/status/orders";
+
 export function aggregateOrders(rawOrders) {
   if (!rawOrders || rawOrders.length === 0) return [];
 
-  const sortedOrders = rawOrders.sort(
-    (a, b) => b.orderTimestamp - a.orderTimestamp
-  );
+  // Filter and sort orders using constants
+  const sortedOrders = rawOrders
+    .filter((order) => !CANCELLED_ORDERS.includes(order.status))
+    .sort((a, b) => b.orderTimestamp - a.orderTimestamp);
 
   const aggregatedOrders = sortedOrders.reduce((acc, rawOrder) => {
     const existingOrder = acc.find(
@@ -38,23 +45,35 @@ export function aggregateOrders(rawOrders) {
 export function calculateOrderValue(orders) {
   return !orders
     ? 0
-    : orders.reduce((total, order) => total + order.price * order.quantity, 0);
+    : orders.reduce(
+        (total, order) =>
+          CANCELLED_ORDERS.includes(order.status)
+            ? total
+            : total + order.price * order.quantity,
+        0
+      );
 }
 
 export function calculateTotalOrderCount(orders) {
   return !orders
     ? 0
-    : orders.reduce((total, order) => total + order.quantity, 0);
+    : orders.reduce(
+        (total, order) =>
+          !CANCELLED_ORDERS.includes(order.status)
+            ? total + order.quantity
+            : total,
+        0
+      );
 }
 
 export function completedOrdersCount(orders) {
   return !orders
     ? 0
-    : orders.filter((order) => order.status == "COMPLETE").length;
+    : orders.filter((order) => COMPLETED_ORDERS.includes(order.status)).length;
 }
 
 export function activeOrdersCount(orders) {
   return !orders
     ? 0
-    : orders.filter((order) => order.status == "ACTIVE").length;
+    : orders.filter((order) => ACTIVE_ORDERS.includes(order.status)).length;
 }

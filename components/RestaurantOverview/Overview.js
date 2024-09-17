@@ -7,6 +7,7 @@ import { db } from "@/firebase/firebaseConfig";
 import { completedOrderPath } from "@/firebase/queries/completedOrder";
 import { tablesPath } from "@/firebase/queries/tables";
 import { INDIAN_RUPPEE_SYMBOL } from "@/constants/common";
+import { ACTIVE_ORDERS } from "@/constants/status/orders";
 
 const Overview = () => {
   const [overviewItems, setOverviewItems] = useState([
@@ -102,7 +103,7 @@ const Overview = () => {
       try {
         const tablesRef = collection(db, tablesPath);
         const q = query(tablesRef);
-        let activeOrders = 0;
+        let activeTables = 0;
         let itemsInKitchen = 0;
 
         // Set up real-time listener
@@ -110,10 +111,10 @@ const Overview = () => {
           querySnapshot.docs.forEach((doc) => {
             const data = doc.data();
             if (data.status === "Occupied" && data.orders) {
-              activeOrders++;
-              data.orders.map((order) => {
-                if (order.status === "ACTIVE") itemsInKitchen++;
-              });
+              activeTables++;
+              itemsInKitchen = data.orders.filter((order) =>
+                ACTIVE_ORDERS.includes(order.status)
+              ).length;
             }
           });
 
@@ -121,7 +122,7 @@ const Overview = () => {
           setOverviewItems((prevItems) =>
             prevItems.map((item) => {
               if (item.title === "Active Tables") {
-                return { ...item, message: activeOrders };
+                return { ...item, message: activeTables };
               } else if (item.title === "Active Orders") {
                 return { ...item, message: itemsInKitchen };
               }
