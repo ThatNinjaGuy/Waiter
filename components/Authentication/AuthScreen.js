@@ -15,8 +15,10 @@ import { doc, writeBatch, collection } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import { Picker } from "@react-native-picker/picker";
 import { validateSignupRequest } from "@/utils/validations";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 const AuthScreen = () => {
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [age, setAge] = useState("");
@@ -77,8 +79,10 @@ const AuthScreen = () => {
   };
 
   const handleSignIn = async () => {
+    setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      setLoading(false);
     } catch (error) {
       console.error(error);
       if (error.code === "auth/user-disabled") {
@@ -94,6 +98,10 @@ const AuthScreen = () => {
       }
     }
   };
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
