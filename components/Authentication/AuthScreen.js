@@ -82,7 +82,6 @@ const AuthScreen = () => {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      setLoading(false);
     } catch (error) {
       console.error(error);
       if (error.code === "auth/user-disabled") {
@@ -96,6 +95,8 @@ const AuthScreen = () => {
           "An error occurred during sign-in. Please try again."
         );
       }
+    } finally {
+      setLoading(false);
     }
   };
 
