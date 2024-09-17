@@ -1,3 +1,5 @@
+import { ORDER_STATUS } from "@/constants/status/orders";
+
 const cleanupTable = (table) => {
   table = {
     ...table,
@@ -19,7 +21,7 @@ const archiveOrders = (table, addCompletedOrder) => {
   let orderValue = 0;
   table.orders = table.orders.map((o) => {
     orderValue += o.price;
-    return { ...o, status: "COMPLETE" };
+    return { ...o, status: ORDER_STATUS.COMPLETE };
   });
   table.totalOrders = table.orders.length;
   table.orderValue = orderValue;

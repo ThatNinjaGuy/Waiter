@@ -4,6 +4,7 @@ import useResponsiveLayout from "@/hooks/useResponsiveLayout";
 import { ThemedView } from "@/components/common/ThemedView";
 import { ThemedText } from "@/components/common/ThemedText";
 import ThemedButton from "@/components/common/ThemedButton";
+import { ORDER_STATUS, ACTIVE_ORDERS } from "@/constants/status/orders";
 
 const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
   const [refreshing, setRefreshing] = useState(false);
@@ -27,52 +28,60 @@ const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
 
   const filteredOrders = orders.filter((order) => {
     if (activeTab === "ACTIVE_ORDERS")
+      return !order.status || ACTIVE_ORDERS.includes(order.status);
+    else
       return (
-        !order.status || order.status === "ACTIVE" || order.status === "PENDING"
+        order.status === ORDER_STATUS.CANCEL ||
+        order.status === ORDER_STATUS.READY
       );
-    else return order.status === "CANCEL" || order.status === "READY";
   });
 
   const renderOrder = ({ item }) => {
     const buttonConfigs = [];
 
-    if (item.status === "ACTIVE") {
+    if (item.status === ORDER_STATUS.ACTIVE) {
       buttonConfigs.push(
         {
           text: "ACCEPT",
           type: "success",
-          onPress: () => updateOrderStatus(item.id, item.tableId, "PENDING"),
+          onPress: () =>
+            updateOrderStatus(item.id, item.tableId, ORDER_STATUS.PENDING),
         },
         {
           text: "COMPLETE",
           type: "primary",
-          onPress: () => updateOrderStatus(item.id, item.tableId, "READY"),
+          onPress: () =>
+            updateOrderStatus(item.id, item.tableId, ORDER_STATUS.READY),
         }
       );
-    } else if (item.status === "PENDING") {
+    } else if (item.status === ORDER_STATUS.PENDING) {
       buttonConfigs.push(
         {
           text: "CANCEL",
           type: "danger",
-          onPress: () => updateOrderStatus(item.id, item.tableId, "CANCEL"),
+          onPress: () =>
+            updateOrderStatus(item.id, item.tableId, ORDER_STATUS.CANCEL),
         },
         {
           text: "COMPLETE",
           type: "success",
-          onPress: () => updateOrderStatus(item.id, item.tableId, "READY"),
+          onPress: () =>
+            updateOrderStatus(item.id, item.tableId, ORDER_STATUS.READY),
         }
       );
-    } else if (item.status === "READY") {
+    } else if (item.status === ORDER_STATUS.READY) {
       buttonConfigs.push({
         text: "DELIVERED",
         type: "success",
-        onPress: () => updateOrderStatus(item.id, item.tableId, "COMPLETE"),
+        onPress: () =>
+          updateOrderStatus(item.id, item.tableId, ORDER_STATUS.COMPLETE),
       });
-    } else if (item.status === "CANCEL") {
+    } else if (item.status === ORDER_STATUS.CANCEL) {
       buttonConfigs.push({
         text: "CANCEL",
         type: "danger",
-        onPress: () => updateOrderStatus(item.id, item.tableId, "CANCELLED"),
+        onPress: () =>
+          updateOrderStatus(item.id, item.tableId, ORDER_STATUS.CANCELLED),
       });
     }
 

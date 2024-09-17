@@ -9,6 +9,7 @@ import FloatingCloseButton from "@/components/FloatingCloseButton/FloatingCloseB
 import { ThemedView } from "@/components/common/ThemedView";
 import { aggregateOrders } from "@/utils/orderManagement";
 import { generateUUID } from "@/utils/uuidGenerator";
+import { ORDER_STATUS } from "@/constants/status/orders";
 
 const OrderManagement = ({
   items,
@@ -71,7 +72,7 @@ const OrderManagement = ({
       dietaryPreference: item.type,
       image: item.image,
       quantity: 1,
-      status: "ACTIVE",
+      status: ORDER_STATUS.ACTIVE,
       itemValue: parseFloat(item.price) || 0, // Convert price to a number,
       orderTimestamp: Date.now(),
     };
@@ -90,7 +91,7 @@ const OrderManagement = ({
       (orderItem) =>
         orderItem.name === item.name &&
         orderItem.category === item.category &&
-        orderItem.status === "ACTIVE"
+        orderItem.status === ORDER_STATUS.ACTIVE
     );
 
     if (index !== -1) {

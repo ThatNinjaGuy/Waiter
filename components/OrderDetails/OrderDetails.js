@@ -5,6 +5,7 @@ import { ThemedText } from "../common/ThemedText";
 import ThemedButton from "../common/ThemedButton";
 import { generateUUID } from "@/utils/uuidGenerator";
 import { INDIAN_RUPPEE_SYMBOL } from "@/constants/common";
+import { ORDER_STATUS } from "@/constants/status/orders";
 
 const OrderDetails = ({
   style,
@@ -24,7 +25,7 @@ const OrderDetails = ({
       dietaryPreference: item.dietaryPreference,
       image: item.image,
       quantity: 1,
-      status: "ACTIVE",
+      status: ORDER_STATUS.ACTIVE,
       itemValue: parseFloat(item.price) || 0, // Convert price to a number,
       orderTimestamp: Date.now(),
     };
