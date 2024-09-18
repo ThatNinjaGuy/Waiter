@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -60,6 +60,16 @@ const ProfileScreen = () => {
       onPress: () => logout(),
     },
   ];
+
+  useEffect(() => {
+    if (user.staffDetails)
+      setUserProfile({
+        name: user.staffDetails.name,
+        position: user.staffDetails.role,
+        email: user.staffDetails.email,
+        phone: user.staffDetails.mobile,
+      });
+  }, [user]);
 
   const handleEdit = () => {
     setIsEditing(!isEditing);
