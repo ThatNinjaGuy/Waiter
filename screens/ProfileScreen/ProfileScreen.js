@@ -30,7 +30,6 @@ const ProfileScreen = () => {
     email: "john.doe@restaurant.com",
     phone: "+1 234 567 8900",
   });
-  const [openApproveRequests, setOpenApproveRequests] = useState(false);
 
   const navigationOptions = [
     {
@@ -42,7 +41,7 @@ const ProfileScreen = () => {
           (user.staffDetails.role === "Manager" ||
             user.staffDetails.role === "Owner")) ||
           !user.staffDetails),
-      onPress: () => setOpenApproveRequests(true),
+      onPress: () => navigation.navigate("approve"),
     },
     {
       title: "Checkout Menu",
@@ -86,8 +85,6 @@ const ProfileScreen = () => {
   };
 
   if (!user) return <AuthScreen />;
-
-  if (openApproveRequests) return <ApproveSignUpRequestsScreen />;
 
   return (
     <ScrollView style={styles.container}>
