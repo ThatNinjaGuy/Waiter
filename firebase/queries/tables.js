@@ -23,7 +23,7 @@ export const fetchAllTables = async (setTables, setIsLoading) => {
         allTables.push({ id: doc.id, ...doc.data() });
       });
       setTables(allTables);
-      setIsLoading(false);
+      if (setIsLoading) setIsLoading(false);
     });
     // Clean up the listener on component unmount
     return () => unsubscribe();
@@ -47,7 +47,7 @@ export const addTable = async (items, tables, setTables) => {
 
   try {
     await batch.commit();
-    setTables([...tables, ...newItems]);
+    if (setTables) setTables([...tables, ...newItems]);
     console.log("Add table successful");
   } catch (error) {
     console.error("Error adding table:", error);
@@ -63,11 +63,12 @@ export const updateTableDetails = async (
   try {
     const itemRef = doc(db, tablesPath, id);
     await updateDoc(itemRef, updatedItem);
-    setTables(
-      tables.map((item) =>
-        item.id === id ? { ...item, ...updatedItem } : item
-      )
-    );
+    if (setTables && tables)
+      setTables(
+        tables.map((item) =>
+          item.id === id ? { ...item, ...updatedItem } : item
+        )
+      );
     console.log("Table successfully updated!");
   } catch (error) {
     console.error("Error updating table: ", error);

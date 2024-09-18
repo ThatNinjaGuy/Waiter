@@ -77,3 +77,44 @@ export function activeOrdersCount(orders) {
     ? 0
     : orders.filter((order) => ACTIVE_ORDERS.includes(order.status)).length;
 }
+
+export function extractOrdersFromTable(tables) {
+  const allOrders = [];
+  tables.forEach((table) => {
+    if (table.orders) {
+      // Add table ID to each order for reference
+      const tableOrders = table.orders.map((order) => ({
+        ...order,
+        tableId: table.id,
+        tableNumber: table.number,
+        tableNote: table.notes,
+      }));
+      allOrders.push(...tableOrders);
+    }
+  });
+
+  // Sort orders by timestamp if available
+  allOrders.sort((a, b) => (a.orderTimestamp || 0) - (b.orderTimestamp || 0));
+  return allOrders;
+}
+
+export const identifyChangedOrders = (oldOrders, newOrders) => {
+  if (
+    !oldOrders ||
+    oldOrders.length === 0 ||
+    !newOrders ||
+    newOrders.length === 0
+  )
+    return [];
+  const updated = newOrders.filter((newOrder) => {
+    const oldOrder = oldOrders.find(
+      (o) =>
+        o.tableId === newOrder.tableId &&
+        o.orderTimestamp === newOrder.orderTimestamp
+    );
+    if (!oldOrder || oldOrder.status === newOrder.status) return false;
+    return true;
+  });
+
+  return { updated };
+};

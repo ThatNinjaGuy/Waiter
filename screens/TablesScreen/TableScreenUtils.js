@@ -78,7 +78,7 @@ export const handleTableOrderUpdate = (
     };
     const newTables = [...tables];
     newTables[tableIndex] = updatedTable;
-    setTables(newTables);
+    if (setTables) setTables(newTables);
     updateTableDetails(selectedTable.id, updatedTable, tables, setTables);
   } else console.error("Couldn't find table");
 };

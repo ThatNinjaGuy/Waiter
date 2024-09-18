@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -23,7 +23,7 @@ const ProfileScreen = () => {
   const isLargeScreen = width > 768;
 
   const navigation = useNavigation();
-
+  const { user, logout } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [userProfile, setUserProfile] = useState({
     name: "John Doe",
@@ -54,15 +54,28 @@ const ProfileScreen = () => {
       icon: "people",
       onPress: () => navigation.navigate("staffs"),
     },
-    { title: "Log Out", icon: "exit-to-app" },
+    {
+      title: "Log Out",
+      icon: "exit-to-app",
+      onPress: () => logout(),
+    },
   ];
+
+  useEffect(() => {
+    if (user.staffDetails)
+      setUserProfile({
+        name: user.staffDetails.name,
+        position: user.staffDetails.role,
+        email: user.staffDetails.email,
+        phone: user.staffDetails.mobile,
+      });
+  }, [user]);
 
   const handleEdit = () => {
     setIsEditing(!isEditing);
     // Implement edit functionality here
   };
 
-  const { user } = useContext(AuthContext);
   if (!user) return <AuthScreen />;
 
   if (

@@ -4,7 +4,7 @@ import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
 import { ThemedButton } from "@/components/common/ThemedButton";
 
-const Notifications = ({ notifications }) => {
+const NotificationsPanel = ({ notifications }) => {
   const renderItem = ({ item }) => (
     <ThemedButton style={styles.notificationItem} type="secondary">
       <ThemedText style={styles.notificationText}>{item.message}</ThemedText>
@@ -37,4 +37,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Notifications;
+export default NotificationsPanel;
