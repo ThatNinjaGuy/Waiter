@@ -13,11 +13,7 @@ import { ThemedText } from "@/components/common/ThemedText";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import AuthScreen from "@/components/Authentication/AuthScreen";
-import {
-  fetchAllTables,
-  addTable,
-  updateTableDetails,
-} from "@/firebase/queries/tables";
+import { addTable, updateTableDetails } from "@/firebase/queries/tables";
 import { fetchMenuItems } from "@/firebase/queries/menuItems";
 import { addCompletedOrder } from "@/firebase/queries/completedOrder";
 import {
@@ -28,36 +24,34 @@ import {
 } from "./TableScreenUtils";
 
 const TablesScreen = () => {
+  const { user, liveTables } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [tables, setTables] = useState([]);
   const [selectedTable, setSelectedTable] = useState(null);
   const [search, setSearch] = useState("");
-  const [filteredItems, setFilteredItems] = useState(tables);
+  const [filteredItems, setFilteredItems] = useState(liveTables);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [tableAdd, setTableAdd] = useState(false);
   const [tableInfoOptionClicked, setTableInfoOptionClicked] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
 
   useEffect(() => {
-    setIsLoading(true);
-    fetchAllTables(setTables, setIsLoading);
-    // Fetch menu items on the tables screen so no refetch is needed for each table
-    fetchMenuItems(setMenuItems);
-  }, []);
+    setFilteredItems(liveTables);
+    refreshSelectedTable();
+  }, [liveTables]);
 
   useEffect(() => {
-    setFilteredItems(tables);
-    refreshSelectedTable();
-  }, [tables]);
+    // Fetch menu items on the liveTables screen so no refetch is needed for each table
+    fetchMenuItems(setMenuItems, undefined);
+  }, []);
 
   const refreshSelectedTable = () => {
     if (!selectedTable) return;
-    const updatedTable = tables.find((t) => t.id === selectedTable.id);
+    const updatedTable = liveTables.find((t) => t.id === selectedTable.id);
     setSelectedTable(updatedTable);
   };
 
   const addNewTable = (item) => {
-    addTable([item], tables, setTables);
+    addTable([item], liveTables, undefined);
     setTableAdd(false);
   };
 
@@ -82,15 +76,14 @@ const TablesScreen = () => {
       selectedTable,
       addCompletedOrder
     );
-    setTables(tables.map((t) => (t.id === updatedTable.id ? updatedTable : t)));
-    updateTableDetails(updatedTable.id, updatedTable, tables, setTables);
+    updateTableDetails(updatedTable.id, updatedTable, undefined, undefined);
     setSelectedTable(null);
     setTableInfoOptionClicked(false);
   };
 
   const updateSearch = (searchText) => {
     setSearch(searchText);
-    setFilteredItems(searchOrder(tables, searchText));
+    setFilteredItems(searchOrder(liveTables, searchText));
   };
 
   const handleTableInfoClose = () => {
@@ -102,8 +95,6 @@ const TablesScreen = () => {
   const handleCompleteOrder = () => {
     setTableInfoOptionClicked(true);
   };
-
-  const { user } = useContext(AuthContext);
   if (!user) return <AuthScreen />;
 
   if (isLoading) {
@@ -129,7 +120,7 @@ const TablesScreen = () => {
           <ThemedView style={styles.filterListContainer}>
             <FlatList
               horizontal
-              data={getUniqueFilters(tables)}
+              data={getUniqueFilters(liveTables)}
               renderItem={({ item }) => (
                 <ThemedButton
                   style={[
@@ -141,7 +132,7 @@ const TablesScreen = () => {
                       item,
                       setSelectedFilter,
                       setFilteredItems,
-                      tables
+                      liveTables
                     )
                   }
                   type="secondary"
@@ -166,9 +157,9 @@ const TablesScreen = () => {
           updateOrder={(orders) =>
             handleTableOrderUpdate(
               orders,
-              tables,
+              liveTables,
               selectedTable,
-              setTables,
+              undefined,
               updateTableDetails
             )
           }

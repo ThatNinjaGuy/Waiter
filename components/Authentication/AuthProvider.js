@@ -3,11 +3,13 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "@/firebase/firebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import LoadingScreen from "../LoadingScreen/LoadingScreen";
+import { fetchAllTables } from "@/firebase/queries/tables";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [liveTables, setLiveTables] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchStaffDetails = async (user) => {
@@ -39,6 +41,7 @@ export const AuthProvider = ({ children }) => {
       const subscriber = onAuthStateChanged(auth, async (firebaseUser) => {
         if (firebaseUser) {
           const updatedUser = await fetchStaffDetails(firebaseUser);
+          await fetchAllTables(setLiveTables, undefined);
           setUser(updatedUser);
         } else {
           setUser(null);
@@ -62,7 +65,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, logout }}>
+    <AuthContext.Provider value={{ user, logout, liveTables }}>
       {children}
     </AuthContext.Provider>
   );
