@@ -18,10 +18,6 @@ const NotificationComponent = () => {
     const getPermissions = async () => {
       try {
         if (Platform.OS === "web") {
-          console.log(
-            "Current Notification Permission: ",
-            Notification.permission
-          );
           if (Notification.permission !== "granted") {
             const permission = await Notification.requestPermission();
             console.log("New Permission: ", permission);
