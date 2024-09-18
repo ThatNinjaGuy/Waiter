@@ -30,7 +30,14 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.thatninjaguyspeaks.Waiter",
-      "permissions": ["WRITE_EXTERNAL_STORAGE", "READ_EXTERNAL_STORAGE"]
+      "permissions": [
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "VIBRATE",
+        "WAKE_LOCK",
+        "RECEIVE_BOOT_COMPLETED",
+        "NOTIFICATIONS"
+      ]
     },
     "web": {
       "bundler": "metro",

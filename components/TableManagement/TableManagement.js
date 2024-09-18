@@ -11,6 +11,7 @@ import generatePDF from "@/utils/generatePDF";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
+import { playNotificationSounds } from "@/components/Notifications/NotificationSound";
 
 const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
   const textColor = useThemeColor({}, "text");

@@ -10,7 +10,6 @@ import {
 import { db } from "@/firebase/firebaseConfig";
 import OrdersScreen from "./OrdersScreen";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
-import Toast from "react-native-toast-message";
 import { View } from "react-native";
 import {
   completedOrdersCount,
@@ -18,6 +17,7 @@ import {
 } from "@/utils/orderManagement";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import AuthScreen from "@/components/Authentication/AuthScreen";
+import { playNotificationSounds } from "@/components/Notifications/NotificationSound";
 
 const OrdersScreenContainer = () => {
   const [orders, setOrders] = useState([]);
@@ -76,28 +76,12 @@ const OrdersScreenContainer = () => {
   const notifyOrdersUpdated = (allOrders) => {
     // If count of order increased, new order has come in. So, notify
     if (activeOrdersCount(orders) < activeOrdersCount(allOrders)) {
-      Toast.show({
-        type: "success",
-        text1: "New Order recieved",
-        position: "bottom",
-        visibilityTime: 2500,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
-      });
+      playNotificationSounds();
     }
 
     // If count of completed orders increased, an order has been completed. So, notify
     if (completedOrdersCount(orders) < completedOrdersCount(allOrders)) {
-      Toast.show({
-        type: "success",
-        text1: "Order ready",
-        position: "bottom",
-        visibilityTime: 2500,
-        autoHide: true,
-        topOffset: 30,
-        bottomOffset: 40,
-      });
+      playNotificationSounds();
     }
   };
 
@@ -147,7 +131,6 @@ const OrdersScreenContainer = () => {
         updateOrderStatus={updateOrderStatus}
         user={user}
       />
-      <Toast />
     </View>
   );
 };
