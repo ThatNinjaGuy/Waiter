@@ -4,11 +4,17 @@ import { auth, db } from "@/firebase/firebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import LoadingScreen from "../LoadingScreen/LoadingScreen";
 import { fetchAllTables } from "@/firebase/queries/tables";
+import {
+  extractOrdersFromTable,
+  identifyChangedOrders,
+} from "@/utils/orderManagement";
+import { sendNotificationToUser } from "@/components/Notifications/Notification";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [liveOrders, setLiveOrders] = useState();
   const [liveTables, setLiveTables] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -35,6 +41,28 @@ export const AuthProvider = ({ children }) => {
       return user;
     }
   };
+
+  const publishNotifications = (updated) => {
+    if (!updated) return;
+    updated.forEach((element) => {
+      sendNotificationToUser(
+        "Order has been updated",
+        element.name +
+          " for table " +
+          element.tableNumber +
+          " changed status to " +
+          element.status
+      );
+    });
+  };
+
+  useEffect(() => {
+    const newOrders = extractOrdersFromTable(liveTables);
+    const { updated } = identifyChangedOrders(liveOrders, newOrders);
+    publishNotifications(updated);
+
+    setLiveOrders(newOrders);
+  }, [liveTables]);
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -65,7 +93,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, logout, liveTables }}>
+    <AuthContext.Provider value={{ user, logout, liveTables, liveOrders }}>
       {children}
     </AuthContext.Provider>
   );

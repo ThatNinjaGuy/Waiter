@@ -4,32 +4,13 @@ import { db } from "@/firebase/firebaseConfig";
 import OrdersScreen from "./OrdersScreen";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import { View } from "react-native";
-import {
-  completedOrdersCount,
-  activeOrdersCount,
-  extractOrdersFromTable,
-} from "@/utils/orderManagement";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import AuthScreen from "@/components/Authentication/AuthScreen";
-import { playNotificationSounds } from "@/components/Notifications/NotificationSound";
 import { tablesPath } from "@/firebase/queries/tables";
 
 const OrdersScreenContainer = () => {
-  const { user, liveTables } = useContext(AuthContext);
-  const liveOrders = extractOrdersFromTable(liveTables);
+  const { user, liveOrders } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-
-  const notifyOrdersUpdated = (allOrders) => {
-    // If count of order increased, new order has come in. So, notify
-    if (activeOrdersCount(liveOrders) < activeOrdersCount(allOrders)) {
-      playNotificationSounds();
-    }
-
-    // If count of completed orders increased, an order has been completed. So, notify
-    if (completedOrdersCount(liveOrders) < completedOrdersCount(allOrders)) {
-      playNotificationSounds();
-    }
-  };
 
   const updateOrderStatus = async (orderId, tableId, orderStatus) => {
     try {

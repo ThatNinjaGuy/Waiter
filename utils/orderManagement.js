@@ -97,3 +97,24 @@ export function extractOrdersFromTable(tables) {
   allOrders.sort((a, b) => (a.orderTimestamp || 0) - (b.orderTimestamp || 0));
   return allOrders;
 }
+
+export const identifyChangedOrders = (oldOrders, newOrders) => {
+  if (
+    !oldOrders ||
+    oldOrders.length === 0 ||
+    !newOrders ||
+    newOrders.length === 0
+  )
+    return [];
+  const updated = newOrders.filter((newOrder) => {
+    const oldOrder = oldOrders.find(
+      (o) =>
+        o.tableId === newOrder.tableId &&
+        o.orderTimestamp === newOrder.orderTimestamp
+    );
+    if (!oldOrder || oldOrder.status === newOrder.status) return false;
+    return true;
+  });
+
+  return { updated };
+};

@@ -7,7 +7,7 @@ import {
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
 import UserProfile from "@/components/UserProfile";
-import Notifications from "@/components/Notifications/Notifications";
+import NotificationsPanel from "@/components/Notifications/NotificationsPanel";
 import Overview from "@/components/RestaurantOverview/Overview";
 import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
 import { useNavigation } from "@react-navigation/native";
@@ -84,7 +84,7 @@ export default function HomeScreen() {
               Notifications
             </ThemedText>
           </View>
-          <Notifications notifications={notifications} />
+          <NotificationsPanel notifications={notifications} />
         </ThemedView> */}
         <NavigationMenu items={navigationItems} />
       </ThemedView>
