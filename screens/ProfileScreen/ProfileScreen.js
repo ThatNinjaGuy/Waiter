@@ -23,7 +23,7 @@ const ProfileScreen = () => {
   const isLargeScreen = width > 768;
 
   const navigation = useNavigation();
-
+  const { user, logout } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [userProfile, setUserProfile] = useState({
     name: "John Doe",
@@ -54,7 +54,11 @@ const ProfileScreen = () => {
       icon: "people",
       onPress: () => navigation.navigate("staffs"),
     },
-    { title: "Log Out", icon: "exit-to-app" },
+    {
+      title: "Log Out",
+      icon: "exit-to-app",
+      onPress: () => logout(),
+    },
   ];
 
   const handleEdit = () => {
@@ -62,7 +66,6 @@ const ProfileScreen = () => {
     // Implement edit functionality here
   };
 
-  const { user } = useContext(AuthContext);
   if (!user) return <AuthScreen />;
 
   if (
