@@ -11,6 +11,7 @@ import generatePDF from "@/utils/generatePDF";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
+import { playNotificationSound } from "@/components/Notifications/NotificationSounds";
 
 const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
   const textColor = useThemeColor({}, "text");
@@ -80,6 +81,7 @@ const TableManagement = React.memo(({ table, onUpdateTable, onClose }) => {
 
   const handleGenerateBillClick = async () => {
     try {
+      playNotificationSound();
       handleUpdate("Available");
       await generateBill();
     } catch (error) {
