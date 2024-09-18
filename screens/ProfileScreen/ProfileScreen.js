@@ -15,7 +15,6 @@ import { useNavigation } from "@react-navigation/native";
 import ApproveSignUpRequestsScreen from "@/components/Authentication/ApproveSignUpRequestsScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import AuthScreen from "@/components/Authentication/AuthScreen";
-import UnauthorizedScreen from "@/components/Authentication/UnauthorizedScreen";
 import { DEFAULT_IMAGE } from "@/constants/common";
 
 const ProfileScreen = () => {
@@ -31,38 +30,47 @@ const ProfileScreen = () => {
     email: "john.doe@restaurant.com",
     phone: "+1 234 567 8900",
   });
-  const [openApproveRequests, setOpenApproveRequests] = useState(false);
 
   const navigationOptions = [
     {
       title: "Approve Sign Up Requests",
       icon: "person-add",
-      onPress: () => setOpenApproveRequests(true),
+      visible:
+        user &&
+        ((user.staffDetails &&
+          (user.staffDetails.role === "Manager" ||
+            user.staffDetails.role === "Owner")) ||
+          !user.staffDetails),
+      onPress: () => navigation.navigate("approve"),
     },
     {
       title: "Checkout Menu",
       icon: "restaurant-menu",
+      visible: true,
       onPress: () => navigation.navigate("menu"),
     },
     {
       title: "Inventory",
       icon: "inventory",
+      visible: true,
       onPress: () => navigation.navigate("inventory"),
     },
     {
       title: "Employees",
       icon: "people",
+      visible: true,
       onPress: () => navigation.navigate("staffs"),
     },
     {
       title: "Log Out",
       icon: "exit-to-app",
+      visible: true,
       onPress: () => logout(),
     },
   ];
 
   useEffect(() => {
-    if (user.staffDetails)
+    if (user && user.staffDetails)
       setUserProfile({
         name: user.staffDetails.name,
         position: user.staffDetails.role,
@@ -77,20 +85,6 @@ const ProfileScreen = () => {
   };
 
   if (!user) return <AuthScreen />;
-
-  if (
-    user.staffDetails &&
-    !(
-      user.staffDetails.role === "Manager" ||
-      user.staffDetails.role === "Owner" ||
-      !user.staffDetails.role ||
-      user.staffDetails.role === ""
-    )
-  ) {
-    return <UnauthorizedScreen />;
-  }
-
-  if (openApproveRequests) return <ApproveSignUpRequestsScreen />;
 
   return (
     <ScrollView style={styles.container}>
@@ -159,23 +153,25 @@ const ProfileScreen = () => {
       </LinearGradient>
 
       <View style={styles.navigationOptions}>
-        {navigationOptions.map((option, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.optionItem}
-            onPress={option.onPress}
-          >
-            <LinearGradient
-              colors={["#FF9966", "#FF5E62"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.optionGradient}
+        {navigationOptions
+          .filter((option) => option.visible)
+          .map((option, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.optionItem}
+              onPress={option.onPress}
             >
-              <Icon name={option.icon} size={24} color="#fff" />
-            </LinearGradient>
-            <Text style={styles.optionText}>{option.title}</Text>
-          </TouchableOpacity>
-        ))}
+              <LinearGradient
+                colors={["#FF9966", "#FF5E62"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.optionGradient}
+              >
+                <Icon name={option.icon} size={24} color="#fff" />
+              </LinearGradient>
+              <Text style={styles.optionText}>{option.title}</Text>
+            </TouchableOpacity>
+          ))}
       </View>
     </ScrollView>
   );
