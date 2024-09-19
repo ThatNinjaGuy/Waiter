@@ -2,25 +2,18 @@ import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  Dimensions,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { BlurView } from "expo-blur";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
-import ApproveSignUpRequestsScreen from "@/components/Authentication/ApproveSignUpRequestsScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import AuthScreen from "@/components/Authentication/AuthScreen";
-import { DEFAULT_IMAGE } from "@/constants/common";
+import ProfileHeader from "@/components/ProfileHeader/ProfileHeader";
 
 const ProfileScreen = () => {
-  const { width } = Dimensions.get("window");
-  const isLargeScreen = width > 768;
-
   const navigation = useNavigation();
   const { user, logout } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
@@ -88,69 +81,7 @@ const ProfileScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <LinearGradient
-        colors={["#4c669f", "#3b5998", "#192f6a"]}
-        style={{ height: isLargeScreen ? 200 : 300 }}
-      >
-        <BlurView intensity={80} style={styles.blurContainer}>
-          <View
-            style={[
-              styles.profileContent,
-              {
-                flexDirection: isLargeScreen ? "row" : "column",
-                alignItems: "center",
-                justifyContent: isLargeScreen ? "center" : "flex-start", // Add this line
-              },
-            ]}
-          >
-            <View>
-              <Image
-                source={{ uri: DEFAULT_IMAGE }}
-                style={[
-                  styles.profileImage,
-                  {
-                    alignSelf: isLargeScreen ? "flex-start" : "center",
-                  },
-                ]}
-              />
-            </View>
-            <View
-              style={[
-                styles.userDetails,
-                {
-                  marginLeft: isLargeScreen ? 20 : 0,
-                  alignItems: isLargeScreen ? "flex-start" : "center",
-                  justifyContent: "center",
-                },
-              ]}
-            >
-              <Text style={styles.name}>{userProfile.name}</Text>
-              <Text style={styles.position}>{userProfile.position}</Text>
-              <View style={styles.infoContainer}>
-                <Icon
-                  name="email"
-                  size={20}
-                  color="#fff"
-                  style={styles.infoIcon}
-                />
-                <Text style={styles.info}>{userProfile.email}</Text>
-              </View>
-              <View style={styles.infoContainer}>
-                <Icon
-                  name="phone"
-                  size={20}
-                  color="#fff"
-                  style={styles.infoIcon}
-                />
-                <Text style={styles.info}>{userProfile.phone}</Text>
-              </View>
-            </View>
-            <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
-              <Icon name="edit" size={isLargeScreen ? 24 : 18} color="#fff" />
-            </TouchableOpacity>
-          </View>
-        </BlurView>
-      </LinearGradient>
+      <ProfileHeader userProfile={userProfile} handleEdit={handleEdit} />
 
       <View style={styles.navigationOptions}>
         {navigationOptions
@@ -162,7 +93,7 @@ const ProfileScreen = () => {
               onPress={option.onPress}
             >
               <LinearGradient
-                colors={["#FF9966", "#FF5E62"]}
+                colors={["#4c669f", "#192f6a"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={styles.optionGradient}

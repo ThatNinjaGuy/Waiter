@@ -6,7 +6,6 @@ import {
 } from "react-native-responsive-screen";
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
-import UserProfile from "@/components/UserProfile";
 import NotificationsPanel from "@/components/Notifications/NotificationsPanel";
 import Overview from "@/components/RestaurantOverview/Overview";
 import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
@@ -15,6 +14,7 @@ import { fetchHotelData } from "@/firebase/queries";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import AuthScreen from "@/components/Authentication/AuthScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
+import ProfileHeader from "@/components/ProfileHeader/ProfileHeader";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -56,18 +56,20 @@ export default function HomeScreen() {
     <View>
       <ThemedView style={styles.container}>
         {hotel && (
-          <UserProfile
-            name={hotel?.name + " ( " + hotel?.owner + " )"}
-            role={
-              hotel?.city +
-              ", " +
-              hotel?.state +
-              ", " +
-              hotel?.country +
-              "- " +
-              hotel?.pinCode
-            }
-            plan={hotel?.category}
+          <ProfileHeader
+            userProfile={{
+              name: hotel.name,
+              address:
+                hotel.city +
+                ", " +
+                hotel.state +
+                ", " +
+                hotel.country +
+                "- " +
+                hotel.pinCode,
+              position: hotel.owner,
+              plan: hotel.categorys,
+            }}
           />
         )}
         <ThemedView style={styles.section}>
@@ -111,7 +113,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: "2%",
   },
   headerForeground: {
     height: hp("15%"),
