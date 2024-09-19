@@ -109,7 +109,7 @@ const AuthScreen = () => {
       <View style={styles.background} />
       <View style={styles.contentContainer}>
         <Image
-          source={require("@/assets/images/adaptive-icon.png")}
+          source={require("@/assets/images/icon.png")}
           style={styles.logo}
         />
         <Text style={styles.welcomeText}>Welcome to Waiter</Text>
