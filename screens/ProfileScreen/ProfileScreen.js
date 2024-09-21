@@ -1,17 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import AuthScreen from "@/components/Authentication/AuthScreen";
 import ProfileHeader from "@/components/ProfileHeader/ProfileHeader";
+import { ThemedView } from "@/components/common/ThemedView";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -83,7 +78,7 @@ const ProfileScreen = () => {
     <ScrollView style={styles.container}>
       <ProfileHeader userProfile={userProfile} handleEdit={handleEdit} />
 
-      <View style={styles.navigationOptions}>
+      <ThemedView style={styles.navigationOptions}>
         {navigationOptions
           .filter((option) => option.visible)
           .map((option, index) => (
@@ -103,7 +98,7 @@ const ProfileScreen = () => {
               <Text style={styles.optionText}>{option.title}</Text>
             </TouchableOpacity>
           ))}
-      </View>
+      </ThemedView>
     </ScrollView>
   );
 };
@@ -111,7 +106,6 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f3f5",
   },
   blurContainer: {
     flex: 1,
@@ -154,7 +148,6 @@ const styles = StyleSheet.create({
   },
   info: {
     fontSize: 16,
-    color: "#fff",
   },
   editButton: {
     position: "absolute",

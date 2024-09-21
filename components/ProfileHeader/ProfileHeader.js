@@ -19,7 +19,10 @@ const ProfileHeader = ({ userProfile, handleEdit }) => {
   return (
     <LinearGradient
       colors={["#4c669f", "#3b5998", "#192f6a"]}
-      style={{ height: isLargeScreen ? 200 : 300 }}
+      // colors={["#FFB733", "#FFAE19", "#ffa500"]}
+      style={{
+        height: isLargeScreen ? 200 : 300,
+      }}
     >
       <BlurView intensity={80} style={styles.blurContainer}>
         <View

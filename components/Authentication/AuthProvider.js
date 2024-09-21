@@ -9,6 +9,7 @@ import {
   identifyChangedOrders,
 } from "@/utils/orderManagement";
 import { sendNotificationToUser } from "@/components/Notifications/Notification";
+import { appDefaultLanguage } from "@/constants/appText/common";
 
 const AuthContext = createContext();
 
@@ -68,7 +69,10 @@ export const AuthProvider = ({ children }) => {
     const initializeAuth = async () => {
       const subscriber = onAuthStateChanged(auth, async (firebaseUser) => {
         if (firebaseUser) {
-          const updatedUser = await fetchStaffDetails(firebaseUser);
+          let updatedUser = await fetchStaffDetails(firebaseUser);
+          updatedUser.preferredLanguage =
+            updatedUser?.staffDetails?.languagePreference || appDefaultLanguage;
+
           await fetchAllTables(setLiveTables, undefined);
           setUser(updatedUser);
         } else {

@@ -15,8 +15,28 @@ import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import AuthScreen from "@/components/Authentication/AuthScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import ProfileHeader from "@/components/ProfileHeader/ProfileHeader";
+import {
+  getStaffsTranslation,
+  getTablesTranslation,
+  getMenuTranslation,
+  getOrdersTranslation,
+  getInventoryTranslation,
+  getProfileTranslation,
+  getOverviewTranslation,
+} from "@/utils/appText/homeScreen";
 
 export default function HomeScreen() {
+  const { user } = useContext(AuthContext);
+  const preferredLanguage = user.preferredLanguage;
+
+  const STAFFS = getStaffsTranslation(preferredLanguage);
+  const TABLES = getTablesTranslation(preferredLanguage);
+  const MENU = getMenuTranslation(preferredLanguage);
+  const ORDERS = getOrdersTranslation(preferredLanguage);
+  const INVENTORY = getInventoryTranslation(preferredLanguage);
+  const PROFILE = getProfileTranslation(preferredLanguage);
+  const TODAY_OVERVIEW = getOverviewTranslation(preferredLanguage);
+
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [hotel, setHotel] = useState();
@@ -44,12 +64,12 @@ export default function HomeScreen() {
   }, []);
 
   const navigationItems = [
-    { title: "Staffs", onPress: () => navigation.navigate("staffs") },
-    { title: "Tables", onPress: () => navigation.navigate("tables") },
-    { title: "Menu", onPress: () => navigation.navigate("menu") },
-    { title: "Orders", onPress: () => navigation.navigate("orders") },
-    { title: "Inventory", onPress: () => navigation.navigate("inventory") },
-    { title: "Admin", onPress: () => navigation.navigate("admin") },
+    { title: STAFFS, onPress: () => navigation.navigate("staffs") },
+    { title: TABLES, onPress: () => navigation.navigate("tables") },
+    { title: MENU, onPress: () => navigation.navigate("menu") },
+    { title: ORDERS, onPress: () => navigation.navigate("orders") },
+    { title: INVENTORY, onPress: () => navigation.navigate("inventory") },
+    { title: PROFILE, onPress: () => navigation.navigate("admin") }, // Add a translation if necessary
   ];
 
   const renderHeader = () => (
@@ -75,10 +95,10 @@ export default function HomeScreen() {
         <ThemedView style={styles.section}>
           <View style={styles.titleContainer}>
             <ThemedText style={styles.title} type="title" setBackground={true}>
-              Today's Overview
+              {TODAY_OVERVIEW}
             </ThemedText>
           </View>
-          <Overview />
+          <Overview preferredLanguage={preferredLanguage} />
         </ThemedView>
         {/* <ThemedView style={styles.section}>
           <View style={styles.titleContainer}>
@@ -93,7 +113,6 @@ export default function HomeScreen() {
     </View>
   );
 
-  const { user } = useContext(AuthContext);
   if (!user) return <AuthScreen />;
 
   if (isLoading) {

@@ -177,7 +177,7 @@ const AuthScreen = () => {
                   <Picker.Item label="Waiter" value="Waiter" />
                   <Picker.Item label="Assistant" value="Assistant" />
                   <Picker.Item label="Cleaner" value="Cleaner" />
-                  <Picker.Item label="Heler" value="Heler" />
+                  <Picker.Item label="Helper" value="Helper" />
                   <Picker.Item label="Others" value="Others" />
                 </Picker>
               </View>

@@ -8,15 +8,30 @@ import { completedOrderPath } from "@/firebase/queries/completedOrder";
 import { tablesPath } from "@/firebase/queries/tables";
 import { INDIAN_RUPPEE_SYMBOL } from "@/constants/common";
 import { ACTIVE_ORDERS } from "@/constants/status/orders";
+import {
+  getActiveTablesTranslation,
+  getActiveOrdersTranslation,
+  getClosedOrdersTranslation,
+  getTodaysRevenueTranslation,
+  getLast7DaysRevTranslation,
+  getLastDayRevTranslation,
+} from "@/utils/appText/homeScreen";
 
-const Overview = () => {
+const Overview = ({ preferredLanguage }) => {
+  const ACTIVE_TABLES_TEXT = getActiveTablesTranslation(preferredLanguage);
+  const ACTIVE_ORDERS_TEXT = getActiveOrdersTranslation(preferredLanguage);
+  const CLOSED_ORDERS_TEXT = getClosedOrdersTranslation(preferredLanguage);
+  const TODAYS_REVENUE_TEXT = getTodaysRevenueTranslation(preferredLanguage);
+  const LAST_7_DAYS_REV_TEXT = getLast7DaysRevTranslation(preferredLanguage);
+  const LAST_DAY_REV_TEXT = getLastDayRevTranslation(preferredLanguage);
+
   const [overviewItems, setOverviewItems] = useState([
-    { title: "Active Tables", message: 0 },
-    { title: "Active Orders", message: 0 },
-    { title: "Closed Orders", message: 0 },
-    { title: "Today's Revenue", message: 0 },
-    { title: "Last 7 days rev", message: 0 },
-    { title: "Last day rev", message: 0 },
+    { title: ACTIVE_TABLES_TEXT, message: 0 },
+    { title: ACTIVE_ORDERS_TEXT, message: 0 },
+    { title: CLOSED_ORDERS_TEXT, message: 0 },
+    { title: TODAYS_REVENUE_TEXT, message: 0 },
+    { title: LAST_7_DAYS_REV_TEXT, message: 0 },
+    { title: LAST_DAY_REV_TEXT, message: 0 },
   ]);
 
   useEffect(() => {
@@ -69,19 +84,19 @@ const Overview = () => {
           /// Update overview items using functional update
           setOverviewItems((prevItems) =>
             prevItems.map((item) => {
-              if (item.title === "Today's Revenue") {
+              if (item.title === TODAYS_REVENUE_TEXT) {
                 return {
                   ...item,
                   message: INDIAN_RUPPEE_SYMBOL + revenueToday,
                 };
-              } else if (item.title === "Closed Orders") {
+              } else if (item.title === CLOSED_ORDERS_TEXT) {
                 return { ...item, message: orderCountToday };
-              } else if (item.title === "Last day rev") {
+              } else if (item.title === LAST_DAY_REV_TEXT) {
                 return {
                   ...item,
                   message: INDIAN_RUPPEE_SYMBOL + revenueLastDay,
                 };
-              } else if (item.title === "Last 7 days rev") {
+              } else if (item.title === LAST_7_DAYS_REV_TEXT) {
                 return {
                   ...item,
                   message: INDIAN_RUPPEE_SYMBOL + revenueLastWeek,
@@ -121,9 +136,9 @@ const Overview = () => {
           // Update overview items using functional update
           setOverviewItems((prevItems) =>
             prevItems.map((item) => {
-              if (item.title === "Active Tables") {
+              if (item.title === ACTIVE_TABLES_TEXT) {
                 return { ...item, message: activeTables };
-              } else if (item.title === "Active Orders") {
+              } else if (item.title === ACTIVE_ORDERS_TEXT) {
                 return { ...item, message: itemsInKitchen };
               }
               return item;
