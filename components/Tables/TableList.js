@@ -15,8 +15,30 @@ import {
 } from "@/utils/colorPicker";
 import useResponsiveLayout from "@/hooks/useResponsiveLayout";
 import { INDIAN_RUPPEE_SYMBOL } from "@/constants/common";
+import {
+  getTableTranslation,
+  getGuestTranslation,
+  getGuestsTranslation,
+  getServerTranslation,
+  getOrdersTranslation,
+  getBillTranslation,
+  getNotesTranslation,
+} from "@/utils/appText/tablesScreen";
 
-const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
+const TableList = ({
+  tables,
+  preferredLanguage,
+  onTablePress,
+  onOrderDetailsPress,
+}) => {
+  const tableText = getTableTranslation(preferredLanguage);
+  const guestText = getGuestTranslation(preferredLanguage);
+  const guestsText = getGuestsTranslation(preferredLanguage);
+  const serverText = getServerTranslation(preferredLanguage);
+  const ordersText = getOrdersTranslation(preferredLanguage);
+  const billText = getBillTranslation(preferredLanguage);
+  const notesText = getNotesTranslation(preferredLanguage);
+
   const { layoutParams, key } = useResponsiveLayout({
     initialItemWidth: 300,
     minItemWidth: 250,
@@ -72,33 +94,35 @@ const TableList = ({ tables, onTablePress, onOrderDetailsPress }) => {
         lightBackgroundColor={lightBackgroundColor}
         darkBackgroundColor={darkBackgroundColor}
       >
-        <ThemedText style={styles.tableNumber}>Table - {number}</ThemedText>
+        <ThemedText style={styles.tableNumber}>
+          {tableText} - {number}
+        </ThemedText>
         <View style={styles.tableDetailsContainer}>
           <View style={styles.leftColumn}>
             <ThemedText style={styles.tableDetails}>
-              Guest: {guestName}
+              {guestText}: {guestName}
             </ThemedText>
             <ThemedText style={styles.tableDetails}>
-              Guests: {guests || 0} pax
+              {guestsText}: {guests || 0} pax
             </ThemedText>
             <ThemedText style={styles.tableDetails}>
-              Server: {waiter}
+              {serverText}: {waiter}
             </ThemedText>
           </View>
           <View style={styles.rightColumn}>
             <ThemedText style={styles.tableDetails}>
-              Orders: {completedOrders}/{totalOrders}
+              {ordersText}: {completedOrders}/{totalOrders}
             </ThemedText>
             <ThemedText style={styles.tableDetails}>{tableWaitTime}</ThemedText>
             <ThemedText style={styles.tableDetails}>
-              Bill: {INDIAN_RUPPEE_SYMBOL}
+              {billText}: {INDIAN_RUPPEE_SYMBOL}
               {orderValue || 0}
             </ThemedText>
           </View>
         </View>
         <View style={styles.notesContainer}>
           <ThemedText style={styles.tableDetails} numberOfLines={2}>
-            Notes: {notes}
+            {notesText}: {notes}
           </ThemedText>
         </View>
         <View style={styles.orderDetailsIcon}>

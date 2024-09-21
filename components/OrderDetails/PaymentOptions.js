@@ -3,22 +3,37 @@ import { StyleSheet } from "react-native";
 import { ThemedView } from "../common/ThemedView";
 import { ThemedText } from "../common/ThemedText";
 import ThemedButton from "../common/ThemedButton";
+import {
+  getCancelTranslation,
+  getGenerateBillTranslation,
+  getKOTTranslation,
+} from "@/utils/appText/orderManagement";
 
-const PaymentOptions = ({ onSave, style, onCancel, completeOrder }) => {
+const PaymentOptions = ({
+  preferredLanguage,
+  onSave,
+  style,
+  onCancel,
+  completeOrder,
+}) => {
+  const cancelText = getCancelTranslation(preferredLanguage);
+  const generateBillText = getGenerateBillTranslation(preferredLanguage);
+  const kotText = getKOTTranslation(preferredLanguage);
+
   return (
     <ThemedView style={[styles.paymentOptions, style]}>
       <ThemedButton style={styles.button} onPress={onCancel} type="danger">
-        <ThemedText>Cancel</ThemedText>
+        <ThemedText>{cancelText}</ThemedText>
       </ThemedButton>
       <ThemedButton
         style={styles.button}
         onPress={completeOrder}
         type="primary"
       >
-        <ThemedText>Generate Bill</ThemedText>
+        <ThemedText>{generateBillText}</ThemedText>
       </ThemedButton>
       <ThemedButton style={styles.button} onPress={onSave} type="success">
-        <ThemedText>KOT</ThemedText>
+        <ThemedText>{kotText}</ThemedText>
       </ThemedButton>
     </ThemedView>
   );

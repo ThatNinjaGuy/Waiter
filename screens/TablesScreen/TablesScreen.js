@@ -22,9 +22,13 @@ import {
   filterBySelectedFilter,
   handleTableOrderUpdate,
 } from "./TableScreenUtils";
+import { getAddTableTranslation } from "@/utils/appText/tablesScreen";
 
 const TablesScreen = () => {
   const { user, liveTables } = useContext(AuthContext);
+  const preferredLanguage = user.preferredLanguage;
+  const addTableText = getAddTableTranslation(preferredLanguage);
+
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTable, setSelectedTable] = useState(null);
   const [search, setSearch] = useState("");
@@ -95,6 +99,7 @@ const TablesScreen = () => {
   const handleCompleteOrder = () => {
     setTableInfoOptionClicked(true);
   };
+
   if (!user) return <AuthScreen />;
 
   if (isLoading) {
@@ -110,12 +115,13 @@ const TablesScreen = () => {
             type="primary"
             style={[{ borderRadius: 0, marginBottom: 5 }]}
           >
-            <ThemedText>Add Table</ThemedText>
+            <ThemedText>{addTableText}</ThemedText>
           </ThemedButton>
           <TableList
             tables={filteredItems}
             onTablePress={handleTablePress}
             onOrderDetailsPress={handleOrderDetailsPress}
+            preferredLanguage={preferredLanguage}
           />
           <ThemedView style={styles.filterListContainer}>
             <FlatList
@@ -153,6 +159,7 @@ const TablesScreen = () => {
         <OrderManagement
           items={selectedTable?.orders}
           menuItems={menuItems}
+          preferredLanguage={preferredLanguage}
           onClose={handleTableInfoClose}
           updateOrder={(orders) =>
             handleTableOrderUpdate(

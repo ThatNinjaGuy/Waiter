@@ -1,0 +1,65 @@
+export const UPDATE_MENU_CATEGORY_LANGUAGE_SET = {
+  ENGLISH: "Update Menu Category",
+  HINDI: "मेनू श्रेणी अपडेट करें",
+  MARATHI: "मेनू श्रेणी अद्यतन करा",
+  BENGALI: "মেনু বিভাগ আপডেট করুন",
+  GUJARATI: "મેનુ શ્રેણી અપડેટ કરો",
+  TAMIL: "மெனு வகையை புதுப்பிக்கவும்",
+  TELUGU: "మెను వర్గాన్ని నవీకరించండి",
+  MALAYALAM: "മെനു വിഭാഗം അപ്‌ഡേറ്റ് ചെയ്യുക",
+};
+
+export const ADD_MENU_ITEM_LANGUAGE_SET = {
+  ENGLISH: "Add Menu Item",
+  HINDI: "मेनू आइटम जोड़ें",
+  MARATHI: "मेनू आयटम जोडा",
+  BENGALI: "মেনু আইটেম যোগ করুন",
+  GUJARATI: "મેનુ આઇટમ ઉમેરો",
+  TAMIL: "மெனு உருப்படியைச் சேர்க்கவும்",
+  TELUGU: "మెను అంశాన్ని జోడించండి",
+  MALAYALAM: "മെനു ഇനം ചേർക്കുക",
+};
+
+export const CUISINE_LANGUAGE_SET = {
+  ENGLISH: "Cuisine",
+  HINDI: "भोजन शैली",
+  MARATHI: "खानपान शैली",
+  BENGALI: "রন্ধনপ্রণালী",
+  GUJARATI: "ખોરાક શૈલી",
+  TAMIL: "சமையல் வகை",
+  TELUGU: "వంటకాలు",
+  MALAYALAM: "ഭക്ഷണശൈലി",
+};
+
+export const CATEGORY_LANGUAGE_SET = {
+  ENGLISH: "Category",
+  HINDI: "श्रेणी",
+  MARATHI: "श्रेणी",
+  BENGALI: "বিভাগ",
+  GUJARATI: "શ્રેણી",
+  TAMIL: "வகை",
+  TELUGU: "వర్గం",
+  MALAYALAM: "വിഭാഗം",
+};
+
+export const PRICE_LANGUAGE_SET = {
+  ENGLISH: "Price",
+  HINDI: "कीमत",
+  MARATHI: "किंमत",
+  BENGALI: "মূল্য",
+  GUJARATI: "કિંમત",
+  TAMIL: "விலை",
+  TELUGU: "ధర",
+  MALAYALAM: "വില",
+};
+
+export const PREFERENCE_LANGUAGE_SET = {
+  ENGLISH: "Preference",
+  HINDI: "प्राथमिकता",
+  MARATHI: "प्राधान्यक्रम",
+  BENGALI: "পছন্দসইতা",
+  GUJARATI: "પ્રાથમિકતા",
+  TAMIL: "விருப்பம் ",
+  TELUGU: "ప్రాధాన్యత ",
+  MALAYALAM: "ആവശ്യകത",
+};

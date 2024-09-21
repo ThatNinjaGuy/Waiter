@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import MenuItems from "@/components/MenuItems/MenuItems";
 import CustomModal from "@/components/CustomModal/CustomModal";
@@ -10,9 +10,14 @@ import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedButton } from "@/components/common/ThemedButton";
 import CategoryManagementPopup from "@/components/CategoryManagementPopup/CategoryManagementPopup";
 import { menuItemFormSchema } from "@/constants/formSchema";
+import {
+  getUpdateMenuCategoryTranslation,
+  getAddMenuItemTranslation,
+} from "@/utils/appText/menuScreen";
 
 const MenuScreenView = ({
   menuItems,
+  preferredLanguage,
   addMenuItem,
   deleteMenuItem,
   updateMenuItem,
@@ -22,6 +27,10 @@ const MenuScreenView = ({
   handleUpdateMenuItemCategory,
   handleDeleteMenuItemCategory,
 }) => {
+  const updateMenuCategoryText =
+    getUpdateMenuCategoryTranslation(preferredLanguage);
+  const addMenuItemText = getAddMenuItemTranslation(preferredLanguage);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const [search, setSearch] = useState("");
@@ -84,17 +93,21 @@ const MenuScreenView = ({
           type="primary"
           style={buttonStyles.button}
         >
-          <ThemedText>Update Menu Category</ThemedText>
+          <ThemedText>{updateMenuCategoryText}</ThemedText>
         </ThemedButton>
         <ThemedButton
           onPress={handleAddItem}
           type="primary"
           style={buttonStyles.button}
         >
-          <ThemedText>Add Menu Item</ThemedText>
+          <ThemedText>{addMenuItemText}</ThemedText>
         </ThemedButton>
       </ThemedView>
-      <MenuItems items={filteredItems} onEdit={handleEditItem} />
+      <MenuItems
+        items={filteredItems}
+        preferredLanguage={preferredLanguage}
+        onEdit={handleEditItem}
+      />
       <CategoryManagementPopup
         visible={isPopupVisible}
         onClose={() => setPopupVisible(false)}

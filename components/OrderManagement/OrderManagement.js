@@ -14,6 +14,7 @@ import { ORDER_STATUS } from "@/constants/status/orders";
 const OrderManagement = ({
   items,
   menuItems,
+  preferredLanguage,
   onClose,
   updateOrder,
   handleCompleteOrder,
@@ -146,6 +147,7 @@ const OrderManagement = ({
             decreaseQuantity={removeItem}
           />
           <PaymentOptions
+            preferredLanguage={preferredLanguage}
             style={styles.paymentOptions}
             onSave={onClose}
             onCancel={onClose}
