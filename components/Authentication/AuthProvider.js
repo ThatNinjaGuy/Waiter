@@ -10,6 +10,10 @@ import {
 } from "@/utils/orderManagement";
 import { sendNotificationToUser } from "@/components/Notifications/Notification";
 import { appDefaultLanguage } from "@/constants/appText/common";
+import {
+  getNotificationTitleTranslation,
+  getNotificationContentTranslation,
+} from "@/utils/appText/notifications";
 
 const AuthContext = createContext();
 
@@ -45,15 +49,14 @@ export const AuthProvider = ({ children }) => {
 
   const publishNotifications = (updated) => {
     if (!updated) return;
+
     updated.forEach((element) => {
-      sendNotificationToUser(
-        "Order has been updated",
-        element.name +
-          " for table " +
-          element.tableNumber +
-          " changed status to " +
-          element.status
+      const title = getNotificationTitleTranslation(user.preferredLanguage);
+      const content = getNotificationContentTranslation(
+        user.preferredLanguage,
+        element
       );
+      sendNotificationToUser(title, content);
     });
   };
 
