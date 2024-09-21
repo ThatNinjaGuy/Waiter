@@ -69,7 +69,7 @@ export default function HomeScreen() {
     { title: MENU, onPress: () => navigation.navigate("menu") },
     { title: ORDERS, onPress: () => navigation.navigate("orders") },
     { title: INVENTORY, onPress: () => navigation.navigate("inventory") },
-    { title: PROFILE, onPress: () => navigation.navigate("admin") }, // Add a translation if necessary
+    { title: PROFILE, onPress: () => navigation.navigate("profile") }, // Add a translation if necessary
   ];
 
   const renderHeader = () => (

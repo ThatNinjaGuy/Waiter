@@ -15,7 +15,7 @@ import { doc, writeBatch, collection } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import { Picker } from "@react-native-picker/picker";
 import { validateSignupRequest } from "@/utils/validations";
-import LoadingScreen from "../LoadingScreen/LoadingScreen";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
 const AuthScreen = () => {
   const [loading, setLoading] = useState(false);

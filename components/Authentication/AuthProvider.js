@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "@/firebase/firebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import LoadingScreen from "../LoadingScreen/LoadingScreen";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import { fetchAllTables } from "@/firebase/queries/tables";
 import {
   extractOrdersFromTable,

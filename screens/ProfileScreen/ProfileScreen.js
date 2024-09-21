@@ -7,6 +7,13 @@ import AuthContext from "@/components/Authentication/AuthProvider";
 import AuthScreen from "@/components/Authentication/AuthScreen";
 import ProfileHeader from "@/components/ProfileHeader/ProfileHeader";
 import { ThemedView } from "@/components/common/ThemedView";
+import {
+  getApproveSignupRequestsTranslation,
+  getCheckoutMenuTranslation,
+  getInventoryTranslation,
+  getEmployeesTranslation,
+  getLogoutTranslation,
+} from "@/utils/appText/profileScreen";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -19,9 +26,18 @@ const ProfileScreen = () => {
     phone: "+1 234 567 8900",
   });
 
+  const preferredLanguage = user.preferredLanguage;
+
+  const approveSignupRequestsText =
+    getApproveSignupRequestsTranslation(preferredLanguage);
+  const checkoutMenuText = getCheckoutMenuTranslation(preferredLanguage);
+  const inventoryText = getInventoryTranslation(preferredLanguage);
+  const employeesText = getEmployeesTranslation(preferredLanguage);
+  const logoutText = getLogoutTranslation(preferredLanguage);
+
   const navigationOptions = [
     {
-      title: "Approve Sign Up Requests",
+      title: approveSignupRequestsText,
       icon: "person-add",
       visible:
         user &&
@@ -32,25 +48,25 @@ const ProfileScreen = () => {
       onPress: () => navigation.navigate("approve"),
     },
     {
-      title: "Checkout Menu",
+      title: checkoutMenuText,
       icon: "restaurant-menu",
       visible: true,
       onPress: () => navigation.navigate("menu"),
     },
     {
-      title: "Inventory",
+      title: inventoryText,
       icon: "inventory",
       visible: true,
       onPress: () => navigation.navigate("inventory"),
     },
     {
-      title: "Employees",
+      title: employeesText,
       icon: "people",
       visible: true,
       onPress: () => navigation.navigate("staffs"),
     },
     {
-      title: "Log Out",
+      title: logoutText,
       icon: "exit-to-app",
       visible: true,
       onPress: () => logout(),
