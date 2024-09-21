@@ -5,8 +5,30 @@ import { ThemedView } from "@/components/common/ThemedView";
 import { ThemedText } from "@/components/common/ThemedText";
 import ThemedButton from "@/components/common/ThemedButton";
 import { ORDER_STATUS, ACTIVE_ORDERS } from "@/constants/status/orders";
+import {
+  getQtyTranslation,
+  getNotesTranslation,
+  getPendingOrdersTranslation,
+  getActiveOrdersTranslation,
+  getReadyForPickupTranslation,
+  getAcceptTranslation,
+  getCancelTranslation,
+  getCompleteTranslation,
+  getDeliveredTranslation,
+} from "@/utils/appText/ordersScreen";
 
 const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
+  const preferredLanguage = user.preferredLanguage;
+  const qtyText = getQtyTranslation(preferredLanguage);
+  const notesText = getNotesTranslation(preferredLanguage);
+  const pendingOrdersText = getPendingOrdersTranslation(preferredLanguage);
+  const activeOrdersText = getActiveOrdersTranslation(preferredLanguage);
+  const readyForPickupText = getReadyForPickupTranslation(preferredLanguage);
+  const acceptText = getAcceptTranslation(preferredLanguage);
+  const completeText = getCompleteTranslation(preferredLanguage);
+  const cancelText = getCancelTranslation(preferredLanguage);
+  const deliveredText = getDeliveredTranslation(preferredLanguage);
+
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState(
     user.staffDetails &&
@@ -42,13 +64,13 @@ const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
     if (item.status === ORDER_STATUS.ACTIVE) {
       buttonConfigs.push(
         {
-          text: "ACCEPT",
+          text: acceptText,
           type: "success",
           onPress: () =>
             updateOrderStatus(item.id, item.tableId, ORDER_STATUS.PENDING),
         },
         {
-          text: "COMPLETE",
+          text: completeText,
           type: "primary",
           onPress: () =>
             updateOrderStatus(item.id, item.tableId, ORDER_STATUS.READY),
@@ -57,13 +79,13 @@ const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
     } else if (item.status === ORDER_STATUS.PENDING) {
       buttonConfigs.push(
         {
-          text: "CANCEL",
+          text: cancelText,
           type: "danger",
           onPress: () =>
             updateOrderStatus(item.id, item.tableId, ORDER_STATUS.CANCEL),
         },
         {
-          text: "COMPLETE",
+          text: completeText,
           type: "success",
           onPress: () =>
             updateOrderStatus(item.id, item.tableId, ORDER_STATUS.READY),
@@ -71,14 +93,14 @@ const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
       );
     } else if (item.status === ORDER_STATUS.READY) {
       buttonConfigs.push({
-        text: "DELIVERED",
+        text: deliveredText,
         type: "success",
         onPress: () =>
           updateOrderStatus(item.id, item.tableId, ORDER_STATUS.COMPLETE),
       });
     } else if (item.status === ORDER_STATUS.CANCEL) {
       buttonConfigs.push({
-        text: "CANCEL",
+        text: cancelText,
         type: "danger",
         onPress: () =>
           updateOrderStatus(item.id, item.tableId, ORDER_STATUS.CANCELLED),
@@ -91,12 +113,14 @@ const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
           <ThemedView style={styles.infoContainer}>
             <ThemedText style={styles.itemName}>{item.name}</ThemedText>
             <ThemedText style={styles.tableNumber}>
-              Qty: {item.quantity}
+              {qtyText}: {item.quantity}
             </ThemedText>
           </ThemedView>
           <ThemedText style={styles.quantity}>{item.tableNumber}</ThemedText>
         </ThemedView>
-        <ThemedText style={styles.notes}>Notes: {item.tableNote}</ThemedText>
+        <ThemedText style={styles.notes}>
+          {notesText}: {item.tableNote}
+        </ThemedText>
         <ThemedView style={styles.buttonContainer}>
           {buttonConfigs.map((config, index) => (
             <ThemedButton
@@ -121,7 +145,7 @@ const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
   return (
     <ThemedView style={styles.container}>
       <ThemedText type="subtitle" style={[{ padding: 5, paddingTop: 10 }]}>
-        Pending Orders: {filteredOrders.length}
+        {pendingOrdersText}: {filteredOrders.length}
       </ThemedText>
       <FlatList
         key={key} // Force re-render when numColumns changes
@@ -146,7 +170,7 @@ const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
           onPress={() => setActiveTab("ACTIVE_ORDERS")}
         >
           <ThemedText type="subtitle" style={[{ padding: 5, paddingTop: 10 }]}>
-            Active Orders
+            {activeOrdersText}
           </ThemedText>
         </ThemedButton>
         <ThemedButton
@@ -155,7 +179,7 @@ const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
           onPress={() => setActiveTab("COMPLETED_ORDERS")}
         >
           <ThemedText type="subtitle" style={[{ padding: 5, paddingTop: 10 }]}>
-            Ready for Pickup
+            {readyForPickupText}
           </ThemedText>
         </ThemedButton>
       </ThemedView>

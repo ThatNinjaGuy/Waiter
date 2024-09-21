@@ -7,4 +7,4 @@ export const TAMIL = "TAMIL";
 export const TELUGU = "TELUGU";
 export const MALYALI = "MALYALI";
 
-export const appDefaultLanguage = BENGALI;
+export const appDefaultLanguage = HINDI;
