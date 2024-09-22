@@ -20,4 +20,4 @@ export const LANGUAGE_MAPPER = {
   KANNADA: { key: KANNADA, displayText: "Kannada" },
 };
 
-export const appDefaultLanguage = HINDI;
+export const appDefaultLanguage = ENGLISH;

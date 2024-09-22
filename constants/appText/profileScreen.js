@@ -130,3 +130,14 @@ export const FAILED_TO_APPROVE_REQUEST_LANGUAGE_SET = {
   TELUGU: "వినతిని ఆమోదించడంలో విఫలమైంది",
   MALYALI: "അഭ്യർത്ഥന അംഗീകരിക്കാൻ പരാജയപ്പെട്ടു",
 };
+
+export const SETTINGS_LANGUAGE_SET = {
+  ENGLISH: "Settings",
+  HINDI: "सेटिंग्स",
+  MARATHI: "सेटिंग्ज",
+  BENGALI: "সেটিংস",
+  GUJARATI: "સેટિંગ્સ",
+  TAMIL: "அமைப்புகள்",
+  TELUGU: "సెట్టింగులు",
+  MALAYALAM: "ക്രമീകരണങ്ങൾ",
+};

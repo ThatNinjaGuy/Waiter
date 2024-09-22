@@ -1,5 +1,6 @@
 import { appDefaultLanguage } from "@/constants/appText/common";
 import {
+  SETTINGS_LANGUAGE_SET,
   APPROVE_SIGNUP_REQUESTS_LANGUAGE_SET,
   CHECKOUT_MENU_LANGUAGE_SET,
   INVENTORY_LANGUAGE_SET,
@@ -13,6 +14,10 @@ import {
   REQUEST_APPROVED_SUCCESS_LANGUAGE_SET,
   FAILED_TO_APPROVE_REQUEST_LANGUAGE_SET,
 } from "@/constants/appText/profileScreen";
+
+export const getSettingsText = (preferredLanguage) =>
+  SETTINGS_LANGUAGE_SET[preferredLanguage] ||
+  SETTINGS_LANGUAGE_SET[appDefaultLanguage];
 
 export const getApproveSignupRequestsTranslation = (preferredLanguage) =>
   APPROVE_SIGNUP_REQUESTS_LANGUAGE_SET[preferredLanguage] ||

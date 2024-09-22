@@ -13,12 +13,14 @@ import {
   getInventoryTranslation,
   getEmployeesTranslation,
   getLogoutTranslation,
+  getSettingsText,
 } from "@/utils/appText/profileScreen";
 import Settings from "@/components/Settings/Settings";
 
 const ProfileScreen = () => {
   const { user, logout } = useContext(AuthContext);
   const preferredLanguage = user.preferredLanguage;
+  const settingsText = getSettingsText(preferredLanguage);
   const approveSignupRequestsText =
     getApproveSignupRequestsTranslation(preferredLanguage);
   const checkoutMenuText = getCheckoutMenuTranslation(preferredLanguage);
@@ -36,7 +38,7 @@ const ProfileScreen = () => {
   const [displaySettingsScreen, openDisplaySettingsScreen] = useState(false);
   const navigationOptions = [
     {
-      title: "Settings",
+      title: settingsText,
       icon: "person-add",
       visible: true,
       onPress: () => openDisplaySettingsScreen(true),

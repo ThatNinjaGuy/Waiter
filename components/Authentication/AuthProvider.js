@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "@/firebase/firebaseConfig";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { auth } from "@/firebase/firebaseConfig";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import { fetchAllTables } from "@/firebase/queries/tables";
 import {
@@ -14,6 +13,7 @@ import {
   getNotificationTitleTranslation,
   getNotificationContentTranslation,
 } from "@/utils/appText/notifications";
+import { fetchAllStaffs } from "@/firebase/queries/staffs";
 
 const AuthContext = createContext();
 
@@ -21,44 +21,21 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [liveOrders, setLiveOrders] = useState();
   const [liveTables, setLiveTables] = useState([]);
+  const [staffs, setStaffs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchStaffDetails = async (user) => {
-    try {
-      const staffsRef = collection(db, "hotel-details/staff-details/staffs");
-      const q = query(staffsRef, where("authId", "==", user.uid));
-      const querySnapshot = await getDocs(q);
-
-      const staffs = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      if (staffs.length > 0) {
-        return {
-          ...user,
-          staffDetails: staffs[0],
-        };
-      }
-      return user;
-    } catch (error) {
-      console.error("Error fetching staff details:", error);
-      return user;
-    }
-  };
-
-  const publishNotifications = (updated) => {
-    if (!updated) return;
-
-    updated.forEach((element) => {
-      const title = getNotificationTitleTranslation(user.preferredLanguage);
-      const content = getNotificationContentTranslation(
-        user.preferredLanguage,
-        element
-      );
-      sendNotificationToUser(title, content);
+  const setLoggedInUserDetails = (user) => {
+    const staff = staffs?.find((staff) => staff.authId == user.uid);
+    setUser({
+      ...user,
+      staffDetails: staff,
+      preferredLanguage: staff?.preferredLanguage || appDefaultLanguage,
     });
   };
+
+  useEffect(() => {
+    if (user && user != null) setLoggedInUserDetails(user);
+  }, [staffs]);
 
   useEffect(() => {
     const newOrders = extractOrdersFromTable(liveTables);
@@ -72,12 +49,9 @@ export const AuthProvider = ({ children }) => {
     const initializeAuth = async () => {
       const subscriber = onAuthStateChanged(auth, async (firebaseUser) => {
         if (firebaseUser) {
-          let updatedUser = await fetchStaffDetails(firebaseUser);
-          updatedUser.preferredLanguage =
-            updatedUser?.staffDetails?.preferredLanguage || appDefaultLanguage;
-
+          await fetchAllStaffs(setStaffs);
           await fetchAllTables(setLiveTables, undefined);
-          setUser(updatedUser);
+          setLoggedInUserDetails(firebaseUser);
         } else {
           setUser(null);
         }
@@ -89,6 +63,19 @@ export const AuthProvider = ({ children }) => {
 
     initializeAuth();
   }, []);
+
+  const publishNotifications = (updated) => {
+    if (!updated) return;
+
+    updated.forEach((element) => {
+      const title = getNotificationTitleTranslation(user.preferredLanguage);
+      const content = getNotificationContentTranslation(
+        user.preferredLanguage,
+        element
+      );
+      sendNotificationToUser(title, content);
+    });
+  };
 
   const logout = async () => {
     await auth.signOut();

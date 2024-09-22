@@ -14,6 +14,7 @@ import ThemedButton from "@/components/common/ThemedButton";
 import { ThemedText } from "@/components/common/ThemedText";
 import { Tooltip, Text } from "react-native-elements";
 import { updateStaff } from "@/firebase/queries/staffs";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
 const SettingsScreen = ({ userDetails, onCancel }) => {
   const [name, setName] = useState(userDetails.name);
@@ -29,7 +30,7 @@ const SettingsScreen = ({ userDetails, onCancel }) => {
     newGuests: false,
     ...userDetails.notificationSettings,
   });
-
+  const [loading, setLoading] = useState(false);
   const [expandedProfileSection, expandProfileSection] = useState(true);
   const [expandedAppSection, expandAppSettingsSection] = useState(false);
   const [expandedNotificationsSection, expandNotificationsSection] =
@@ -42,15 +43,22 @@ const SettingsScreen = ({ userDetails, onCancel }) => {
   const toggleNotificationSettingsSection = () =>
     expandNotificationsSection(!expandedNotificationsSection);
 
-  const onUpdate = () => {
-    updateStaff(userDetails.id, {
-      ...userDetails,
-      name: name,
-      age: age,
-      mobile: phoneNumber,
-      preferredLanguage: language,
-      notificationSettings: notificationSettings,
-    });
+  const onUpdate = async () => {
+    setLoading(true);
+    await updateStaff(
+      userDetails.id,
+      {
+        ...userDetails,
+        name: name,
+        age: age,
+        mobile: phoneNumber,
+        preferredLanguage: language,
+        notificationSettings: notificationSettings,
+      },
+      undefined,
+      setLoading
+    );
+    onCancel();
   };
 
   const notificationSettingTypes = [
@@ -71,6 +79,10 @@ const SettingsScreen = ({ userDetails, onCancel }) => {
       key: "newGuests",
     },
   ];
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <View style={styles.container}>
