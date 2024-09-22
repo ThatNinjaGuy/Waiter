@@ -18,7 +18,7 @@ import {
 } from "@/utils/appText/ordersScreen";
 
 const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
-  const preferredLanguage = user.preferredLanguage;
+  const preferredLanguage = user?.preferredLanguage;
   const qtyText = getQtyTranslation(preferredLanguage);
   const notesText = getNotesTranslation(preferredLanguage);
   const pendingOrdersText = getPendingOrdersTranslation(preferredLanguage);

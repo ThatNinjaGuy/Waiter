@@ -26,7 +26,7 @@ import { getAddTableTranslation } from "@/utils/appText/tablesScreen";
 
 const TablesScreen = () => {
   const { user, liveTables } = useContext(AuthContext);
-  const preferredLanguage = user.preferredLanguage;
+  const preferredLanguage = user?.preferredLanguage;
   const addTableText = getAddTableTranslation(preferredLanguage);
 
   const [isLoading, setIsLoading] = useState(false);
