@@ -12,7 +12,7 @@ import InventoryScreenView from "./InventoryScreenView";
 import { generateUniqueKey } from "@/utils/keyGenerator";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
-import AuthScreen from "@/components/Authentication/AuthScreen";
+import AuthScreen from "@/screens/AuthScreen/AuthScreen";
 import UnauthorizedScreen from "@/components/Authentication/UnauthorizedScreen";
 
 const InventoryScreenContainer = () => {

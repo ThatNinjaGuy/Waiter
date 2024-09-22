@@ -5,7 +5,7 @@ import OrdersScreen from "./OrdersScreen";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import { View } from "react-native";
 import AuthContext from "@/components/Authentication/AuthProvider";
-import AuthScreen from "@/components/Authentication/AuthScreen";
+import AuthScreen from "@/screens/AuthScreen/AuthScreen";
 import { tablesPath } from "@/firebase/queries/tables";
 
 const OrdersScreenContainer = () => {

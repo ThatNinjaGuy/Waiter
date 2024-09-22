@@ -12,7 +12,7 @@ import ThemedButton from "@/components/common/ThemedButton";
 import { ThemedText } from "@/components/common/ThemedText";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
-import AuthScreen from "@/components/Authentication/AuthScreen";
+import AuthScreen from "@/screens/AuthScreen/AuthScreen";
 import { addTable, updateTableDetails } from "@/firebase/queries/tables";
 import { fetchMenuItems } from "@/firebase/queries/menuItems";
 import { addCompletedOrder } from "@/firebase/queries/completedOrder";

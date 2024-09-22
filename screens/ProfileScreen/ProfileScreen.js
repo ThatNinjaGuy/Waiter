@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import AuthContext from "@/components/Authentication/AuthProvider";
-import AuthScreen from "@/components/Authentication/AuthScreen";
+import AuthScreen from "@/screens/AuthScreen/AuthScreen";
 import ProfileHeader from "@/components/ProfileHeader/ProfileHeader";
 import { ThemedView } from "@/components/common/ThemedView";
 import {
@@ -14,20 +14,11 @@ import {
   getEmployeesTranslation,
   getLogoutTranslation,
 } from "@/utils/appText/profileScreen";
+import Settings from "@/components/Settings/Settings";
 
 const ProfileScreen = () => {
-  const navigation = useNavigation();
   const { user, logout } = useContext(AuthContext);
-  const [isEditing, setIsEditing] = useState(false);
-  const [userProfile, setUserProfile] = useState({
-    name: "John Doe",
-    position: "Head Chef",
-    email: "john.doe@restaurant.com",
-    phone: "+1 234 567 8900",
-  });
-
   const preferredLanguage = user.preferredLanguage;
-
   const approveSignupRequestsText =
     getApproveSignupRequestsTranslation(preferredLanguage);
   const checkoutMenuText = getCheckoutMenuTranslation(preferredLanguage);
@@ -35,7 +26,21 @@ const ProfileScreen = () => {
   const employeesText = getEmployeesTranslation(preferredLanguage);
   const logoutText = getLogoutTranslation(preferredLanguage);
 
+  const navigation = useNavigation();
+  const [userProfile, setUserProfile] = useState({
+    name: "John Doe",
+    position: "Head Chef",
+    email: "john.doe@restaurant.com",
+    phone: "+1 234 567 8900",
+  });
+  const [displaySettingsScreen, openDisplaySettingsScreen] = useState(false);
   const navigationOptions = [
+    {
+      title: "Settings",
+      icon: "person-add",
+      visible: true,
+      onPress: () => openDisplaySettingsScreen(true),
+    },
     {
       title: approveSignupRequestsText,
       icon: "person-add",
@@ -83,16 +88,23 @@ const ProfileScreen = () => {
       });
   }, [user]);
 
-  const handleEdit = () => {
-    setIsEditing(!isEditing);
-    // Implement edit functionality here
-  };
-
   if (!user) return <AuthScreen />;
+
+  if (displaySettingsScreen)
+    return (
+      <Settings
+        userDetails={user.staffDetails}
+        onCancel={() => openDisplaySettingsScreen(false)}
+        onUpdate={() => openDisplaySettingsScreen(false)}
+      />
+    );
 
   return (
     <ScrollView style={styles.container}>
-      <ProfileHeader userProfile={userProfile} handleEdit={handleEdit} />
+      <ProfileHeader
+        userProfile={userProfile}
+        handleEdit={() => openDisplaySettingsScreen(true)}
+      />
 
       <ThemedView style={styles.navigationOptions}>
         {navigationOptions

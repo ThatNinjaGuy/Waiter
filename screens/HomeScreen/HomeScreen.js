@@ -10,9 +10,9 @@ import NotificationsPanel from "@/components/Notifications/NotificationsPanel";
 import Overview from "@/components/RestaurantOverview/Overview";
 import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
 import { useNavigation } from "@react-navigation/native";
-import { fetchHotelData } from "@/firebase/queries";
+import { fetchHotelData } from "@/firebase/queries/hotelInfo";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
-import AuthScreen from "@/components/Authentication/AuthScreen";
+import AuthScreen from "@/screens/AuthScreen/AuthScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import ProfileHeader from "@/components/ProfileHeader/ProfileHeader";
 import {

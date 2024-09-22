@@ -37,6 +37,7 @@ import {
 import AuthContext from "@/components/Authentication/AuthProvider";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import ThemedButton from "../common/ThemedButton";
+import { appDefaultLanguage } from "@/constants/appText/common";
 
 const ApproveSignUpRequestsScreen = () => {
   const { user } = useContext(AuthContext);
@@ -127,6 +128,13 @@ const ApproveSignUpRequestsScreen = () => {
       role: role,
       authId: authId,
       mobile: mobile,
+      preferredLanguage: appDefaultLanguage,
+      notificationSettings: {
+        newOrders: true,
+        orderReady: true,
+        orderCompleted: true,
+        newGuests: false,
+      },
       createdAt: Date.now(),
     });
     try {

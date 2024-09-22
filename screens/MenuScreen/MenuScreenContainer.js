@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import MenuScreenView from "./MenuScreenView";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
-import AuthScreen from "@/components/Authentication/AuthScreen";
+import AuthScreen from "@/screens/AuthScreen/AuthScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import UnauthorizedScreen from "@/components/Authentication/UnauthorizedScreen";
 import {

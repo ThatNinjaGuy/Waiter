@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }) => {
         if (firebaseUser) {
           let updatedUser = await fetchStaffDetails(firebaseUser);
           updatedUser.preferredLanguage =
-            updatedUser?.staffDetails?.languagePreference || appDefaultLanguage;
+            updatedUser?.staffDetails?.preferredLanguage || appDefaultLanguage;
 
           await fetchAllTables(setLiveTables, undefined);
           setUser(updatedUser);
