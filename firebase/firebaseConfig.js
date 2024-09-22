@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { initializeFirestore } from "firebase/firestore";
+import { initializeFirestore, CACHE_SIZE_UNLIMITED } from "firebase/firestore";
 import {
   getAuth,
   initializeAuth,
@@ -45,6 +45,7 @@ if (Platform.OS === "web") {
 const db = initializeFirestore(app, {
   experimentalForceLongPolling: true,
   synchronizeTabs: true,
+  cacheSizeBytes: CACHE_SIZE_UNLIMITED,
 });
 
 export { auth, db, firebaseConfig };

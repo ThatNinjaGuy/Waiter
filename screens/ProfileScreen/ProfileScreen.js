@@ -1,39 +1,50 @@
 import React, { useState, useContext, useEffect } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Dimensions,
-} from "react-native";
+import { Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { BlurView } from "expo-blur";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
-import ApproveSignUpRequestsScreen from "@/components/Authentication/ApproveSignUpRequestsScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
-import AuthScreen from "@/components/Authentication/AuthScreen";
-import { DEFAULT_IMAGE } from "@/constants/common";
+import AuthScreen from "@/screens/AuthScreen/AuthScreen";
+import ProfileHeader from "@/components/ProfileHeader/ProfileHeader";
+import { ThemedView } from "@/components/common/ThemedView";
+import {
+  getApproveSignupRequestsTranslation,
+  getCheckoutMenuTranslation,
+  getInventoryTranslation,
+  getEmployeesTranslation,
+  getLogoutTranslation,
+  getSettingsText,
+} from "@/utils/appText/profileScreen";
+import Settings from "@/components/Settings/Settings";
 
 const ProfileScreen = () => {
-  const { width } = Dimensions.get("window");
-  const isLargeScreen = width > 768;
+  const { user, logout } = useContext(AuthContext);
+  const preferredLanguage = user.preferredLanguage;
+  const settingsText = getSettingsText(preferredLanguage);
+  const approveSignupRequestsText =
+    getApproveSignupRequestsTranslation(preferredLanguage);
+  const checkoutMenuText = getCheckoutMenuTranslation(preferredLanguage);
+  const inventoryText = getInventoryTranslation(preferredLanguage);
+  const employeesText = getEmployeesTranslation(preferredLanguage);
+  const logoutText = getLogoutTranslation(preferredLanguage);
 
   const navigation = useNavigation();
-  const { user, logout } = useContext(AuthContext);
-  const [isEditing, setIsEditing] = useState(false);
   const [userProfile, setUserProfile] = useState({
     name: "John Doe",
     position: "Head Chef",
     email: "john.doe@restaurant.com",
     phone: "+1 234 567 8900",
   });
-
+  const [displaySettingsScreen, openDisplaySettingsScreen] = useState(false);
   const navigationOptions = [
     {
-      title: "Approve Sign Up Requests",
+      title: settingsText,
+      icon: "person-add",
+      visible: true,
+      onPress: () => openDisplaySettingsScreen(true),
+    },
+    {
+      title: approveSignupRequestsText,
       icon: "person-add",
       visible:
         user &&
@@ -44,25 +55,25 @@ const ProfileScreen = () => {
       onPress: () => navigation.navigate("approve"),
     },
     {
-      title: "Checkout Menu",
+      title: checkoutMenuText,
       icon: "restaurant-menu",
       visible: true,
       onPress: () => navigation.navigate("menu"),
     },
     {
-      title: "Inventory",
+      title: inventoryText,
       icon: "inventory",
       visible: true,
       onPress: () => navigation.navigate("inventory"),
     },
     {
-      title: "Employees",
+      title: employeesText,
       icon: "people",
       visible: true,
       onPress: () => navigation.navigate("staffs"),
     },
     {
-      title: "Log Out",
+      title: logoutText,
       icon: "exit-to-app",
       visible: true,
       onPress: () => logout(),
@@ -79,80 +90,25 @@ const ProfileScreen = () => {
       });
   }, [user]);
 
-  const handleEdit = () => {
-    setIsEditing(!isEditing);
-    // Implement edit functionality here
-  };
-
   if (!user) return <AuthScreen />;
+
+  if (displaySettingsScreen)
+    return (
+      <Settings
+        userDetails={user.staffDetails}
+        onCancel={() => openDisplaySettingsScreen(false)}
+        onUpdate={() => openDisplaySettingsScreen(false)}
+      />
+    );
 
   return (
     <ScrollView style={styles.container}>
-      <LinearGradient
-        colors={["#4c669f", "#3b5998", "#192f6a"]}
-        style={{ height: isLargeScreen ? 200 : 300 }}
-      >
-        <BlurView intensity={80} style={styles.blurContainer}>
-          <View
-            style={[
-              styles.profileContent,
-              {
-                flexDirection: isLargeScreen ? "row" : "column",
-                alignItems: "center",
-                justifyContent: isLargeScreen ? "center" : "flex-start", // Add this line
-              },
-            ]}
-          >
-            <View>
-              <Image
-                source={{ uri: DEFAULT_IMAGE }}
-                style={[
-                  styles.profileImage,
-                  {
-                    alignSelf: isLargeScreen ? "flex-start" : "center",
-                  },
-                ]}
-              />
-            </View>
-            <View
-              style={[
-                styles.userDetails,
-                {
-                  marginLeft: isLargeScreen ? 20 : 0,
-                  alignItems: isLargeScreen ? "flex-start" : "center",
-                  justifyContent: "center",
-                },
-              ]}
-            >
-              <Text style={styles.name}>{userProfile.name}</Text>
-              <Text style={styles.position}>{userProfile.position}</Text>
-              <View style={styles.infoContainer}>
-                <Icon
-                  name="email"
-                  size={20}
-                  color="#fff"
-                  style={styles.infoIcon}
-                />
-                <Text style={styles.info}>{userProfile.email}</Text>
-              </View>
-              <View style={styles.infoContainer}>
-                <Icon
-                  name="phone"
-                  size={20}
-                  color="#fff"
-                  style={styles.infoIcon}
-                />
-                <Text style={styles.info}>{userProfile.phone}</Text>
-              </View>
-            </View>
-            <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
-              <Icon name="edit" size={isLargeScreen ? 24 : 18} color="#fff" />
-            </TouchableOpacity>
-          </View>
-        </BlurView>
-      </LinearGradient>
+      <ProfileHeader
+        userProfile={userProfile}
+        handleEdit={() => openDisplaySettingsScreen(true)}
+      />
 
-      <View style={styles.navigationOptions}>
+      <ThemedView style={styles.navigationOptions}>
         {navigationOptions
           .filter((option) => option.visible)
           .map((option, index) => (
@@ -162,7 +118,7 @@ const ProfileScreen = () => {
               onPress={option.onPress}
             >
               <LinearGradient
-                colors={["#FF9966", "#FF5E62"]}
+                colors={["#4c669f", "#192f6a"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={styles.optionGradient}
@@ -172,7 +128,7 @@ const ProfileScreen = () => {
               <Text style={styles.optionText}>{option.title}</Text>
             </TouchableOpacity>
           ))}
-      </View>
+      </ThemedView>
     </ScrollView>
   );
 };
@@ -180,7 +136,6 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f3f5",
   },
   blurContainer: {
     flex: 1,
@@ -223,7 +178,6 @@ const styles = StyleSheet.create({
   },
   info: {
     fontSize: 16,
-    color: "#fff",
   },
   editButton: {
     position: "absolute",

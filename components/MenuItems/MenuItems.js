@@ -11,10 +11,20 @@ import { ThemedText } from "@/components/common/ThemedText";
 import useResponsiveLayout from "@/hooks/useResponsiveLayout";
 import ThemedButton from "@/components/common/ThemedButton";
 import { DEFAULT_IMAGE } from "@/constants/common";
+import {
+  getCuisineTranslation,
+  getCategoryTranslation,
+  getPriceTranslation,
+  getPreferenceTranslation,
+} from "@/utils/appText/menuScreen";
 
-const MenuItems = ({ items, onEdit }) => {
+const MenuItems = ({ items, onEdit, preferredLanguage }) => {
+  const cuisineText = getCuisineTranslation(preferredLanguage);
+  const categoryText = getCategoryTranslation(preferredLanguage);
+  const priceText = getPriceTranslation(preferredLanguage);
+  const preferenceText = getPreferenceTranslation(preferredLanguage);
+
   const [refreshing, setRefreshing] = useState(false);
-
   const { layoutParams, key } = useResponsiveLayout({
     initialItemWidth: 300,
     minItemWidth: 250,
@@ -50,15 +60,19 @@ const MenuItems = ({ items, onEdit }) => {
         <View style={styles.contentContainer}>
           <View style={styles.leftColumn}>
             <ThemedText style={styles.contentInfo}>
-              Cuisine: {cuisine}
+              {cuisineText}: {cuisine}
             </ThemedText>
             <ThemedText style={styles.contentInfo}>
-              Category: {category}
+              {categoryText}: {category}
             </ThemedText>
           </View>
           <View style={styles.rightColumn}>
-            <ThemedText style={styles.contentInfo}>Price: {price}</ThemedText>
-            <ThemedText style={styles.contentInfo}>Diet: {type}</ThemedText>
+            <ThemedText style={styles.contentInfo}>
+              {priceText}: {price}
+            </ThemedText>
+            <ThemedText style={styles.contentInfo}>
+              {preferenceText}: {type}
+            </ThemedText>
           </View>
         </View>
       </ThemedButton>

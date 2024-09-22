@@ -15,7 +15,7 @@ import { doc, writeBatch, collection } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import { Picker } from "@react-native-picker/picker";
 import { validateSignupRequest } from "@/utils/validations";
-import LoadingScreen from "../LoadingScreen/LoadingScreen";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
 const AuthScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -109,7 +109,7 @@ const AuthScreen = () => {
       <View style={styles.background} />
       <View style={styles.contentContainer}>
         <Image
-          source={require("@/assets/images/adaptive-icon.png")}
+          source={require("@/assets/images/icon.png")}
           style={styles.logo}
         />
         <Text style={styles.welcomeText}>Welcome to Waiter</Text>
@@ -177,7 +177,7 @@ const AuthScreen = () => {
                   <Picker.Item label="Waiter" value="Waiter" />
                   <Picker.Item label="Assistant" value="Assistant" />
                   <Picker.Item label="Cleaner" value="Cleaner" />
-                  <Picker.Item label="Heler" value="Heler" />
+                  <Picker.Item label="Helper" value="Helper" />
                   <Picker.Item label="Others" value="Others" />
                 </Picker>
               </View>

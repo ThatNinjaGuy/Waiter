@@ -6,17 +6,37 @@ import {
 } from "react-native-responsive-screen";
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
-import UserProfile from "@/components/UserProfile";
 import NotificationsPanel from "@/components/Notifications/NotificationsPanel";
 import Overview from "@/components/RestaurantOverview/Overview";
 import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
 import { useNavigation } from "@react-navigation/native";
-import { fetchHotelData } from "@/firebase/queries";
+import { fetchHotelData } from "@/firebase/queries/hotelInfo";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
-import AuthScreen from "@/components/Authentication/AuthScreen";
+import AuthScreen from "@/screens/AuthScreen/AuthScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
+import ProfileHeader from "@/components/ProfileHeader/ProfileHeader";
+import {
+  getStaffsTranslation,
+  getTablesTranslation,
+  getMenuTranslation,
+  getOrdersTranslation,
+  getInventoryTranslation,
+  getProfileTranslation,
+  getOverviewTranslation,
+} from "@/utils/appText/homeScreen";
 
 export default function HomeScreen() {
+  const { user } = useContext(AuthContext);
+  const preferredLanguage = user.preferredLanguage;
+
+  const STAFFS = getStaffsTranslation(preferredLanguage);
+  const TABLES = getTablesTranslation(preferredLanguage);
+  const MENU = getMenuTranslation(preferredLanguage);
+  const ORDERS = getOrdersTranslation(preferredLanguage);
+  const INVENTORY = getInventoryTranslation(preferredLanguage);
+  const PROFILE = getProfileTranslation(preferredLanguage);
+  const TODAY_OVERVIEW = getOverviewTranslation(preferredLanguage);
+
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [hotel, setHotel] = useState();
@@ -44,39 +64,41 @@ export default function HomeScreen() {
   }, []);
 
   const navigationItems = [
-    { title: "Staffs", onPress: () => navigation.navigate("staffs") },
-    { title: "Tables", onPress: () => navigation.navigate("tables") },
-    { title: "Menu", onPress: () => navigation.navigate("menu") },
-    { title: "Orders", onPress: () => navigation.navigate("orders") },
-    { title: "Inventory", onPress: () => navigation.navigate("inventory") },
-    { title: "Admin", onPress: () => navigation.navigate("admin") },
+    { title: STAFFS, onPress: () => navigation.navigate("staffs") },
+    { title: TABLES, onPress: () => navigation.navigate("tables") },
+    { title: MENU, onPress: () => navigation.navigate("menu") },
+    { title: ORDERS, onPress: () => navigation.navigate("orders") },
+    { title: INVENTORY, onPress: () => navigation.navigate("inventory") },
+    { title: PROFILE, onPress: () => navigation.navigate("profile") }, // Add a translation if necessary
   ];
 
   const renderHeader = () => (
     <View>
       <ThemedView style={styles.container}>
         {hotel && (
-          <UserProfile
-            name={hotel?.name + " ( " + hotel?.owner + " )"}
-            role={
-              hotel?.city +
-              ", " +
-              hotel?.state +
-              ", " +
-              hotel?.country +
-              "- " +
-              hotel?.pinCode
-            }
-            plan={hotel?.category}
+          <ProfileHeader
+            userProfile={{
+              name: hotel.name,
+              address:
+                hotel.city +
+                ", " +
+                hotel.state +
+                ", " +
+                hotel.country +
+                "- " +
+                hotel.pinCode,
+              position: hotel.owner,
+              plan: hotel.categorys,
+            }}
           />
         )}
         <ThemedView style={styles.section}>
           <View style={styles.titleContainer}>
             <ThemedText style={styles.title} type="title" setBackground={true}>
-              Today's Overview
+              {TODAY_OVERVIEW}
             </ThemedText>
           </View>
-          <Overview />
+          <Overview preferredLanguage={preferredLanguage} />
         </ThemedView>
         {/* <ThemedView style={styles.section}>
           <View style={styles.titleContainer}>
@@ -91,7 +113,6 @@ export default function HomeScreen() {
     </View>
   );
 
-  const { user } = useContext(AuthContext);
   if (!user) return <AuthScreen />;
 
   if (isLoading) {
@@ -111,7 +132,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: "2%",
   },
   headerForeground: {
     height: hp("15%"),

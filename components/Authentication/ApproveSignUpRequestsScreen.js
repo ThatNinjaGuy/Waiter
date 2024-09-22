@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  ActivityIndicator,
 } from "react-native";
 import {
   collection,
@@ -23,11 +22,41 @@ import {
   signOut,
 } from "firebase/auth";
 import { db } from "@/firebase/firebaseConfig";
-import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { firebaseConfig } from "@/firebase/firebaseConfig";
+import {
+  getApproveSignupRequestsTranslation,
+  getNoPendingSignupRequestsTranslation,
+  getEmailAlreadyInUseTranslation,
+  getPasswordLengthErrorTranslation,
+  getSignupErrorTranslation,
+  getSuccessTranslation,
+  getRequestApprovedSuccessTranslation,
+  getFailedToApproveRequestTranslation,
+} from "@/utils/appText/profileScreen";
+import AuthContext from "@/components/Authentication/AuthProvider";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
+import ThemedButton from "../common/ThemedButton";
+import { appDefaultLanguage } from "@/constants/appText/common";
 
 const ApproveSignUpRequestsScreen = () => {
+  const { user } = useContext(AuthContext);
+  const preferredLanguage = user.preferredLanguage;
+  const approveSignupRequestsText =
+    getApproveSignupRequestsTranslation(preferredLanguage);
+  const noPendingSignupRequestsText =
+    getNoPendingSignupRequestsTranslation(preferredLanguage);
+  const emailAlreadyInUseText =
+    getEmailAlreadyInUseTranslation(preferredLanguage);
+  const passwordLengthErrorText =
+    getPasswordLengthErrorTranslation(preferredLanguage);
+  const signupErrorText = getSignupErrorTranslation(preferredLanguage);
+  const successText = getSuccessTranslation(preferredLanguage);
+  const requestApprovedSuccessText =
+    getRequestApprovedSuccessTranslation(preferredLanguage);
+  const failedToApproveRequestText =
+    getFailedToApproveRequestTranslation(preferredLanguage);
+
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -80,13 +109,11 @@ const ApproveSignUpRequestsScreen = () => {
     } catch (error) {
       console.error(error);
       if (error.code === "auth/email-already-in-use") {
-        throw new Error(
-          "This email is already in use. Please try another one."
-        );
+        throw new Error(emailAlreadyInUseText);
       } else if (error.code === "auth/weak-password") {
-        throw new Error("Password should have atleast 6 characters");
+        throw new Error(passwordLengthErrorText);
       } else {
-        throw new Error("An error occurred during sign-up. Please try again.");
+        throw new Error(signupErrorText);
       }
     }
   };
@@ -101,6 +128,13 @@ const ApproveSignUpRequestsScreen = () => {
       role: role,
       authId: authId,
       mobile: mobile,
+      preferredLanguage: appDefaultLanguage,
+      notificationSettings: {
+        newOrders: true,
+        orderReady: true,
+        orderCompleted: true,
+        newGuests: false,
+      },
       createdAt: Date.now(),
     });
     try {
@@ -131,10 +165,10 @@ const ApproveSignUpRequestsScreen = () => {
       addToStaffs(request);
       deleteRequest(request);
       console.log("Approval requests updated");
-      Alert.alert("Success", "Request approved successfully");
+      Alert.alert(successText, requestApprovedSuccessText);
     } catch (error) {
       console.error("Error in handleApprove:", error);
-      Alert.alert("Failed to approve request", error.message);
+      Alert.alert(failedToApproveRequestText, error.message);
     } finally {
       setLoading(false);
     }
@@ -146,27 +180,15 @@ const ApproveSignUpRequestsScreen = () => {
         <Text style={styles.requestName}>{item.name}</Text>
         <Text style={styles.requestEmail}>{item.email}</Text>
       </View>
-      <TouchableOpacity
-        style={styles.approveButton}
+      <ThemedButton
+        type="success"
+        style={(styles.approveGradient, styles.approveButton)}
         onPress={() => handleApprove(item.id)}
       >
-        <LinearGradient
-          colors={["#4c669f", "#3b5998", "#192f6a"]}
-          style={styles.approveGradient}
-        >
-          <Ionicons name="checkmark-outline" size={24} color="#fff" />
-        </LinearGradient>
-      </TouchableOpacity>
+        <Ionicons name="checkmark-outline" size={24} color="#000" />
+      </ThemedButton>
     </View>
   );
-
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#4c669f" />
-      </View>
-    );
-  }
 
   if (loading) {
     return <LoadingScreen />;
@@ -174,9 +196,9 @@ const ApproveSignUpRequestsScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Approve Sign Up Requests</Text>
+      <Text style={styles.title}>{approveSignupRequestsText}</Text>
       {requests.length === 0 ? (
-        <Text style={styles.noRequestsText}>No pending requests</Text>
+        <Text style={styles.noRequestsText}>{noPendingSignupRequestsText}</Text>
       ) : (
         <FlatList
           data={requests}

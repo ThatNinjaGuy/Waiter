@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import MenuScreenView from "./MenuScreenView";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
-import AuthScreen from "@/components/Authentication/AuthScreen";
+import AuthScreen from "@/screens/AuthScreen/AuthScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import UnauthorizedScreen from "@/components/Authentication/UnauthorizedScreen";
 import {
@@ -18,8 +18,9 @@ import {
 } from "@/firebase/queries/menuItemCategories";
 
 const MenuScreenContainer = () => {
+  const { user } = useContext(AuthContext);
+  const preferredLanguage = user.preferredLanguage;
   const [isLoading, setIsLoading] = useState(false);
-
   const [menuItems, setMenuItems] = useState([]);
   const [menuItemCategories, setMenuItemCategories] = useState([]);
 
@@ -33,7 +34,6 @@ const MenuScreenContainer = () => {
     addMenuItems([item], menuItems, setMenuItems);
   };
 
-  const { user } = useContext(AuthContext);
   if (!user) return <AuthScreen />;
 
   if (
@@ -55,6 +55,7 @@ const MenuScreenContainer = () => {
   return (
     <MenuScreenView
       menuItems={menuItems}
+      preferredLanguage={preferredLanguage}
       addMenuItem={addMenuItem}
       deleteMenuItem={(id) => deleteMenuItem(id, menuItems, setMenuItems)}
       updateMenuItem={(id, updatedItem) =>
