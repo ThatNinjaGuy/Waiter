@@ -5,9 +5,11 @@ export const ADD_TABLE_LANGUAGE_SET = {
   BENGALI: "টেবিল যোগ করুন",
   GUJARATI: "ટેબલ ઉમેરો",
   TAMIL: "மேசை சேர்க்கவும்",
-  TELUGU: "పట్టిక జోడించండి",
+  TELUGU: "టేబుల్ జోడించండి",
   MALAYALAM: "മേശ ചേർക്കുക",
+  KANNADA: "ಟೇಬಲ್ ಸೇರಿಸಿ",
 };
+
 export const TABLE_LANGUAGE_SET = {
   ENGLISH: "Table",
   HINDI: "टेबल",
@@ -15,8 +17,9 @@ export const TABLE_LANGUAGE_SET = {
   BENGALI: "টেবিল",
   GUJARATI: "ટેબલ",
   TAMIL: "மேசை",
-  TELUGU: "పట్టిక",
+  TELUGU: "టేబుల్",
   MALAYALAM: "മേശ",
+  KANNADA: "ಟೇಬಲ್",
 };
 
 export const GUEST_LANGUAGE_SET = {
@@ -28,50 +31,55 @@ export const GUEST_LANGUAGE_SET = {
   TAMIL: "விருந்தினர்",
   TELUGU: "అతిథి",
   MALAYALAM: "അഥിതി",
+  KANNADA: "ಅತಿಥಿ",
 };
 
 export const GUESTS_LANGUAGE_SET = {
   ENGLISH: "Guests",
-  HINDI: "मेहमानों",
-  MARATHI: "पाहुणे",
-  BENGALI: "অতিথিরা",
-  GUJARATI: "મહેમાનો",
-  TAMIL: "விருந்தினர்கள்",
-  TELUGU: "అతిథులు",
-  MALAYALAM: "അഥിതികൾ",
+  HINDI: "संख्या",
+  MARATHI: "संख्या",
+  BENGALI: "সংখ্যা",
+  GUJARATI: "સંખ્યા",
+  TAMIL: "எண்ணிக்கை",
+  TELUGU: "సంఖ్య",
+  MALAYALAM: "എണ്ണം",
+  KANNADA: "ಸಂಖ್ಯೆ",
 };
 
 export const SERVER_LANGUAGE_SET = {
   ENGLISH: "Server",
-  HINDI: "सर्वर",
-  MARATHI: "सर्व्हर",
-  BENGALI: "সার্ভার",
-  GUJARATI: "સર્વર",
-  TAMIL: "சர்வர் ",
-  TELUGU: "సర్వర్ ",
-  MALAYALAM: "സെർവർ",
+  HINDI: "वेटर",
+  MARATHI: "वेटर",
+  BENGALI: "ওয়েটার",
+  GUJARATI: "વેટર",
+  TAMIL: "வெற்றர்",
+  TELUGU: "వేటర్",
+  MALAYALAM: "വെയ്റ്റർ",
+  KANNADA: "ವೇಟರ್",
 };
 
 export const ORDERS_LANGUAGE_SET = {
   ENGLISH: "Orders",
-  HINDI: "आदेश",
-  MARATHI: "आदेश",
-  BENGALI: "আদেশগুলি",
+  HINDI: "ऑर्डर्स",
+  MARATHI: "ऑर्डर्स",
+  BENGALI: "অর্ডারগুলি",
   GUJARATI: "ઓર્ડર્સ",
   TAMIL: "ஆர்டர்கள்",
   TELUGU: "ఆర్డర్లు",
   MALAYALAM: "ഓർഡറുകൾ",
+  KANNADA: "ಆರ್ಡರ್‌ಗಳು",
 };
 
 export const BILL_LANGUAGE_SET = {
-  ENGLISH: "Bill",
-  HINDI: "बिल",
-  MARATHI: "बिल",
-  BENGALI: "বিল",
-  GUJARATI: "બિલ",
+  ENGLISH: "Bill ",
+  HINDI: "बिल ",
+  MARATHI: "बिल ",
+  BENGALI: "বিল ",
+  GUJARATI: "બિલ ",
   TAMIL: "பில் ",
   TELUGU: "బిల్ ",
-  MALAYALAM: "ബിൽ",
+  MALAYALAM: "ബിൽ ",
+  KANNADA: "ಬಿಲ್",
 };
 
 export const NOTES_LANGUAGE_SET = {
@@ -80,7 +88,8 @@ export const NOTES_LANGUAGE_SET = {
   MARATHI: "नोंदी",
   BENGALI: "নোটস্",
   GUJARATI: "નોંધો",
-  TAMIL: "குறிப்புகள் ",
-  TELUGU: "గమనికలు ",
+  TAMIL: "குறிப்புகள்",
+  TELUGU: "గమనికలు",
   MALAYALAM: "കുറിപ്പുകൾ",
+  KANNADA: "ಟಿಪ್ಪಣಿಗಳು",
 };

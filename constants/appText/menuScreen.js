@@ -7,6 +7,7 @@ export const UPDATE_MENU_CATEGORY_LANGUAGE_SET = {
   TAMIL: "மெனு வகையை புதுப்பிக்கவும்",
   TELUGU: "మెను వర్గాన్ని నవీకరించండి",
   MALAYALAM: "മെനു വിഭാഗം അപ്‌ഡേറ്റ് ചെയ്യുക",
+  KANNADA: "ಮೆನು ವರ್ಗವನ್ನು ನವೀಕರಿಸಿ",
 };
 
 export const ADD_MENU_ITEM_LANGUAGE_SET = {
@@ -18,6 +19,7 @@ export const ADD_MENU_ITEM_LANGUAGE_SET = {
   TAMIL: "மெனு உருப்படியைச் சேர்க்கவும்",
   TELUGU: "మెను అంశాన్ని జోడించండి",
   MALAYALAM: "മെനു ഇനം ചേർക്കുക",
+  KANNADA: "ಮೆನು ಐಟಂ ಸೇರಿಸಿ",
 };
 
 export const CUISINE_LANGUAGE_SET = {
@@ -29,6 +31,7 @@ export const CUISINE_LANGUAGE_SET = {
   TAMIL: "சமையல் வகை",
   TELUGU: "వంటకాలు",
   MALAYALAM: "ഭക്ഷണശൈലി",
+  KANNADA: "ಆಹಾರ ಶೈಲಿ",
 };
 
 export const CATEGORY_LANGUAGE_SET = {
@@ -40,6 +43,7 @@ export const CATEGORY_LANGUAGE_SET = {
   TAMIL: "வகை",
   TELUGU: "వర్గం",
   MALAYALAM: "വിഭാഗം",
+  KANNADA: "ವರ್ಗ",
 };
 
 export const PRICE_LANGUAGE_SET = {
@@ -51,6 +55,7 @@ export const PRICE_LANGUAGE_SET = {
   TAMIL: "விலை",
   TELUGU: "ధర",
   MALAYALAM: "വില",
+  KANNADA: "ಬೆಲೆ",
 };
 
 export const PREFERENCE_LANGUAGE_SET = {
@@ -62,4 +67,5 @@ export const PREFERENCE_LANGUAGE_SET = {
   TAMIL: "விருப்பம் ",
   TELUGU: "ప్రాధాన్యత ",
   MALAYALAM: "ആവശ്യകത",
+  KANNADA: "ಆದ್ಯತೆ",
 };

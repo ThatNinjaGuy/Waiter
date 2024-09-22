@@ -7,17 +7,19 @@ export const CANCEL_LANGUAGE_SET = {
   TAMIL: "ரத்து செய்யவும்",
   TELUGU: "రద్దు చేయండి",
   MALAYALAM: "റദ്ദാക്കുക",
+  KANNADA: "ರದ್ದುಮಾಡಿ",
 };
 
 export const GENERATE_BILL_LANGUAGE_SET = {
-  ENGLISH: "Generate Bill",
-  HINDI: "बिल उत्पन्न करें",
-  MARATHI: "बिल तयार करा",
-  BENGALI: "বিল তৈরি করুন",
-  GUJARATI: "બિલ જનરેટ કરો",
-  TAMIL: "பில் உருவாக்கவும்",
-  TELUGU: "బిల్ రూపొందించండి",
-  MALAYALAM: "ബിൽ സൃഷ്ടിക്കുക",
+  ENGLISH: "Bill",
+  HINDI: "बिल",
+  MARATHI: "बिल",
+  BENGALI: "বিল",
+  GUJARATI: "બિલ",
+  TAMIL: "பில்",
+  TELUGU: "బిల్",
+  MALAYALAM: "ബിൽ",
+  KANNADA: "ಬಿಲ್",
 };
 
 export const KOT_LANGUAGE_SET = {
@@ -29,4 +31,5 @@ export const KOT_LANGUAGE_SET = {
   TAMIL: "கேஓடி",
   TELUGU: "కేఓటి",
   MALAYALAM: "കെഒടി",
+  KANNADA: "ಕೆಒಟಿ",
 };

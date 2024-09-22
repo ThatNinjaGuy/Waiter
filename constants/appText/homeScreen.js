@@ -1,4 +1,3 @@
-// Define the language-specific translations for "Staffs"
 export const STAFFS_LANGUAGE_SET = {
   ENGLISH: "Staffs",
   HINDI: "स्टाफ",
@@ -8,6 +7,7 @@ export const STAFFS_LANGUAGE_SET = {
   TAMIL: "ஸ்டாஃப்",
   TELUGU: "స్టాఫ్",
   MALYALI: "സ്റ്റാഫ്",
+  KANNADA: "ಸ್ಟಾಫ್",
 };
 
 export const TABLES_LANGUAGE_SET = {
@@ -19,6 +19,7 @@ export const TABLES_LANGUAGE_SET = {
   TAMIL: "டேபிள்",
   TELUGU: "టేబుల్",
   MALYALI: "ടേബിള്‍",
+  KANNADA: "ಟೇಬಲ್",
 };
 
 export const MENU_LANGUAGE_SET = {
@@ -30,6 +31,7 @@ export const MENU_LANGUAGE_SET = {
   TAMIL: "மெனு",
   TELUGU: "మెను",
   MALYALI: "മെനു",
+  KANNADA: "ಮೆನು",
 };
 
 export const ORDERS_LANGUAGE_SET = {
@@ -41,6 +43,7 @@ export const ORDERS_LANGUAGE_SET = {
   TAMIL: "ஆர்டர்",
   TELUGU: "ఆర్డర్",
   MALYALI: "ഓർഡർ",
+  KANNADA: "ಆರ್ಡರ್",
 };
 
 export const INVENTORY_LANGUAGE_SET = {
@@ -52,6 +55,7 @@ export const INVENTORY_LANGUAGE_SET = {
   TAMIL: "இன்வெண்டரி",
   TELUGU: "ఇన్వెంటరీ",
   MALYALI: "ഇൻവെന്ററി",
+  KANNADA: "ಇನ್ವೆಂಟರಿ",
 };
 
 export const PROFILE_LANGUAGE_SET = {
@@ -63,6 +67,7 @@ export const PROFILE_LANGUAGE_SET = {
   TAMIL: "ப்ரொஃபைல்",
   TELUGU: "ప్రొఫైల్",
   MALYALI: "പ്രൊഫൈൽ",
+  KANNADA: "ಪ್ರೊಫೈಲ್",
 };
 
 export const OVERVIEW_LANGUAGE_SET = {
@@ -71,9 +76,10 @@ export const OVERVIEW_LANGUAGE_SET = {
   MARATHI: "आजचा आढावा",
   BENGALI: "আজকের সারাংশ",
   GUJARATI: "આજની સ્થિતિ",
-  TAMIL: "இன்றைய நிலை",
-  TELUGU: "ఈరోజు పరిస్థితి",
-  MALYALI: "ഇന്നത്തെ സ്ഥിതി",
+  TAMIL: "இன்றைய நிலைமைகள்",
+  TELUGU: "ఈరోజు సమీక్ష",
+  MALYALI: "ഇന്നത്തെ അവലോകനം",
+  KANNADA: "ಇಂದಿನ ಸ್ಥಿತಿ",
 };
 
 export const OVERVIEW_ITEMS_LANGUAGE_SET = {
@@ -83,9 +89,10 @@ export const OVERVIEW_ITEMS_LANGUAGE_SET = {
     MARATHI: "सक्रिय टेबल",
     BENGALI: "সক্রিয় টেবিল",
     GUJARATI: "સક્રિય ટેબલ",
-    TAMIL: "செயலில் உள்ள காரணிகள்",
+    TAMIL: "செயலில் உள்ள டேபிள்கள்",
     TELUGU: "సక్రియ టేబుల్",
     MALYALI: "സജീവ പട്ടികകൾ",
+    KANNADA: "ಸಕ್ರಿಯ ಟೇಬಲ್",
   },
   ACTIVE_ORDERS: {
     ENGLISH: "Active Orders",
@@ -96,6 +103,7 @@ export const OVERVIEW_ITEMS_LANGUAGE_SET = {
     TAMIL: "செயலில் உள்ள ஆர்டர்கள்",
     TELUGU: "సక్రియ ఆర్డర్లు",
     MALYALI: "സജീവ ഓര്‍ഡറുകൾ",
+    KANNADA: "ಸಕ್ರಿಯ ಆರ್ಡರ್",
   },
   CLOSED_ORDERS: {
     ENGLISH: "Closed Orders",
@@ -106,6 +114,7 @@ export const OVERVIEW_ITEMS_LANGUAGE_SET = {
     TAMIL: "மூடிய ஆர்டர்கள்",
     TELUGU: "మూసిన ఆర్డర్లు",
     MALYALI: "അടച്ച ഓര്‍ഡറുകൾ",
+    KANNADA: "ಮುಚ್ಚಿದ ಆರ್ಡರ್",
   },
   TODAYS_REVENUE: {
     ENGLISH: "Today's Revenue",
@@ -113,9 +122,10 @@ export const OVERVIEW_ITEMS_LANGUAGE_SET = {
     MARATHI: "आजचे उत्पन्न",
     BENGALI: "আজকের রাজস্ব",
     GUJARATI: "આજે આવક",
-    TAMIL: "இன்றைய வரவுகள்",
-    TELUGU: "ఈ రోజు ఆదాయం",
-    MALYALI: "ഇന്നത്തെ വരുമാനം",
+    TAMIL: "இன்றைய வருமானம் ",
+    TELUGU: "ఈ రోజు ఆదాయం ",
+    MALYALI: "ഇന്നത്തെ വരുമാനം ",
+    KANNADA: "ಇಂದಿನ ಆದಾಯ",
   },
   LAST_7_DAYS_REV: {
     ENGLISH: "Last 7 days rev",
@@ -123,18 +133,21 @@ export const OVERVIEW_ITEMS_LANGUAGE_SET = {
     MARATHI: "गेल्या 7 दिवसांचे उत्पन्न",
     BENGALI: "গত ৭ দিনের রাজস্ব",
     GUJARATI: "ગત 7 દિવસની આવક",
-    TAMIL: "கடந்த 7 நாட்களின் வரவுகள்",
+    TAMIL: "கடந்த 7 நாட்களின் வருமானம்",
     TELUGU: "గత 7 రోజుల ఆదాయం",
-    MALYALI: "കഴിഞ്ഞ 7 ദിവസത്തെ വരുമാനം",
+    MALAYALAM: "കഴിഞ്ഞ 7 ദിവസത്തെ വരുമാനം",
+    KANNADA: "ಕಳೆದ 7 ದಿನಗಳ ಆದಾಯ",
   },
+
   LAST_DAY_REV: {
     ENGLISH: "Last day rev",
     HINDI: "पिछले दिन का राजस्व",
     MARATHI: "गेल्या दिवसाचे उत्पन्न",
     BENGALI: "গত দিনের রাজস্ব",
     GUJARATI: "ગત દિવસની આવક",
-    TAMIL: "கடந்த நாளின் வரவுகள்",
+    TAMIL: "கடந்த நாளின் வருமானம்",
     TELUGU: "గత రోజు ఆదాయం",
-    MALYALI: "കഴിഞ്ഞ ദിവസത്തെ വരുമാനം",
+    MALAYALAM: "കഴിഞ്ഞ ദിവസത്തെ വരുമാനം",
+    KANNADA: "ಕಳೆದ ದಿನದ ಆದಾಯ",
   },
 };
