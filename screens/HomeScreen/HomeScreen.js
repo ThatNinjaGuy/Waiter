@@ -27,7 +27,7 @@ import {
 
 export default function HomeScreen() {
   const { user } = useContext(AuthContext);
-  const preferredLanguage = user.preferredLanguage;
+  const preferredLanguage = user?.preferredLanguage;
 
   const STAFFS = getStaffsTranslation(preferredLanguage);
   const TABLES = getTablesTranslation(preferredLanguage);

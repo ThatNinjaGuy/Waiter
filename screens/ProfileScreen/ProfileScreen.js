@@ -19,7 +19,7 @@ import Settings from "@/components/Settings/Settings";
 
 const ProfileScreen = () => {
   const { user, logout } = useContext(AuthContext);
-  const preferredLanguage = user.preferredLanguage;
+  const preferredLanguage = user?.preferredLanguage;
   const settingsText = getSettingsText(preferredLanguage);
   const approveSignupRequestsText =
     getApproveSignupRequestsTranslation(preferredLanguage);

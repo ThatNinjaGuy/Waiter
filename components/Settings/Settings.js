@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import {
   View,
   TextInput,
-  Picker,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
   Switch,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/Ionicons";
-import { LANGUAGE_MAPPER } from "@/constants/appText/common";
+import {
+  LANGUAGE_MAPPER,
+  appDefaultLanguage,
+} from "@/constants/appText/common";
 import ThemedButton from "@/components/common/ThemedButton";
 import { ThemedText } from "@/components/common/ThemedText";
 import { Tooltip, Text } from "react-native-elements";
@@ -17,18 +20,20 @@ import { updateStaff } from "@/firebase/queries/staffs";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
 const SettingsScreen = ({ userDetails, onCancel }) => {
-  const [name, setName] = useState(userDetails.name);
-  const [age, setAge] = useState(userDetails.age);
-  const [email, setEmail] = useState(userDetails.email);
-  const [role, setRole] = useState(userDetails.role);
-  const [phoneNumber, setPhoneNumber] = useState(userDetails.mobile);
-  const [language, setLanguage] = useState(userDetails.preferredLanguage);
+  const [name, setName] = useState(userDetails?.name || "");
+  const [age, setAge] = useState(userDetails?.age || "");
+  const [email, setEmail] = useState(userDetails?.email || "");
+  const [role, setRole] = useState(userDetails?.role || "");
+  const [phoneNumber, setPhoneNumber] = useState(userDetails?.mobile || "");
+  const [language, setLanguage] = useState(
+    userDetails?.preferredLanguage || appDefaultLanguage
+  );
   const [notificationSettings, setNotificationSettings] = useState({
     newOrders: false,
     orderReady: false,
     orderCompleted: false,
     newGuests: false,
-    ...userDetails.notificationSettings,
+    ...userDetails?.notificationSettings,
   });
   const [loading, setLoading] = useState(false);
   const [expandedProfileSection, expandProfileSection] = useState(true);

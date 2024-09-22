@@ -19,7 +19,7 @@ import {
 
 const MenuScreenContainer = () => {
   const { user } = useContext(AuthContext);
-  const preferredLanguage = user.preferredLanguage;
+  const preferredLanguage = user?.preferredLanguage;
   const [isLoading, setIsLoading] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
   const [menuItemCategories, setMenuItemCategories] = useState([]);
