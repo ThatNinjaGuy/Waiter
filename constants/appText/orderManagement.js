@@ -6,7 +6,7 @@ export const CANCEL_LANGUAGE_SET = {
   GUJARATI: "રદ કરવું",
   TAMIL: "ரத்து செய்யவும்",
   TELUGU: "రద్దు చేయండి",
-  MALAYALAM: "റദ്ദാക്കുക",
+  MALYALI: "റദ്ദാക്കുക",
   KANNADA: "ರದ್ದುಮಾಡಿ",
 };
 
@@ -18,7 +18,7 @@ export const GENERATE_BILL_LANGUAGE_SET = {
   GUJARATI: "બિલ",
   TAMIL: "பில்",
   TELUGU: "బిల్",
-  MALAYALAM: "ബിൽ",
+  MALYALI: "ബിൽ",
   KANNADA: "ಬಿಲ್",
 };
 
@@ -30,6 +30,6 @@ export const KOT_LANGUAGE_SET = {
   GUJARATI: "કેઓટી",
   TAMIL: "கேஓடி",
   TELUGU: "కేఓటి",
-  MALAYALAM: "കെഒടി",
+  MALYALI: "കെഒടി",
   KANNADA: "ಕೆಒಟಿ",
 };

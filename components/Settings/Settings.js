@@ -57,7 +57,7 @@ const SettingsScreen = ({ userDetails, onCancel }) => {
         name: name,
         age: age,
         mobile: phoneNumber,
-        preferredLanguage: language,
+        preferredLanguage: LANGUAGE_MAPPER[language].key,
         notificationSettings: notificationSettings,
       },
       undefined,

@@ -30,10 +30,10 @@ const ProfileScreen = () => {
 
   const navigation = useNavigation();
   const [userProfile, setUserProfile] = useState({
-    name: "John Doe",
-    position: "Head Chef",
-    email: "john.doe@restaurant.com",
-    phone: "+1 234 567 8900",
+    name: "",
+    position: "",
+    email: "",
+    phone: "",
   });
   const [displaySettingsScreen, openDisplaySettingsScreen] = useState(false);
   const navigationOptions = [

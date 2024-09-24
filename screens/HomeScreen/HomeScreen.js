@@ -75,23 +75,18 @@ export default function HomeScreen() {
   const renderHeader = () => (
     <View>
       <ThemedView style={styles.container}>
-        {hotel && (
-          <ProfileHeader
-            userProfile={{
-              name: hotel.name,
-              address:
-                hotel.city +
-                ", " +
-                hotel.state +
-                ", " +
-                hotel.country +
-                "- " +
-                hotel.pinCode,
-              position: hotel.owner,
-              plan: hotel.categorys,
-            }}
-          />
-        )}
+        <ProfileHeader
+          userProfile={{
+            name: hotel?.name,
+            address:
+              (hotel?.city ? hotel?.city + ", " : "") +
+              (hotel?.state ? hotel?.state + ", " : "") +
+              (hotel?.country ? hotel?.country + " - " : "") +
+              (hotel?.pinCode || ""),
+            position: hotel?.owner,
+            plan: hotel?.categorys,
+          }}
+        />
         <ThemedView style={styles.section}>
           <View style={styles.titleContainer}>
             <ThemedText style={styles.title} type="title" setBackground={true}>

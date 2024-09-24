@@ -6,7 +6,7 @@ export const QTY_LANGUAGE_SET = {
   GUJARATI: "જથ્થો",
   TAMIL: "அளவு",
   TELUGU: "పరిమాణం",
-  MALAYALAM: "അളവ്",
+  MALYALI: "അളവ്",
   KANNADA: "ಪ್ರಮಾಣ",
 };
 
@@ -18,7 +18,7 @@ export const NOTES_LANGUAGE_SET = {
   GUJARATI: "નોંધો",
   TAMIL: "குறிப்புகள்",
   TELUGU: "గమనికలు",
-  MALAYALAM: "കുറിപ്പുകൾ",
+  MALYALI: "കുറിപ്പുകൾ",
   KANNADA: "ಟಿಪ್ಪಣಿಗಳು",
 };
 
@@ -30,7 +30,7 @@ export const PENDING_ORDERS_LANGUAGE_SET = {
   GUJARATI: "બાકી ઓર્ડર્સ",
   TAMIL: "நிலுவையில் உள்ள ஆர்டர்கள்",
   TELUGU: "పెండింగ్ ఆర్డర్లు",
-  MALAYALAM: "വായ്പ ഓർഡറുകൾ",
+  MALYALI: "വായ്പ ഓർഡറുകൾ",
   KANNADA: "ಬಾಕಿ ಆರ್ಡರ್‌ಗಳು",
 };
 
@@ -42,7 +42,7 @@ export const ACCEPT_LANGUAGE_SET = {
   GUJARATI: "સ્વીકાર કરો ",
   TAMIL: "ஏற்கவும் ",
   TELUGU: "ఆమోదించండి ",
-  MALAYALAM: "സ്വീകരിക്കുക ",
+  MALYALI: "സ്വീകരിക്കുക ",
   KANNADA: "ಸ್ವೀಕರಿಸಿ",
 };
 
@@ -54,7 +54,7 @@ export const COMPLETE_LANGUAGE_SET = {
   GUJARATI: "પૂર્ણ કરો ",
   TAMIL: "முழுமை ",
   TELUGU: "పూర్తి చేయండి ",
-  MALAYALAM: "പൂർത്തിയാക്കുക ",
+  MALYALI: "പൂർത്തിയാക്കുക ",
   KANNADA: "ಪೂರ್ಣ",
 };
 
@@ -66,7 +66,7 @@ export const CANCEL_LANGUAGE_SET = {
   GUJARATI: "રદ કરો ",
   TAMIL: "ரத்து செய்யவும் ",
   TELUGU: "రద్దు చేయండి ",
-  MALAYALAM: "റദ്ദാക്കുക ",
+  MALYALI: "റദ്ദാക്കുക ",
   KANNADA: "ರದ್ದುಮಾಡಿ",
 };
 
@@ -78,7 +78,7 @@ export const DELIVERED_LANGUAGE_SET = {
   GUJARATI: "ડિલિવર કર્યું ",
   TAMIL: "வழங்கப்பட்டது ",
   TELUGU: "డెలివర్ చేయబడ్డది ",
-  MALAYALAM: "വിതരിച്ചു ",
+  MALYALI: "വിതരിച്ചു ",
   KANNADA: "ವಿತರಿಸಲಾಗಿದೆ",
 };
 
@@ -90,7 +90,7 @@ export const ACTIVE_ORDERS_LANGUAGE_SET = {
   GUJARATI: "સક્રિય",
   TAMIL: "செயலில்",
   TELUGU: "సక్రియ",
-  MALAYALAM: "സജീവം",
+  MALYALI: "സജീവം",
   KANNADA: "ಸಕ್ರಿಯ",
 };
 
@@ -102,6 +102,6 @@ export const READY_FOR_PICKUP_LANGUAGE_SET = {
   GUJARATI: "પિકઅપ તૈયાર",
   TAMIL: "பிக்கப் தயாராக",
   TELUGU: "పికప్ సిద్ధం",
-  MALAYALAM: "പിക്കപ്പ് തയ്യാറാണ്",
+  MALYALI: "പിക്കപ്പ് തയ്യാറാണ്",
   KANNADA: "ಪಿಕಪ್ ಸಿದ್ಧ",
 };
