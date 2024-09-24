@@ -6,7 +6,7 @@ export const ADD_TABLE_LANGUAGE_SET = {
   GUJARATI: "ટેબલ ઉમેરો",
   TAMIL: "மேசை சேர்க்கவும்",
   TELUGU: "టేబుల్ జోడించండి",
-  MALAYALAM: "മേശ ചേർക്കുക",
+  MALYALI: "മേശ ചേർക്കുക",
   KANNADA: "ಟೇಬಲ್ ಸೇರಿಸಿ",
 };
 
@@ -18,7 +18,7 @@ export const TABLE_LANGUAGE_SET = {
   GUJARATI: "ટેબલ",
   TAMIL: "மேசை",
   TELUGU: "టేబుల్",
-  MALAYALAM: "മേശ",
+  MALYALI: "മേശ",
   KANNADA: "ಟೇಬಲ್",
 };
 
@@ -30,7 +30,7 @@ export const GUEST_LANGUAGE_SET = {
   GUJARATI: "મહેમાન",
   TAMIL: "விருந்தினர்",
   TELUGU: "అతిథి",
-  MALAYALAM: "അഥിതി",
+  MALYALI: "അഥിതി",
   KANNADA: "ಅತಿಥಿ",
 };
 
@@ -42,7 +42,7 @@ export const GUESTS_LANGUAGE_SET = {
   GUJARATI: "સંખ્યા",
   TAMIL: "எண்ணிக்கை",
   TELUGU: "సంఖ్య",
-  MALAYALAM: "എണ്ണം",
+  MALYALI: "എണ്ണം",
   KANNADA: "ಸಂಖ್ಯೆ",
 };
 
@@ -54,7 +54,7 @@ export const SERVER_LANGUAGE_SET = {
   GUJARATI: "વેટર",
   TAMIL: "வெற்றர்",
   TELUGU: "వేటర్",
-  MALAYALAM: "വെയ്റ്റർ",
+  MALYALI: "വെയ്റ്റർ",
   KANNADA: "ವೇಟರ್",
 };
 
@@ -66,7 +66,7 @@ export const ORDERS_LANGUAGE_SET = {
   GUJARATI: "ઓર્ડર્સ",
   TAMIL: "ஆர்டர்கள்",
   TELUGU: "ఆర్డర్లు",
-  MALAYALAM: "ഓർഡറുകൾ",
+  MALYALI: "ഓർഡറുകൾ",
   KANNADA: "ಆರ್ಡರ್‌ಗಳು",
 };
 
@@ -78,7 +78,7 @@ export const BILL_LANGUAGE_SET = {
   GUJARATI: "બિલ ",
   TAMIL: "பில் ",
   TELUGU: "బిల్ ",
-  MALAYALAM: "ബിൽ ",
+  MALYALI: "ബിൽ ",
   KANNADA: "ಬಿಲ್",
 };
 
@@ -90,6 +90,6 @@ export const NOTES_LANGUAGE_SET = {
   GUJARATI: "નોંધો",
   TAMIL: "குறிப்புகள்",
   TELUGU: "గమనికలు",
-  MALAYALAM: "കുറിപ്പുകൾ",
+  MALYALI: "കുറിപ്പുകൾ",
   KANNADA: "ಟಿಪ್ಪಣಿಗಳು",
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, useWindowDimensions } from "react-native";
+import { Alert, StyleSheet, useWindowDimensions } from "react-native";
 import Sidebar from "@/components/OrderManagement/Sidebar/Sidebar";
 import MenuItemGrid from "@/components/OrderManagement/MenuItemGrid/MenuItemGrid";
 import OrderDetails from "@/components/OrderDetails/OrderDetails";
@@ -22,8 +22,8 @@ const OrderManagement = ({
   const [selectedMenu, setSelectedMenu] = useState();
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [rawOrders, setRawOrders] = useState([]);
+  const [pendingOrders, setPendingOrders] = useState([]);
   const [orders, setOrders] = useState();
-  const [updateFlag, setUpdateFlag] = useState(false);
 
   const { width } = useWindowDimensions();
   const isLargeScreen = width > 768;
@@ -44,18 +44,10 @@ const OrderManagement = ({
     );
   }, [selectedCategory, menuItems]);
 
-  // Update orders whenever rawOrders changes
+  // Update orders whenever rawOrders or pendingOrders change
   useEffect(() => {
-    setOrders(aggregateOrders(rawOrders));
-  }, [rawOrders]);
-
-  // Update Firebase whenever orders change
-  useEffect(() => {
-    if (updateFlag) {
-      updateOrder(rawOrders);
-      setUpdateFlag(false);
-    }
-  }, [rawOrders]);
+    setOrders(aggregateOrders([...rawOrders, ...pendingOrders]));
+  }, [rawOrders, pendingOrders]);
 
   const onSidebarItemClicked = (item, idx) => {
     setSelectedCategory(idx);
@@ -74,21 +66,18 @@ const OrderManagement = ({
       image: item.image,
       quantity: 1,
       status: ORDER_STATUS.ACTIVE,
-      itemValue: parseFloat(item.price) || 0, // Convert price to a number,
+      itemValue: parseFloat(item.price) || 0,
       orderTimestamp: Date.now(),
     };
     addItem(orderItem);
   };
 
   const addItem = (item) => {
-    const newOrders = rawOrders ? [...rawOrders, item] : [item];
-    setRawOrders(newOrders);
-    setUpdateFlag(true);
+    setPendingOrders((prevPendingOrders) => [...prevPendingOrders, item]);
   };
 
   const removeItem = (item) => {
-    // Find the first item with the same name, category, and status ACTIVE
-    const index = rawOrders.findIndex(
+    const index = pendingOrders.findIndex(
       (orderItem) =>
         orderItem.name === item.name &&
         orderItem.category === item.category &&
@@ -96,12 +85,13 @@ const OrderManagement = ({
     );
 
     if (index !== -1) {
-      const newOrders = [...rawOrders]; // Create a copy of the orders array
-      newOrders.splice(index, 1); // Remove the item at the specified index
-      setRawOrders(newOrders); // Update the state with the new array
-      setUpdateFlag(true);
+      setPendingOrders((prevPendingOrders) => {
+        const newPendingOrders = [...prevPendingOrders];
+        newPendingOrders.splice(index, 1);
+        return newPendingOrders;
+      });
     } else {
-      console.log("No active item found to decrease quantity.");
+      Alert.alert("Item not found in pending orders");
     }
   };
 
@@ -110,9 +100,24 @@ const OrderManagement = ({
     // return menuItems.filter((item) => item.orderCountPercentile > 70);
   };
 
+  const handleSave = () => {
+    const updatedOrders = [...rawOrders, ...pendingOrders];
+    updateOrder(updatedOrders);
+    setRawOrders(updatedOrders);
+    setPendingOrders([]);
+    onClose();
+  };
+
+  const completeOrder = () => {
+    const updatedOrders = [...rawOrders, ...pendingOrders];
+    updateOrder(updatedOrders);
+    setRawOrders(updatedOrders);
+    setPendingOrders([]);
+    handleCompleteOrder();
+  };
+
   return (
     <ThemedView style={styles.mainContainer}>
-      {/* <HeaderSection /> */}
       <FloatingCloseButton onClose={onClose} />
       <ThemedView
         style={[
@@ -149,9 +154,9 @@ const OrderManagement = ({
           <PaymentOptions
             preferredLanguage={preferredLanguage}
             style={styles.paymentOptions}
-            onSave={onClose}
+            onSave={handleSave}
             onCancel={onClose}
-            completeOrder={handleCompleteOrder}
+            completeOrder={completeOrder}
           />
         </ThemedView>
       </ThemedView>

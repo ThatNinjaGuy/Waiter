@@ -6,7 +6,7 @@ export const NOTIFICATION_TITLE_LANGUAGE_SET = {
   GUJARATI: "ઓર્ડર અપડેટ થયું છે",
   TAMIL: "ஆர்டர் புதுப்பிக்கப்பட்டது",
   TELUGU: "ఆర్డర్ అప్డేట్ చేయబడింది",
-  MALAYALAM: "ഓർഡർ അപ്‌ഡേറ്റ് ചെയ്‌തു",
+  MALYALI: "ഓർഡർ അപ്‌ഡേറ്റ് ചെയ്‌തു",
   KANNADA: "ಆರ್ಡರ್ ನವೀಕರಿಸಲಾಗಿದೆ",
 };
 
@@ -20,6 +20,6 @@ export const NOTIFICATION_CONTENT_LANGUAGE_SET = {
   GUJARATI: "ટેબલ {tableNumber} માટે {name} ની સ્થિતિ બદલાઈને {status} થઈ છે.",
   TAMIL: "மேசை {tableNumber} க்கான {name} நிலைமை மாற்றப்பட்டது {status}.",
   TELUGU: "టేబుల్ {tableNumber} కోసం {name} స్థితి మార్చబడింది {status}.",
-  MALAYALAM: "മേശ {tableNumber} ന് വേണ്ടി {name} നില മാറ്റി {status}.",
+  MALYALI: "മേശ {tableNumber} ന് വേണ്ടി {name} നില മാറ്റി {status}.",
   KANNADA: "ಕೋಷ್ಟಕದ{tableNumber}ಗಾಗಿ{name}ಸ್ಥಿತಿಯನ್ನು{status}ಗೆ ಬದಲಿಸಲಾಗಿದೆ.",
 };

@@ -160,7 +160,7 @@ const TablesScreen = () => {
           items={selectedTable?.orders}
           menuItems={menuItems}
           preferredLanguage={preferredLanguage}
-          onClose={handleTableInfoClose}
+          onClose={() => setSelectedTable(null)}
           updateOrder={(orders) =>
             handleTableOrderUpdate(
               orders,
