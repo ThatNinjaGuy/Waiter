@@ -102,6 +102,18 @@ This project is a React Native application for managing a restaurant menu. It us
 
 - npx expo start
 
+## Building the web app
+
+- npx expo export --platform web
+
+## Running the web app preview build
+
+- firebase hosting:channel:deploy preview_name
+
+## Running the web app production build
+
+- firebase deploy
+
 ## Building the APK
 
 - npm install -g eas-cli
