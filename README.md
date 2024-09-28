@@ -76,6 +76,34 @@ This project is a React Native application for managing a restaurant menu. It us
    npm install -g eas-cli
    ```
 
+## Running the app - Locally for web or android hosting
+
+- npx expo start
+
+## Building and hosting a preview deployemnt of the web app
+
+- npx expo export --platform web
+- firebase hosting:channel:deploy preview_name
+
+## Running the web app production build
+
+- npx expo export --platform web
+- firebase deploy
+
+## Building the APK
+
+- npm install -g eas-cli
+- eas login
+- eas build --platform android --profile preview
+
+## Alternate web app hosting: Publishing the app to Ngrok for getting remote access to locally hosted web app
+
+- If 8081 is your port number, then use below or update it to reflext your local port number
+
+```sh
+ngrok http 8081
+```
+
 ## Firebase Setup
 
 1. **Create a Firebase project:**
@@ -85,7 +113,8 @@ This project is a React Native application for managing a restaurant menu. It us
    - In the Firebase Console, navigate to "Project settings" and add your Android and iOS apps.
    - Download the google-services.json file for Android and GoogleService-Info.plist file for iOS.
 3. **Add Firebase configuration:**
-   Create a firebaseConfig.js file in the app/firebase directory:
+   Usgae of provided default firebaseConfig is for reference only. It should not be used for live deployments or production use. It should not be used for demo purposes only. Excess hits to firebase services can lead to your account being flagged as suspicious and disabled, and a legal action against you.
+   Update the firebaseConfig.js file in the root directory with your details:
 
    ```sh
    const firebaseConfig = {
@@ -97,42 +126,6 @@ This project is a React Native application for managing a restaurant menu. It us
    appId: 'YOUR_APP_ID',
    };
    ```
-
-## Running the app
-
-- npx expo start
-
-## Building the web app
-
-- npx expo export --platform web
-
-## Running the web app preview build
-
-- firebase hosting:channel:deploy preview_name
-
-## Running the web app production build
-
-- firebase deploy
-
-## Building the APK
-
-- npm install -g eas-cli
-- eas login
-- eas build --platform android --profile preview
-
-## Web-Based access: Publishing the app to Ngrok for local hosting
-
-- If 8081 is your port number, then use below or update it to reflext your local port number
-
-```sh
-ngrok http 8081
-```
-
-## Android-Based access: Generating APK
-
-```sh
-eas build -p android --profile preview
-```
 
 ## Contributing
 

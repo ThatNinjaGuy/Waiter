@@ -25,7 +25,7 @@ import {
 import { getAddTableTranslation } from "@/utils/appText/tablesScreen";
 
 const TablesScreen = () => {
-  const { user, liveTables, staffs } = useContext(AuthContext);
+  const { user, hotel, liveTables, staffs } = useContext(AuthContext);
   const preferredLanguage = user?.preferredLanguage;
   const addTableText = getAddTableTranslation(preferredLanguage);
 
@@ -178,6 +178,7 @@ const TablesScreen = () => {
       {selectedTable && tableInfoOptionClicked && (
         <ThemedView style={styles.container}>
           <TableManagement
+            hotel={hotel}
             table={selectedTable}
             staffs={staffs}
             onUpdateTable={handleUpdateTable}

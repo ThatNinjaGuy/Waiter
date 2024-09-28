@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -6,12 +6,9 @@ import {
 } from "react-native-responsive-screen";
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
-import NotificationsPanel from "@/components/Notifications/NotificationsPanel";
 import Overview from "@/components/RestaurantOverview/Overview";
 import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
 import { useNavigation } from "@react-navigation/native";
-import { fetchHotelData } from "@/firebase/queries/hotelInfo";
-import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import AuthScreen from "@/screens/AuthScreen/AuthScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import ProfileHeader from "@/components/ProfileHeader/ProfileHeader";
@@ -26,7 +23,7 @@ import {
 } from "@/utils/appText/homeScreen";
 
 export default function HomeScreen() {
-  const { user } = useContext(AuthContext);
+  const { user, hotel } = useContext(AuthContext);
   const preferredLanguage = user?.preferredLanguage;
 
   const STAFFS = getStaffsTranslation(preferredLanguage);
@@ -38,30 +35,6 @@ export default function HomeScreen() {
   const TODAY_OVERVIEW = getOverviewTranslation(preferredLanguage);
 
   const navigation = useNavigation();
-  const [isLoading, setIsLoading] = useState(false);
-  const [hotel, setHotel] = useState();
-  // const [notifications, setNotifications] = useState([]);
-
-  useEffect(() => {
-    const fetchHotelDetails = async () => {
-      const hotelDetailsArray = await fetchHotelData();
-      if (hotelDetailsArray) {
-        // Convert array to an object
-        const hotelDetails = hotelDetailsArray.reduce((acc, item) => {
-          acc[item.id] = item;
-          return acc;
-        }, {});
-
-        // Access details using keys
-        setHotel(hotelDetails["details"]);
-        // setNotifications(hotelDetails["homeScreenItems"]?.notifications || []);
-        setIsLoading(false);
-      }
-    };
-
-    setIsLoading(true);
-    fetchHotelDetails();
-  }, []);
 
   const navigationItems = [
     { title: STAFFS, onPress: () => navigation.navigate("staffs") },
@@ -95,24 +68,12 @@ export default function HomeScreen() {
           </View>
           <Overview preferredLanguage={preferredLanguage} />
         </ThemedView>
-        {/* <ThemedView style={styles.section}>
-          <View style={styles.titleContainer}>
-            <ThemedText style={styles.title} type="title" setBackground={true}>
-              Notifications
-            </ThemedText>
-          </View>
-          <NotificationsPanel notifications={notifications} />
-        </ThemedView> */}
         <NavigationMenu items={navigationItems} />
       </ThemedView>
     </View>
   );
 
   if (!user) return <AuthScreen />;
-
-  if (isLoading) {
-    <LoadingScreen />;
-  }
 
   return (
     <FlatList

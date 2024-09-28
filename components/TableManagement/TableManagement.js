@@ -11,7 +11,7 @@ import generatePDF from "@/utils/generatePDF";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 const TableManagement = React.memo(
-  ({ table, staffs, onUpdateTable, onClose }) => {
+  ({ hotel, table, staffs, onUpdateTable, onClose }) => {
     const textColor = useThemeColor({}, "text");
     const bgColor = useThemeColor({}, "background");
 
@@ -67,7 +67,7 @@ const TableManagement = React.memo(
     };
 
     const generateBill = async () => {
-      const restaurantName = "Shree RAM VEG";
+      const restaurantName = hotel?.name;
       const orderItems = table.orders;
       const tableData = {
         number: table.number,

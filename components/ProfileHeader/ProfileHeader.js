@@ -12,7 +12,7 @@ import { BlurView } from "expo-blur";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { DEFAULT_IMAGE } from "@/constants/common";
 
-const ProfileHeader = ({ userProfile, handleEdit }) => {
+const ProfileHeader = ({ userProfile, handleEdit, hotel }) => {
   const { width } = Dimensions.get("window");
   const isLargeScreen = width > 768;
 
@@ -58,7 +58,9 @@ const ProfileHeader = ({ userProfile, handleEdit }) => {
           >
             <Text style={styles.name}>{userProfile.name}</Text>
             {userProfile.position && (
-              <Text style={styles.position}>{userProfile.position}</Text>
+              <Text style={styles.position}>
+                {userProfile.position} @ {hotel?.name}
+              </Text>
             )}
             {userProfile.email && (
               <View style={styles.infoContainer}>

@@ -19,7 +19,7 @@ import { Tooltip, Text } from "react-native-elements";
 import { updateStaff } from "@/firebase/queries/staffs";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
-const SettingsScreen = ({ staffs, userDetails, onCancel }) => {
+const SettingsScreen = ({ userDetails, staffs, onCancel }) => {
   const [name, setName] = useState(userDetails?.name || "");
   const [age, setAge] = useState(userDetails?.age || "");
   const [email, setEmail] = useState(userDetails?.email || "");

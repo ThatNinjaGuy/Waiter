@@ -18,7 +18,7 @@ import {
 import Settings from "@/components/Settings/Settings";
 
 const ProfileScreen = () => {
-  const { user, logout, staffs } = useContext(AuthContext);
+  const { user, hotel, logout, staffs } = useContext(AuthContext);
   const preferredLanguage = user?.preferredLanguage;
   const settingsText = getSettingsText(preferredLanguage);
   const approveSignupRequestsText =
@@ -106,6 +106,7 @@ const ProfileScreen = () => {
     <ScrollView style={styles.container}>
       <ProfileHeader
         userProfile={userProfile}
+        hotel={hotel}
         handleEdit={() => openDisplaySettingsScreen(true)}
       />
 
