@@ -84,7 +84,7 @@ export const OVERVIEW_LANGUAGE_SET = {
 
 export const OVERVIEW_ITEMS_LANGUAGE_SET = {
   ACTIVE_TABLES: {
-    ENGLISH: "Active Table",
+    ENGLISH: "Active Tables",
     HINDI: "चालू टेबल",
     MARATHI: "चालू टेबल",
     BENGALI: "চলমান টেবিল",
