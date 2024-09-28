@@ -14,6 +14,7 @@ import {
   getNotificationContentTranslation,
 } from "@/utils/appText/notifications";
 import { fetchAllStaffs } from "@/firebase/queries/staffs";
+import { fetchHotelData } from "@/firebase/queries/hotelInfo";
 
 const AuthContext = createContext();
 
@@ -22,7 +23,19 @@ export const AuthProvider = ({ children }) => {
   const [liveOrders, setLiveOrders] = useState();
   const [liveTables, setLiveTables] = useState([]);
   const [staffs, setStaffs] = useState([]);
+  const [hotel, setHotel] = useState();
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHotelDetails = async () => {
+      const hotelDetails = await fetchHotelData();
+      if (hotelDetails) {
+        setHotel(hotelDetails);
+      }
+    };
+
+    fetchHotelDetails();
+  }, []);
 
   const setLoggedInUserDetails = (user) => {
     const staff = staffs?.find((staff) => staff.authId == user.uid);
@@ -87,7 +100,9 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, logout, liveTables, liveOrders }}>
+    <AuthContext.Provider
+      value={{ user, logout, liveTables, liveOrders, staffs, hotel }}
+    >
       {children}
     </AuthContext.Provider>
   );

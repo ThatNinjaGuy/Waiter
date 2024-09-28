@@ -1,17 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-} from "react-native";
+import { View, Text, FlatList, StyleSheet, Alert } from "react-native";
 import {
   collection,
   query,
   onSnapshot,
-  writeBatch,
   doc,
   deleteDoc,
 } from "firebase/firestore";
@@ -38,6 +30,7 @@ import AuthContext from "@/components/Authentication/AuthProvider";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import ThemedButton from "../common/ThemedButton";
 import { appDefaultLanguage } from "@/constants/appText/common";
+import { addToStaffs } from "@/firebase/queries/staffs";
 
 const ApproveSignUpRequestsScreen = () => {
   const { user } = useContext(AuthContext);
@@ -118,33 +111,6 @@ const ApproveSignUpRequestsScreen = () => {
     }
   };
 
-  const addToStaffs = async ({ name, email, role, age, mobile, authId }) => {
-    const batch = writeBatch(db);
-    const docRef = doc(collection(db, "hotel-details/staff-details/staffs"));
-    batch.set(docRef, {
-      name: name,
-      age: age,
-      email: email,
-      role: role,
-      authId: authId,
-      mobile: mobile,
-      preferredLanguage: appDefaultLanguage,
-      notificationSettings: {
-        newOrders: true,
-        orderReady: true,
-        orderCompleted: true,
-        newGuests: false,
-      },
-      createdAt: Date.now(),
-    });
-    try {
-      await batch.commit();
-      console.log("Batch write successful");
-    } catch (error) {
-      console.error("Error writing batch:", error);
-    }
-  };
-
   const deleteRequest = async ({ id }) => {
     try {
       const docRef = doc(db, "hotel-details/staff-details/signup-requests", id);
@@ -161,8 +127,7 @@ const ApproveSignUpRequestsScreen = () => {
     try {
       setLoading(true);
       request.authId = await handleSignUp(request);
-      console.log(request);
-      addToStaffs(request);
+      addToStaffs(request, appDefaultLanguage);
       deleteRequest(request);
       console.log("Approval requests updated");
       Alert.alert(successText, requestApprovedSuccessText);

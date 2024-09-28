@@ -53,3 +53,43 @@ export const menuItemFormSchema = (categories) => [
     type: "text",
   },
 ];
+
+export const STAFFS_FORM_SCHEMA = [
+  {
+    name: "searchableKey",
+    placeholder: "Key",
+    inputMode: "default",
+    type: "text",
+  },
+  { name: "name", placeholder: "Name", inputMode: "default", type: "text" },
+  { name: "age", placeholder: "Age", inputMode: "numeric", type: "text" },
+  // {
+  //   name: "gender",
+  //   placeholder: "Gender",
+  //   inputMode: "numeric",
+  //   type: "dropdown",
+  //   options: ["Male", "Female", "Other"],
+  // },
+  {
+    name: "role",
+    placeholder: "Role",
+    inputMode: "default",
+    type: "dropdown",
+    options: [
+      "Manager",
+      // "Chef",
+      "Cook",
+      "Waiter",
+      "Assistant",
+      "Cleaner",
+      "Helper",
+      "Others",
+    ],
+  },
+  // {
+  //   name: "image",
+  //   placeholder: "Image URL",
+  //   inputMode: "default",
+  //   type: "text",
+  // },
+];
