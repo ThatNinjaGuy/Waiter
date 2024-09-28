@@ -19,7 +19,7 @@ import { Tooltip, Text } from "react-native-elements";
 import { updateStaff } from "@/firebase/queries/staffs";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 
-const SettingsScreen = ({ userDetails, onCancel }) => {
+const SettingsScreen = ({ staffs, userDetails, onCancel }) => {
   const [name, setName] = useState(userDetails?.name || "");
   const [age, setAge] = useState(userDetails?.age || "");
   const [email, setEmail] = useState(userDetails?.email || "");
@@ -60,6 +60,7 @@ const SettingsScreen = ({ userDetails, onCancel }) => {
         preferredLanguage: LANGUAGE_MAPPER[language].key,
         notificationSettings: notificationSettings,
       },
+      staffs,
       undefined,
       setLoading
     );

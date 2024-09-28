@@ -27,12 +27,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="tables"
+        name="menu"
         options={{
-          title: "Tables",
+          title: "Menu",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "bag-sharp" : "bag-outline"}
+              name={focused ? "restaurant" : "restaurant-outline"}
               color={color}
             />
           ),
@@ -51,18 +51,17 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="menu"
+        name="tables"
         options={{
-          title: "Menu",
+          title: "Tables",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "restaurant" : "restaurant-outline"}
+              name={focused ? "bag-sharp" : "bag-outline"}
               color={color}
             />
           ),
         }}
       />
-
       <Tabs.Screen
         name="profile"
         options={{

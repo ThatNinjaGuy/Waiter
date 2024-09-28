@@ -8,48 +8,9 @@ import CustomSearchBar from "@/components/common/SearchBar";
 import { ThemedView } from "@/components/common/ThemedView";
 import ThemedButton from "@/components/common/ThemedButton";
 import { ThemedText } from "@/components/common/ThemedText";
+import { STAFFS_FORM_SCHEMA } from "@/constants/formSchema";
 
-const formSchema = [
-  {
-    name: "searchableKey",
-    placeholder: "Key",
-    inputMode: "default",
-    type: "text",
-  },
-  { name: "name", placeholder: "Name", inputMode: "default", type: "text" },
-  { name: "age", placeholder: "Age", inputMode: "numeric", type: "text" },
-  {
-    name: "gender",
-    placeholder: "Gender",
-    inputMode: "numeric",
-    type: "dropdown",
-    options: ["Male", "Female", "Other"],
-  },
-  {
-    name: "role",
-    placeholder: "Role",
-    inputMode: "default",
-    type: "dropdown",
-    options: [
-      "Manager",
-      // "Chef",
-      "Cook",
-      "Waiter",
-      "Assistant",
-      "Cleaner",
-      "Helper",
-      "Others",
-    ],
-  },
-  {
-    name: "image",
-    placeholder: "Image URL",
-    inputMode: "default",
-    type: "text",
-  },
-];
-
-const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
+const StaffScreenView = ({ staffs, deleteStaff, updateStaff }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const [search, setSearch] = useState("");
@@ -60,21 +21,15 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
     setFilteredItems(staffs);
   }, [staffs]);
 
-  const handleAddItem = () => {
-    setCurrentItem(null);
-    setModalVisible(true);
-  };
-
   const handleEditItem = (item) => {
     setCurrentItem(item);
     setModalVisible(true);
   };
 
   const handleSaveItem = (item) => {
+    console.log("item", item);
     if (currentItem) {
       updateStaff(currentItem.id, item);
-    } else {
-      addStaff(item);
     }
     setModalVisible(false);
   };
@@ -105,13 +60,6 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedButton
-        onPress={handleAddItem}
-        type="primary"
-        style={[{ borderRadius: 0, marginBottom: 5 }]}
-      >
-        <ThemedText>Add Staff</ThemedText>
-      </ThemedButton>
       <FlatList
         data={filteredItems}
         renderItem={({ item }) => (
@@ -129,7 +77,7 @@ const StaffScreenView = ({ staffs, addStaff, deleteStaff, updateStaff }) => {
           onSave={handleSaveItem}
           onDelete={handleDeleteItem}
           item={currentItem}
-          schema={formSchema}
+          schema={STAFFS_FORM_SCHEMA}
           style={styles.container}
         />
       )}

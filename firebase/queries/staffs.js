@@ -9,6 +9,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
+import { generateUniqueKey } from "@/utils/keyGenerator";
 
 export const staffsPath = "hotel-details/staff-details/staffs";
 
@@ -33,8 +34,16 @@ export const fetchAllStaffs = async (setStaffs, setIsLoading) => {
   }
 };
 
-export const updateStaff = async (id, updatedItem, setStaffs, setLoading) => {
+export const updateStaff = async (
+  id,
+  updatedItem,
+  staffs,
+  setStaffs,
+  setLoading
+) => {
   try {
+    if (staffs && !updatedItem.searchableKey)
+      updatedItem.searchableKey = generateUniqueKey(staffs, updatedItem);
     const itemRef = doc(db, staffsPath, id);
     await updateDoc(itemRef, updatedItem);
     if (setStaffs)
@@ -48,5 +57,44 @@ export const updateStaff = async (id, updatedItem, setStaffs, setLoading) => {
     console.error("Error updating document: ", error);
   } finally {
     if (setLoading) setLoading(false);
+  }
+};
+
+export const deleteStaff = async (id) => {
+  try {
+    await deleteDoc(doc(db, staffsPath, id));
+    console.log("Document successfully deleted!");
+  } catch (error) {
+    console.error("Error removing document: ", error);
+  }
+};
+
+const addToStaffs = async (
+  { name, email, role, age, mobile, authId },
+  appDefaultLanguage
+) => {
+  const batch = writeBatch(db);
+  const docRef = doc(collection(db, staffsPath));
+  batch.set(docRef, {
+    name: name,
+    age: age,
+    email: email,
+    role: role,
+    authId: authId,
+    mobile: mobile,
+    preferredLanguage: appDefaultLanguage,
+    notificationSettings: {
+      newOrders: true,
+      orderReady: true,
+      orderCompleted: true,
+      newGuests: false,
+    },
+    createdAt: Date.now(),
+  });
+  try {
+    await batch.commit();
+    console.log("Batch write successful");
+  } catch (error) {
+    console.error("Error writing batch:", error);
   }
 };
