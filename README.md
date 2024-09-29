@@ -71,6 +71,7 @@ This project is a comprehensive React Native application for managing a restaura
    ```
 
 4. **Install EAS CLI:**
+
    ```sh
    npm install -g eas-cli
    ```
@@ -125,6 +126,11 @@ ngrok http 8081
    appId: 'YOUR_APP_ID',
    };
    ```
+
+## Generating native folders and running the gradle build locally
+
+- npx expo prebuild
+- eas build --platform android --local
 
 ## Contributing
 
