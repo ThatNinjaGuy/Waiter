@@ -18,7 +18,7 @@ import {
   getPreferenceTranslation,
 } from "@/utils/appText/menuScreen";
 
-const MenuItems = ({ items, onEdit, preferredLanguage }) => {
+const MenuItems = ({ items, onEdit, preferredLanguage, isMenuEditVisible }) => {
   const cuisineText = getCuisineTranslation(preferredLanguage);
   const categoryText = getCategoryTranslation(preferredLanguage);
   const priceText = getPriceTranslation(preferredLanguage);
@@ -41,7 +41,7 @@ const MenuItems = ({ items, onEdit, preferredLanguage }) => {
     return (
       <ThemedButton
         style={[styles.card, { width: layoutParams.itemWidth }]}
-        onPress={() => onEdit(item)}
+        onPress={() => (isMenuEditVisible ? onEdit(item) : null)}
       >
         <View style={styles.imageContainer}>
           <Image

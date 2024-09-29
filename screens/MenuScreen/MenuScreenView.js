@@ -26,6 +26,9 @@ const MenuScreenView = ({
   handleAddMenuItemCategory,
   handleUpdateMenuItemCategory,
   handleDeleteMenuItemCategory,
+  isMenuAddVisible,
+  isMenuCategoryAddVisible,
+  isMenuEditVisible,
 }) => {
   const updateMenuCategoryText =
     getUpdateMenuCategoryTranslation(preferredLanguage);
@@ -88,25 +91,30 @@ const MenuScreenView = ({
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={buttonStyles.buttonContainer}>
-        <ThemedButton
-          onPress={() => setPopupVisible(true)}
-          type="primary"
-          style={buttonStyles.button}
-        >
-          <ThemedText>{updateMenuCategoryText}</ThemedText>
-        </ThemedButton>
-        <ThemedButton
-          onPress={handleAddItem}
-          type="primary"
-          style={buttonStyles.button}
-        >
-          <ThemedText>{addMenuItemText}</ThemedText>
-        </ThemedButton>
+        {isMenuCategoryAddVisible && (
+          <ThemedButton
+            onPress={() => setPopupVisible(true)}
+            type="primary"
+            style={buttonStyles.button}
+          >
+            <ThemedText>{updateMenuCategoryText}</ThemedText>
+          </ThemedButton>
+        )}
+        {isMenuAddVisible && (
+          <ThemedButton
+            onPress={handleAddItem}
+            type="primary"
+            style={buttonStyles.button}
+          >
+            <ThemedText>{addMenuItemText}</ThemedText>
+          </ThemedButton>
+        )}
       </ThemedView>
       <MenuItems
         items={filteredItems}
         preferredLanguage={preferredLanguage}
         onEdit={handleEditItem}
+        isMenuEditVisible={isMenuEditVisible}
       />
       <CategoryManagementPopup
         visible={isPopupVisible}

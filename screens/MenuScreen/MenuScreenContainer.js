@@ -3,7 +3,6 @@ import MenuScreenView from "./MenuScreenView";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import AuthScreen from "@/screens/AuthScreen/AuthScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
-import UnauthorizedScreen from "@/components/Authentication/UnauthorizedScreen";
 import {
   fetchMenuItems,
   addMenuItems,
@@ -16,13 +15,16 @@ import {
   updateMenuItemCategory,
   deleteMenuItemCategory,
 } from "@/firebase/queries/menuItemCategories";
-
+import { isAdminEmployee } from "@/utils/entitlementManagement";
 const MenuScreenContainer = () => {
   const { user } = useContext(AuthContext);
   const preferredLanguage = user?.preferredLanguage;
   const [isLoading, setIsLoading] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
   const [menuItemCategories, setMenuItemCategories] = useState([]);
+  const isMenuAddVisible = isAdminEmployee(user?.staffDetails?.role);
+  const isMenuCategoryAddVisible = isAdminEmployee(user?.staffDetails?.role);
+  const isMenuEditVisible = isAdminEmployee(user?.staffDetails?.role);
 
   useEffect(() => {
     setIsLoading(true);
@@ -35,18 +37,6 @@ const MenuScreenContainer = () => {
   };
 
   if (!user) return <AuthScreen />;
-
-  if (
-    user.staffDetails &&
-    !(
-      user.staffDetails.role === "Manager" ||
-      user.staffDetails.role === "Owner" ||
-      !user.staffDetails.role ||
-      user.staffDetails.role === ""
-    )
-  ) {
-    return <UnauthorizedScreen />;
-  }
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -66,6 +56,9 @@ const MenuScreenContainer = () => {
       handleAddMenuItemCategory={addMenuItemCategory}
       handleUpdateMenuItemCategory={updateMenuItemCategory}
       handleDeleteMenuItemCategory={deleteMenuItemCategory}
+      isMenuAddVisible={isMenuAddVisible}
+      isMenuCategoryAddVisible={isMenuCategoryAddVisible}
+      isMenuEditVisible={isMenuEditVisible}
     />
   );
 };
