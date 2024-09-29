@@ -7,6 +7,7 @@ import {
 } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
+import { getMessaging } from "firebase/messaging";
 
 // PROD configs
 // {Replace DEV configs for PROD builds}

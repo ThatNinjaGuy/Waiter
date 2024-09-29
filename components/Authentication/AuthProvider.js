@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import React, { createContext, useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase/firebaseConfig";
@@ -15,6 +16,7 @@ import {
 } from "@/utils/appText/notifications";
 import { fetchAllStaffs } from "@/firebase/queries/staffs";
 import { fetchHotelData } from "@/firebase/queries/hotelInfo";
+import { registerForPushNotificationsAsync } from "@/firebase/messaging";
 
 const AuthContext = createContext();
 
@@ -65,6 +67,27 @@ export const AuthProvider = ({ children }) => {
           await fetchAllStaffs(setStaffs);
           await fetchAllTables(setLiveTables, undefined);
           setLoggedInUserDetails(firebaseUser);
+
+          // Register for push notifications
+          const token = await registerForPushNotificationsAsync();
+          if (token) {
+            // TODO: Send this token to your server and associate it with the user
+            console.log("Push Notification:", token);
+          }
+
+          // Set up message handler
+          if (Platform.OS === "android") {
+            const unsubscribe = messaging().onMessage(onMessageReceived);
+            return () => unsubscribe();
+          } else if (Platform.OS === "web") {
+            // For web, you might want to use Firebase's onMessage here
+            // This depends on how you've set up Firebase for web
+            Notification.requestPermission().then((permission) => {
+              if (permission === "granted") {
+                console.log("Notification permission granted.");
+              }
+            });
+          }
         } else {
           setUser(null);
         }

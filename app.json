@@ -17,6 +17,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "buildNumber": "1.0.0",
       "supportsTablet": true,
       "bundleIdentifier": "com.thatninjaguyspeaks.Waiter",
       "infoPlist": {
@@ -25,30 +26,57 @@
       }
     },
     "android": {
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "googleServicesFile": "./firebase/google-services.json",
+      "googleServicesFile": "./google-services.json",
       "package": "com.thatninjaguyspeaks.Waiter",
       "permissions": [
+        "INTERNET",
         "WRITE_EXTERNAL_STORAGE",
         "READ_EXTERNAL_STORAGE",
-        "VIBRATE",
-        "WAKE_LOCK",
         "RECEIVE_BOOT_COMPLETED",
-        "NOTIFICATIONS"
+        "VIBRATE",
+        "WAKE_LOCK"
       ]
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/icon.png"
+      "favicon": "./assets/images/icon.png",
+      "name": "Waiter",
+      "shortName": "Waiter",
+      "description": "A CRM for managing your restaurant",
+      "build": {
+        "babel": {
+          "include": ["@firebase/messaging"]
+        }
+      }
     },
     "plugins": [
       "expo-router",
       "@react-native-firebase/app",
-      "@react-native-firebase/auth"
+      "@react-native-firebase/auth",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#ffffff"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          },
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
