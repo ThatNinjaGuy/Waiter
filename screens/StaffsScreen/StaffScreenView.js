@@ -10,7 +10,12 @@ import ThemedButton from "@/components/common/ThemedButton";
 import { ThemedText } from "@/components/common/ThemedText";
 import { STAFFS_FORM_SCHEMA } from "@/constants/formSchema";
 
-const StaffScreenView = ({ staffs, deleteStaff, updateStaff }) => {
+const StaffScreenView = ({
+  staffs,
+  deleteStaff,
+  updateStaff,
+  isStaffEditable,
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const [search, setSearch] = useState("");
@@ -66,7 +71,7 @@ const StaffScreenView = ({ staffs, deleteStaff, updateStaff }) => {
           <StaffItem
             key={item.id}
             item={item}
-            onEdit={() => handleEditItem(item)}
+            onEdit={isStaffEditable ? () => handleEditItem(item) : undefined}
           />
         )}
         style={styles.itemList}

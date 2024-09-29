@@ -12,14 +12,13 @@ import { BlurView } from "expo-blur";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { DEFAULT_IMAGE } from "@/constants/common";
 
-const ProfileHeader = ({ userProfile, handleEdit, hotel }) => {
+const ProfileHeader = ({ userProfile, handleEdit }) => {
   const { width } = Dimensions.get("window");
   const isLargeScreen = width > 768;
 
   return (
     <LinearGradient
       colors={["#4c669f", "#3b5998", "#192f6a"]}
-      // colors={["#FFB733", "#FFAE19", "#ffa500"]}
       style={{
         height: isLargeScreen ? 200 : 300,
       }}
@@ -31,7 +30,7 @@ const ProfileHeader = ({ userProfile, handleEdit, hotel }) => {
             {
               flexDirection: isLargeScreen ? "row" : "column",
               alignItems: "center",
-              justifyContent: isLargeScreen ? "center" : "flex-start", // Add this line
+              justifyContent: isLargeScreen ? "center" : "flex-start",
             },
           ]}
         >
@@ -58,9 +57,7 @@ const ProfileHeader = ({ userProfile, handleEdit, hotel }) => {
           >
             <Text style={styles.name}>{userProfile.name}</Text>
             {userProfile.position && (
-              <Text style={styles.position}>
-                {userProfile.position} @ {hotel?.name}
-              </Text>
+              <Text style={styles.position}>{userProfile.position}</Text>
             )}
             {userProfile.email && (
               <View style={styles.infoContainer}>
@@ -96,7 +93,7 @@ const ProfileHeader = ({ userProfile, handleEdit, hotel }) => {
               </View>
             )}
           </View>
-          {handleEdit && handleEdit != null && (
+          {handleEdit && (
             <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
               <Icon name="edit" size={isLargeScreen ? 24 : 18} color="#fff" />
             </TouchableOpacity>

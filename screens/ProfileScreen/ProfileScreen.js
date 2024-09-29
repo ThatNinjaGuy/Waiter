@@ -16,9 +16,10 @@ import {
   getSettingsText,
 } from "@/utils/appText/profileScreen";
 import Settings from "@/components/Settings/Settings";
+import { isAdminEmployee } from "@/utils/entitlementManagement";
 
 const ProfileScreen = () => {
-  const { user, hotel, logout, staffs } = useContext(AuthContext);
+  const { user, logout, staffs } = useContext(AuthContext);
   const preferredLanguage = user?.preferredLanguage;
   const settingsText = getSettingsText(preferredLanguage);
   const approveSignupRequestsText =
@@ -27,6 +28,7 @@ const ProfileScreen = () => {
   const inventoryText = getInventoryTranslation(preferredLanguage);
   const employeesText = getEmployeesTranslation(preferredLanguage);
   const logoutText = getLogoutTranslation(preferredLanguage);
+  const isSignupRequestsVisible = isAdminEmployee(user?.staffDetails?.role);
 
   const navigation = useNavigation();
   const [userProfile, setUserProfile] = useState({
@@ -46,12 +48,7 @@ const ProfileScreen = () => {
     {
       title: approveSignupRequestsText,
       icon: "person-add",
-      visible:
-        user &&
-        ((user.staffDetails &&
-          (user.staffDetails.role === "Manager" ||
-            user.staffDetails.role === "Owner")) ||
-          !user.staffDetails),
+      visible: isSignupRequestsVisible,
       onPress: () => navigation.navigate("approve"),
     },
     {
@@ -106,7 +103,6 @@ const ProfileScreen = () => {
     <ScrollView style={styles.container}>
       <ProfileHeader
         userProfile={userProfile}
-        hotel={hotel}
         handleEdit={() => openDisplaySettingsScreen(true)}
       />
 

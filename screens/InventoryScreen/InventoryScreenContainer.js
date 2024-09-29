@@ -13,12 +13,14 @@ import { generateUniqueKey } from "@/utils/keyGenerator";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import AuthScreen from "@/screens/AuthScreen/AuthScreen";
-import UnauthorizedScreen from "@/components/Authentication/UnauthorizedScreen";
+import { isAdminEmployee } from "@/utils/entitlementManagement";
 
 const InventoryScreenContainer = () => {
+  const { user } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
-
   const [inventoryItems, setInventoryItems] = useState([]);
+  const isInventoryItemClickable = isAdminEmployee(user.staffDetails?.role);
+  const isAddItemButtonVisible = isAdminEmployee(user.staffDetails?.role);
 
   useEffect(() => {
     const fetchInventoryItems = async () => {
@@ -92,20 +94,7 @@ const InventoryScreenContainer = () => {
     }
   };
 
-  const { user } = useContext(AuthContext);
   if (!user) return <AuthScreen />;
-
-  if (
-    user.staffDetails &&
-    !(
-      user.staffDetails.role === "Manager" ||
-      user.staffDetails.role === "Owner" ||
-      !user.staffDetails.role ||
-      user.staffDetails.role === ""
-    )
-  ) {
-    return <UnauthorizedScreen />;
-  }
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -117,6 +106,8 @@ const InventoryScreenContainer = () => {
       addInventoryItem={addInventoryItem}
       deleteInventoryItem={deleteInventoryItem}
       updateInventoryItem={updateInventoryItem}
+      isInventoryItemClickable={isInventoryItemClickable}
+      isAddItemButtonVisible={isAddItemButtonVisible}
     />
   );
 };

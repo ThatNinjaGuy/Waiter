@@ -54,6 +54,8 @@ const InventoryScreenView = ({
   addInventoryItem,
   deleteInventoryItem,
   updateInventoryItem,
+  isInventoryItemClickable,
+  isAddItemButtonVisible,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
@@ -95,20 +97,24 @@ const InventoryScreenView = ({
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedButton
-        onPress={handleAddItem}
-        type="primary"
-        style={[{ borderRadius: 0, marginBottom: 5 }]}
-      >
-        <ThemedText>Add Item</ThemedText>
-      </ThemedButton>
+      {isAddItemButtonVisible && (
+        <ThemedButton
+          onPress={handleAddItem}
+          type="primary"
+          style={[{ borderRadius: 0, marginBottom: 5 }]}
+        >
+          <ThemedText>Add Item</ThemedText>
+        </ThemedButton>
+      )}
       <FlatList
         data={filteredItems}
         renderItem={({ item }) => (
           <InventoryItem
             key={item.id}
             item={item}
-            onEdit={() => handleEditItem(item)}
+            onEdit={
+              isInventoryItemClickable ? () => handleEditItem(item) : null
+            }
           />
         )}
       />
