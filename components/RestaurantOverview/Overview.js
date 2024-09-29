@@ -1,37 +1,44 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
 import { collection, query, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import { completedOrderPath } from "@/firebase/queries/completedOrder";
-import { tablesPath } from "@/firebase/queries/tables";
 import { INDIAN_RUPPEE_SYMBOL } from "@/constants/common";
-import { ACTIVE_ORDERS } from "@/constants/status/orders";
+import {
+  ACTIVE_ORDERS,
+  IN_KITCHEN_ORDERS,
+  ORDERS_PENDING_ACTION,
+} from "@/constants/status/orders";
 import {
   getActiveTablesTranslation,
   getActiveOrdersTranslation,
-  getClosedOrdersTranslation,
-  getTodaysRevenueTranslation,
-  getLast7DaysRevTranslation,
-  getLastDayRevTranslation,
+  getInKitchenOrdersTranslation,
+  getPendingOrdersTranslation,
+  getCompletedBookingsTranslation,
+  getRevenueTodayTranslation,
 } from "@/utils/appText/homeScreen";
+import AuthContext from "@/components/Authentication/AuthProvider";
 
 const Overview = ({ preferredLanguage }) => {
+  const { liveTables, liveOrders } = useContext(AuthContext);
   const ACTIVE_TABLES_TEXT = getActiveTablesTranslation(preferredLanguage);
   const ACTIVE_ORDERS_TEXT = getActiveOrdersTranslation(preferredLanguage);
-  const CLOSED_ORDERS_TEXT = getClosedOrdersTranslation(preferredLanguage);
-  const TODAYS_REVENUE_TEXT = getTodaysRevenueTranslation(preferredLanguage);
-  const LAST_7_DAYS_REV_TEXT = getLast7DaysRevTranslation(preferredLanguage);
-  const LAST_DAY_REV_TEXT = getLastDayRevTranslation(preferredLanguage);
+  const IN_KITCHEN_ORDERS_TEXT =
+    getInKitchenOrdersTranslation(preferredLanguage);
+  const PENDING_ORDERS_TEXT = getPendingOrdersTranslation(preferredLanguage);
+  const COMPLETED_BOOKINGS_TEXT =
+    getCompletedBookingsTranslation(preferredLanguage);
+  const REVENUE_TODAY_TEXT = getRevenueTodayTranslation(preferredLanguage);
 
   const [overviewItems, setOverviewItems] = useState([
     { title: ACTIVE_TABLES_TEXT, message: 0 },
     { title: ACTIVE_ORDERS_TEXT, message: 0 },
-    { title: CLOSED_ORDERS_TEXT, message: 0 },
-    { title: TODAYS_REVENUE_TEXT, message: 0 },
-    { title: LAST_7_DAYS_REV_TEXT, message: 0 },
-    { title: LAST_DAY_REV_TEXT, message: 0 },
+    { title: IN_KITCHEN_ORDERS_TEXT, message: 0 },
+    { title: PENDING_ORDERS_TEXT, message: 0 },
+    { title: COMPLETED_BOOKINGS_TEXT, message: 0 },
+    { title: REVENUE_TODAY_TEXT, message: 0 },
   ]);
 
   useEffect(() => {
@@ -43,22 +50,10 @@ const Overview = ({ preferredLanguage }) => {
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
           let orderCountToday = 0;
           let revenueToday = 0;
-          let revenueLastDay = 0;
-          let revenueLastWeek = 0;
 
           // Set current day to midnight
-          const now = new Date();
-          const midnightToday = new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate()
-          );
-
-          const lastDayStart = new Date(midnightToday);
-          lastDayStart.setDate(midnightToday.getDate() - 1);
-
-          const lastWeekStart = new Date(midnightToday);
-          lastWeekStart.setDate(midnightToday.getDate() - 7);
+          const midnightToday = new Date();
+          midnightToday.setHours(0, 0, 0, 0);
 
           querySnapshot.docs.forEach((doc) => {
             const data = doc.data();
@@ -66,40 +61,20 @@ const Overview = ({ preferredLanguage }) => {
 
             // Calculate order count and revenue for today
             if (orderDate >= midnightToday) {
-              orderCountToday += data.totalOrders;
+              orderCountToday++;
               revenueToday += data.orderValue;
-            }
-
-            // Calculate revenue for the last day
-            if (orderDate >= lastDayStart && orderDate < midnightToday) {
-              revenueLastDay += data.orderValue;
-            }
-
-            // Calculate revenue for the last week
-            if (orderDate >= lastWeekStart && orderDate < midnightToday) {
-              revenueLastWeek += data.orderValue;
             }
           });
 
-          /// Update overview items using functional update
+          // Update overview items using functional update
           setOverviewItems((prevItems) =>
             prevItems.map((item) => {
-              if (item.title === TODAYS_REVENUE_TEXT) {
-                return {
-                  ...item,
-                  message: INDIAN_RUPPEE_SYMBOL + revenueToday,
-                };
-              } else if (item.title === CLOSED_ORDERS_TEXT) {
+              if (item.title === COMPLETED_BOOKINGS_TEXT) {
                 return { ...item, message: orderCountToday };
-              } else if (item.title === LAST_DAY_REV_TEXT) {
+              } else if (item.title === REVENUE_TODAY_TEXT) {
                 return {
                   ...item,
-                  message: INDIAN_RUPPEE_SYMBOL + revenueLastDay,
-                };
-              } else if (item.title === LAST_7_DAYS_REV_TEXT) {
-                return {
-                  ...item,
-                  message: INDIAN_RUPPEE_SYMBOL + revenueLastWeek,
+                  message: `${INDIAN_RUPPEE_SYMBOL} ${revenueToday}`,
                 };
               }
               return item;
@@ -114,42 +89,33 @@ const Overview = ({ preferredLanguage }) => {
       }
     };
 
-    const getActiveOrdersSummary = async () => {
-      try {
-        const tablesRef = collection(db, tablesPath);
-        const q = query(tablesRef);
-        let activeTables = 0;
-        let itemsInKitchen = 0;
+    const getActiveOrdersSummary = () => {
+      const activeTables = liveTables.filter(
+        (table) => table.status === "Occupied"
+      ).length;
+      const activeOrders = liveOrders.filter((order) =>
+        ACTIVE_ORDERS.includes(order.status)
+      ).length;
+      const ordersInKitchen = liveOrders.filter((order) =>
+        IN_KITCHEN_ORDERS.includes(order.status)
+      ).length;
+      const ordersPendingAction = liveOrders.filter((order) =>
+        ORDERS_PENDING_ACTION.includes(order.status)
+      ).length;
 
-        // Set up real-time listener
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-          querySnapshot.docs.forEach((doc) => {
-            const data = doc.data();
-            if (data.status === "Occupied" && data.orders) {
-              activeTables++;
-              itemsInKitchen = data.orders.filter((order) =>
-                ACTIVE_ORDERS.includes(order.status)
-              ).length;
-            }
-          });
-
-          // Update overview items using functional update
-          setOverviewItems((prevItems) =>
-            prevItems.map((item) => {
-              if (item.title === ACTIVE_TABLES_TEXT) {
-                return { ...item, message: activeTables };
-              } else if (item.title === ACTIVE_ORDERS_TEXT) {
-                return { ...item, message: itemsInKitchen };
-              }
-              return item;
-            })
-          );
-        });
-        // Clean up the listener on component unmount
-        return () => unsubscribe();
-      } catch (error) {
-        console.error("Error fetching tables:", error);
-      }
+      setOverviewItems((prevItems) =>
+        prevItems.map((item) => {
+          if (item.title === ACTIVE_TABLES_TEXT) {
+            return { ...item, message: activeTables };
+          } else if (item.title === ACTIVE_ORDERS_TEXT) {
+            return { ...item, message: activeOrders };
+          } else if (item.title === IN_KITCHEN_ORDERS_TEXT)
+            return { ...item, message: ordersInKitchen };
+          else if (item.title === PENDING_ORDERS_TEXT)
+            return { ...item, message: ordersPendingAction };
+          return item;
+        })
+      );
     };
 
     getActiveOrdersSummary();

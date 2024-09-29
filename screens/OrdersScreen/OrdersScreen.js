@@ -4,7 +4,11 @@ import useResponsiveLayout from "@/hooks/useResponsiveLayout";
 import { ThemedView } from "@/components/common/ThemedView";
 import { ThemedText } from "@/components/common/ThemedText";
 import ThemedButton from "@/components/common/ThemedButton";
-import { ORDER_STATUS, ACTIVE_ORDERS } from "@/constants/status/orders";
+import {
+  ORDER_STATUS,
+  ALL_KITCHEN_ORDERS,
+  ALL_SERVER_ORDERS,
+} from "@/constants/status/orders";
 import {
   getQtyTranslation,
   getNotesTranslation,
@@ -50,12 +54,8 @@ const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
 
   const filteredOrders = orders.filter((order) => {
     if (activeTab === "ACTIVE_ORDERS")
-      return !order.status || ACTIVE_ORDERS.includes(order.status);
-    else
-      return (
-        order.status === ORDER_STATUS.CANCEL ||
-        order.status === ORDER_STATUS.READY
-      );
+      return !order.status || ALL_KITCHEN_ORDERS.includes(order.status);
+    else return ALL_SERVER_ORDERS.includes(order.status);
   });
 
   const renderOrder = ({ item }) => {
