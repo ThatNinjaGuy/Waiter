@@ -29,6 +29,7 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
+      "googleServicesFile": "./firebase/google-services.json",
       "package": "com.thatninjaguyspeaks.Waiter",
       "permissions": [
         "WRITE_EXTERNAL_STORAGE",
@@ -44,7 +45,11 @@
       "output": "static",
       "favicon": "./assets/images/icon.png"
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth"
+    ],
     "experiments": {
       "typedRoutes": true
     },
