@@ -14,7 +14,11 @@ export const fetchHotelData = async () => {
       docSnap = await db.doc(hotelDetailsPath).get();
     }
 
-    if (docSnap.exists()) {
+    // Update this check
+    if (
+      docSnap.exists ||
+      (typeof docSnap.exists === "function" && docSnap.exists())
+    ) {
       return docSnap.data();
     } else {
       console.log("No such document!");

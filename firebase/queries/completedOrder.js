@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
 import { db } from "@/firebase/firebaseConfig";
 
-export const completedOrderPath = "hotel-details/completed-orders/orders/";
+export const completedOrderPath = "hotel-details/completed-orders/orders";
 
 export const addCompletedOrder = async (order) => {
   try {

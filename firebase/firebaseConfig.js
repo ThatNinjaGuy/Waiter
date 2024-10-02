@@ -1,5 +1,4 @@
 import { Platform } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 let firebase, auth, firestore, messaging;
 
@@ -30,6 +29,19 @@ async function initializeFirebase() {
 
       if (typeof window !== "undefined" && "serviceWorker" in navigator) {
         messaging = firebaseMessaging.getMessaging(app);
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker
+            .register("/firebase-messaging-sw.js")
+            .then(function (registration) {
+              console.log(
+                "Service Worker registered with scope:",
+                registration.scope
+              );
+            })
+            .catch(function (error) {
+              console.log("Service Worker registration failed:", error);
+            });
+        }
       }
     } else {
       const firebaseApp = await import("@react-native-firebase/app");
@@ -48,7 +60,7 @@ async function initializeFirebase() {
 
       auth = firebaseAuth.default();
       firestore = firebaseFirestore.default();
-      messaging = firebaseMessaging.default();
+      messaging = firebaseMessaging.default;
     }
   } catch (error) {
     console.error("Error initializing Firebase:", error);

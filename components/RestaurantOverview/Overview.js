@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
-import { collection, query, onSnapshot } from "firebase/firestore";
+import { Platform } from "react-native";
 import { db } from "@/firebase/firebaseConfig";
 import { completedOrderPath } from "@/firebase/queries/completedOrder";
 import { INDIAN_RUPPEE_SYMBOL } from "@/constants/common";
@@ -44,49 +44,61 @@ const Overview = ({ preferredLanguage }) => {
   useEffect(() => {
     const getCompletedOrderSummary = async () => {
       try {
-        const completedOrdersRef = collection(db, completedOrderPath);
-        const q = query(completedOrdersRef);
+        let unsubscribe;
 
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-          let orderCountToday = 0;
-          let revenueToday = 0;
-
-          // Set current day to midnight
-          const midnightToday = new Date();
-          midnightToday.setHours(0, 0, 0, 0);
-
-          querySnapshot.docs.forEach((doc) => {
-            const data = doc.data();
-            const orderDate = data.bookingTime.toDate();
-
-            // Calculate order count and revenue for today
-            if (orderDate >= midnightToday) {
-              orderCountToday++;
-              revenueToday += data.orderValue;
-            }
-          });
-
-          // Update overview items using functional update
-          setOverviewItems((prevItems) =>
-            prevItems.map((item) => {
-              if (item.title === COMPLETED_BOOKINGS_TEXT) {
-                return { ...item, message: orderCountToday };
-              } else if (item.title === REVENUE_TODAY_TEXT) {
-                return {
-                  ...item,
-                  message: `${INDIAN_RUPPEE_SYMBOL} ${revenueToday}`,
-                };
-              }
-              return item;
-            })
+        if (Platform.OS === "web") {
+          const { collection, query, onSnapshot } = await import(
+            "firebase/firestore"
           );
-        });
+          const completedOrdersRef = collection(db, completedOrderPath);
+          const q = query(completedOrdersRef);
+          unsubscribe = onSnapshot(q, handleQuerySnapshot);
+        } else {
+          // Android/iOS
+          const completedOrdersRef = db.collection(completedOrderPath);
+          unsubscribe = completedOrdersRef.onSnapshot(handleQuerySnapshot);
+        }
 
         // Clean up the listener on component unmount
         return () => unsubscribe();
       } catch (error) {
         console.error("Error fetching completed order summary:", error);
       }
+    };
+
+    const handleQuerySnapshot = (querySnapshot) => {
+      let orderCountToday = 0;
+      let revenueToday = 0;
+
+      // Set current day to midnight
+      const midnightToday = new Date();
+      midnightToday.setHours(0, 0, 0, 0);
+
+      querySnapshot.docs.forEach((doc) => {
+        const data = doc.data();
+        const orderDate = data.bookingTime.toDate();
+
+        // Calculate order count and revenue for today
+        if (orderDate >= midnightToday) {
+          orderCountToday++;
+          revenueToday += data.orderValue;
+        }
+      });
+
+      // Update overview items using functional update
+      setOverviewItems((prevItems) =>
+        prevItems.map((item) => {
+          if (item.title === COMPLETED_BOOKINGS_TEXT) {
+            return { ...item, message: orderCountToday };
+          } else if (item.title === REVENUE_TODAY_TEXT) {
+            return {
+              ...item,
+              message: `${INDIAN_RUPPEE_SYMBOL} ${revenueToday}`,
+            };
+          }
+          return item;
+        })
+      );
     };
 
     const getActiveOrdersSummary = () => {
@@ -120,7 +132,12 @@ const Overview = ({ preferredLanguage }) => {
 
     getActiveOrdersSummary();
     getCompletedOrderSummary();
-  }, []);
+
+    // Clean up function
+    return () => {
+      // Any cleanup code if needed
+    };
+  }, [liveTables, liveOrders]);
 
   return (
     <ThemedView style={styles.overviewContainer}>

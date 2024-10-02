@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
 import { db } from "@/firebase/firebaseConfig";
 
-export const tablesPath = "hotel-details/seating-arrangement/tables/";
+export const tablesPath = "hotel-details/seating-arrangement/tables";
 
 export const fetchAllTables = async (setTables, setIsLoading) => {
   try {

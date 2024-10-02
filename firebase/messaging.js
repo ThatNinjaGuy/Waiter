@@ -33,12 +33,12 @@ export async function registerForPushNotificationsAsync() {
       return;
     }
 
-    if (Platform.OS === "android") {
-      await messaging().registerDeviceForRemoteMessages();
-      token = await messaging().getToken();
-    } else {
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-    }
+    // if (Platform.OS === "android") {
+    //   await messaging().registerDeviceForRemoteMessages();
+    //   token = await messaging().getToken();
+    // } else {
+    //   token = (await Notifications.getExpoPushTokenAsync()).data;
+    // }
   } else {
     alert("Must use physical device for Push Notifications");
   }
@@ -47,31 +47,68 @@ export async function registerForPushNotificationsAsync() {
 }
 
 export async function onMessageReceived(message) {
-  if (Platform.OS === "android") {
-    // Handle Android foreground notifications
-    const { title, body } = message.notification;
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title,
-        body,
-      },
-      trigger: null,
-    });
-  } else if (Platform.OS === "web") {
+  console.log("Received message:", message);
+
+  if (Platform.OS === "web") {
     // Handle web notifications
     if (Notification.permission === "granted") {
-      new Notification(message.notification.title, {
-        body: message.notification.body,
+      try {
+        const { title, body, icon } =
+          message.notification || message.data || {};
+
+        // Check if the browser supports notifications
+        if (!("Notification" in window)) {
+          console.log("This browser does not support desktop notification");
+          return;
+        }
+        console.log("Showing web notification");
+
+        // Create and show the notification
+        const notification = new Notification(title || "New Message", {
+          body: body || "You have a new notification",
+          //   icon: icon || "/path/to/default/icon.png", // Add a path to your default app icon
+          tag: "new-message", // Unique identifier for the notification
+          requireInteraction: true, // Keep the notification visible until the user interacts with it
+        });
+
+        console.log("Notification created successfully", notification);
+        notification.onclick = function () {
+          console.log("Notification clicked");
+          window.focus();
+          notification.close();
+        };
+
+        notification.onshow = function () {
+          console.log("Notification shown successfully");
+        };
+
+        notification.onerror = function (error) {
+          console.error("Error showing notification:", error);
+        };
+      } catch (error) {
+        console.error("Error creating web notification:", error);
+        console.error("Error name:", error.name);
+        console.error("Error message:", error.message);
+        console.error("Error stack:", error.stack);
+      }
+    } else {
+      console.log("Notification permission not granted for web");
+      // Optionally, you can request permission here
+      Notification.requestPermission().then(function (permission) {
+        if (permission === "granted") {
+          console.log("Notification permission granted.");
+          // You can call onMessageReceived again here to show the notification
+        }
       });
     }
   } else {
-    // Handle mobile notifications
-    const { title, body } = message.notification;
-
-    Notifications.scheduleNotificationAsync({
+    // Handle mobile notifications (Android and iOS)
+    const { title, body } = message.notification || message.data || {};
+    await Notifications.scheduleNotificationAsync({
       content: {
-        title,
-        body,
+        title: title || "New Message",
+        body: body || "You have a new notification",
+        data: message.data,
       },
       trigger: null,
     });

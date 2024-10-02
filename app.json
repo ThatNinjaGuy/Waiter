@@ -37,6 +37,7 @@
         "backgroundColor": "#ffffff"
       },
       "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true,
       "package": "com.thatninjaguyspeaks.Waiter",
       "permissions": [
         "INTERNET",
@@ -44,7 +45,8 @@
         "READ_EXTERNAL_STORAGE",
         "RECEIVE_BOOT_COMPLETED",
         "VIBRATE",
-        "WAKE_LOCK"
+        "WAKE_LOCK",
+        "POST_NOTIFICATIONS"
       ]
     },
     "web": {
