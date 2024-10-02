@@ -1,13 +1,4 @@
-import {
-  collection,
-  getDocs,
-  writeBatch,
-  doc,
-  deleteDoc,
-  updateDoc,
-  query,
-  onSnapshot,
-} from "firebase/firestore";
+import { Platform } from "react-native";
 import { db } from "@/firebase/firebaseConfig";
 import { generateUniqueKey } from "@/utils/keyGenerator";
 
@@ -15,19 +6,32 @@ export const staffsPath = "hotel-details/staff-details/staffs";
 
 export const fetchAllStaffs = async (setStaffs, setIsLoading) => {
   try {
-    const staffsRef = collection(db, staffsPath);
-    const q = query(staffsRef);
-
-    // Set up real-time listener
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const allStaffs = [];
-      querySnapshot.docs.forEach((doc) => {
-        allStaffs.push({ id: doc.id, ...doc.data() });
+    let unsubscribe;
+    if (Platform.OS === "web") {
+      const { collection, query, onSnapshot } = await import(
+        "firebase/firestore"
+      );
+      const staffsRef = collection(db, staffsPath);
+      const q = query(staffsRef);
+      unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const allStaffs = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        if (setStaffs) setStaffs(allStaffs);
+        if (setIsLoading) setIsLoading(false);
       });
-      if (setStaffs) setStaffs(allStaffs);
-      if (setIsLoading) setIsLoading(false);
-    });
-    // Clean up the listener on component unmount
+    } else {
+      const staffsRef = db.collection(staffsPath);
+      unsubscribe = staffsRef.onSnapshot((querySnapshot) => {
+        const allStaffs = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        if (setStaffs) setStaffs(allStaffs);
+        if (setIsLoading) setIsLoading(false);
+      });
+    }
     return () => unsubscribe();
   } catch (error) {
     console.error("Error fetching staffs:", error);
@@ -44,8 +48,15 @@ export const updateStaff = async (
   try {
     if (staffs && !updatedItem.searchableKey)
       updatedItem.searchableKey = generateUniqueKey(staffs, updatedItem);
-    const itemRef = doc(db, staffsPath, id);
-    await updateDoc(itemRef, updatedItem);
+
+    if (Platform.OS === "web") {
+      const { doc, updateDoc } = await import("firebase/firestore");
+      const itemRef = doc(db, staffsPath, id);
+      await updateDoc(itemRef, updatedItem);
+    } else {
+      await db.collection(staffsPath).doc(id).update(updatedItem);
+    }
+
     if (setStaffs)
       setStaffs(
         staffs.map((item) =>
@@ -62,20 +73,23 @@ export const updateStaff = async (
 
 export const deleteStaff = async (id) => {
   try {
-    await deleteDoc(doc(db, staffsPath, id));
+    if (Platform.OS === "web") {
+      const { doc, deleteDoc } = await import("firebase/firestore");
+      await deleteDoc(doc(db, staffsPath, id));
+    } else {
+      await db.collection(staffsPath).doc(id).delete();
+    }
     console.log("Document successfully deleted!");
   } catch (error) {
     console.error("Error removing document: ", error);
   }
 };
 
-const addToStaffs = async (
+export const addToStaffs = async (
   { name, email, role, age, mobile, authId },
   appDefaultLanguage
 ) => {
-  const batch = writeBatch(db);
-  const docRef = doc(collection(db, staffsPath));
-  batch.set(docRef, {
+  const newStaff = {
     name: name,
     age: age,
     email: email,
@@ -90,11 +104,17 @@ const addToStaffs = async (
       newGuests: false,
     },
     createdAt: Date.now(),
-  });
+  };
+
   try {
-    await batch.commit();
-    console.log("Batch write successful");
+    if (Platform.OS === "web") {
+      const { collection, addDoc } = await import("firebase/firestore");
+      await addDoc(collection(db, staffsPath), newStaff);
+    } else {
+      await db.collection(staffsPath).add(newStaff);
+    }
+    console.log("Staff added successfully");
   } catch (error) {
-    console.error("Error writing batch:", error);
+    console.error("Error adding staff:", error);
   }
 };

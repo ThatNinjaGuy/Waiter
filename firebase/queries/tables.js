@@ -1,31 +1,36 @@
-import {
-  collection,
-  writeBatch,
-  doc,
-  deleteDoc,
-  updateDoc,
-  query,
-  onSnapshot,
-} from "firebase/firestore";
+import { Platform } from "react-native";
 import { db } from "@/firebase/firebaseConfig";
 
 export const tablesPath = "hotel-details/seating-arrangement/tables/";
 
 export const fetchAllTables = async (setTables, setIsLoading) => {
   try {
-    const tablesRef = collection(db, tablesPath);
-    const q = query(tablesRef);
-
-    // Set up real-time listener
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const allTables = [];
-      querySnapshot.docs.forEach((doc) => {
-        allTables.push({ id: doc.id, ...doc.data() });
+    let unsubscribe;
+    if (Platform.OS === "web") {
+      const { collection, query, onSnapshot } = await import(
+        "firebase/firestore"
+      );
+      const tablesRef = collection(db, tablesPath);
+      const q = query(tablesRef);
+      unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const allTables = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        if (setTables) setTables(allTables);
+        if (setIsLoading) setIsLoading(false);
       });
-      setTables(allTables);
-      if (setIsLoading) setIsLoading(false);
-    });
-    // Clean up the listener on component unmount
+    } else {
+      const tablesRef = db.collection(tablesPath);
+      unsubscribe = tablesRef.onSnapshot((querySnapshot) => {
+        const allTables = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        if (setTables) setTables(allTables);
+        if (setIsLoading) setIsLoading(false);
+      });
+    }
     return () => unsubscribe();
   } catch (error) {
     console.error("Error fetching tables:", error);
@@ -33,20 +38,33 @@ export const fetchAllTables = async (setTables, setIsLoading) => {
 };
 
 export const addTable = async (items, tables, setTables) => {
-  const batch = writeBatch(db);
-  const newItems = [];
-
-  items.forEach((item) => {
-    item.number = item.number ? item.number : tables.length + 1;
-    item.searchableKey = item.number;
-    item.status = "Available";
-    const docRef = doc(collection(db, tablesPath));
-    batch.set(docRef, item);
-    newItems.push({ ...item, id: docRef.id });
-  });
-
   try {
-    await batch.commit();
+    const newItems = [];
+    if (Platform.OS === "web") {
+      const { collection, addDoc, writeBatch } = await import(
+        "firebase/firestore"
+      );
+      const batch = writeBatch(db);
+      for (const item of items) {
+        item.number = item.number ? item.number : tables.length + 1;
+        item.searchableKey = item.number;
+        item.status = "Available";
+        const docRef = await addDoc(collection(db, tablesPath), item);
+        newItems.push({ ...item, id: docRef.id });
+      }
+      await batch.commit();
+    } else {
+      const batch = db.batch();
+      for (const item of items) {
+        item.number = item.number ? item.number : tables.length + 1;
+        item.searchableKey = item.number;
+        item.status = "Available";
+        const docRef = db.collection(tablesPath).doc();
+        batch.set(docRef, item);
+        newItems.push({ ...item, id: docRef.id });
+      }
+      await batch.commit();
+    }
     if (setTables) setTables([...tables, ...newItems]);
     console.log("Add table successful");
   } catch (error) {
@@ -61,8 +79,13 @@ export const updateTableDetails = async (
   setTables
 ) => {
   try {
-    const itemRef = doc(db, tablesPath, id);
-    await updateDoc(itemRef, updatedItem);
+    if (Platform.OS === "web") {
+      const { doc, updateDoc } = await import("firebase/firestore");
+      const itemRef = doc(db, tablesPath, id);
+      await updateDoc(itemRef, updatedItem);
+    } else {
+      await db.collection(tablesPath).doc(id).update(updatedItem);
+    }
     if (setTables && tables)
       setTables(
         tables.map((item) =>
@@ -77,7 +100,12 @@ export const updateTableDetails = async (
 
 export const deleteTableDetails = async (id, tables, setTables) => {
   try {
-    await deleteDoc(doc(db, tablesPath, id));
+    if (Platform.OS === "web") {
+      const { doc, deleteDoc } = await import("firebase/firestore");
+      await deleteDoc(doc(db, tablesPath, id));
+    } else {
+      await db.collection(tablesPath).doc(id).delete();
+    }
     setTables(tables.filter((item) => item.id !== id));
     console.log("Table successfully deleted!");
   } catch (error) {

@@ -18,7 +18,7 @@ import {
   registerForPushNotificationsAsync,
   onMessageReceived,
 } from "@/firebase/messaging";
-import { auth, messaging } from "@/firebase/firebaseConfig";
+import { auth, messaging, firebase } from "@/firebase/firebaseConfig";
 import { onMessage } from "firebase/messaging";
 
 const AuthContext = createContext();
@@ -33,14 +33,18 @@ export const AuthProvider = ({ children }) => {
   const [authInitialized, setAuthInitialized] = useState(false);
 
   const fetchHotelDetails = async () => {
-    const hotelDetails = await fetchHotelData();
-    if (hotelDetails) {
-      setHotel(hotelDetails);
+    try {
+      const hotelDetails = await fetchHotelData();
+      if (hotelDetails) {
+        setHotel(hotelDetails);
+      }
+    } catch (error) {
+      console.error("Error fetching hotel details:", error);
     }
   };
 
   const setLoggedInUserDetails = (user) => {
-    const staff = staffs?.find((staff) => staff.authId == user.uid);
+    const staff = staffs?.find((staff) => staff.authId === user.uid);
     setUser({
       ...user,
       staffDetails: staff,
@@ -49,7 +53,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (user && user != null) setLoggedInUserDetails(user);
+    if (user) setLoggedInUserDetails(user);
   }, [staffs]);
 
   useEffect(() => {
@@ -71,8 +75,14 @@ export const AuthProvider = ({ children }) => {
           }
         }, 100);
       } else {
-        // For native platforms, auth should be immediately available
-        setAuthInitialized(true);
+        // For native platforms
+        const checkAuth = setInterval(() => {
+          if (auth && typeof auth.onAuthStateChanged === "function") {
+            clearInterval(checkAuth);
+            setAuthInitialized(true);
+            console.log("Auth initialized");
+          }
+        }, 100);
       }
     };
 
@@ -92,33 +102,35 @@ export const AuthProvider = ({ children }) => {
 
   const handleAuthStateChange = async (firebaseUser) => {
     if (firebaseUser) {
-      await fetchAllStaffs(setStaffs);
-      await fetchAllTables(setLiveTables, undefined);
-      setLoggedInUserDetails(firebaseUser);
-      fetchHotelDetails();
+      try {
+        await fetchAllStaffs(setStaffs);
+        await fetchAllTables(setLiveTables, undefined);
+        setLoggedInUserDetails(firebaseUser);
+        await fetchHotelDetails();
 
-      // Register for push notifications
-      const token = await registerForPushNotificationsAsync();
-      if (token) {
-        console.log("Push Notification Token:", token);
-      }
+        // Register for push notifications
+        const token = await registerForPushNotificationsAsync();
+        if (token) {
+          console.log("Push Notification Token:", token);
+        }
 
-      // Set up message handler
-      if (Platform.OS !== "web") {
-        const unsubscribeMessage = messaging().onMessage(onMessageReceived);
-        return () => unsubscribeMessage();
-      } else {
-        // For web
-        if (typeof Notification !== "undefined") {
+        // Set up message handler
+        if (Platform.OS !== "web" && messaging) {
+          const unsubscribeMessage = messaging.onMessage(onMessageReceived);
+          return () => unsubscribeMessage();
+        } else if (
+          Platform.OS === "web" &&
+          typeof Notification !== "undefined"
+        ) {
           Notification.requestPermission().then((permission) => {
             if (permission === "granted") {
               console.log("Notification permission granted.");
-              // messaging.onMessage(onMessageReceived);
-              // const messagingInstance = getMessaging();
               onMessage(messaging, onMessageReceived);
             }
           });
         }
+      } catch (error) {
+        console.error("Error during authentication state change:", error);
       }
     } else {
       setUser(null);
@@ -140,12 +152,16 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    if (Platform.OS === "web") {
-      await auth.signOut();
-    } else {
-      await auth().signOut();
+    try {
+      if (Platform.OS === "web") {
+        await auth.signOut();
+      } else {
+        await auth().signOut();
+      }
+      setUser(null);
+    } catch (error) {
+      console.error("Error during logout:", error);
     }
-    setUser(null);
   };
 
   if (loading) {

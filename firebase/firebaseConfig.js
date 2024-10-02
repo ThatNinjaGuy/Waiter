@@ -12,54 +12,49 @@ const firebaseConfig = {
   messagingSenderId: "699328756162",
   appId: "1:699328756162:web:f11e002f4f3dd23bd23e5b",
   measurementId: "G-F4YF1WECQR",
+  databaseURL: "https://waiter-dev-ca07d.firebaseio.com",
 };
 
-if (Platform.OS === "web") {
-  // Web Firebase setup
-  import("firebase/app").then((firebaseApp) => {
-    import("firebase/auth").then((firebaseAuth) => {
-      import("firebase/firestore").then((firebaseFirestore) => {
-        import("firebase/messaging").then((firebaseMessaging) => {
-          const app = firebaseApp.initializeApp(firebaseConfig);
-          auth = firebaseAuth.getAuth(app);
-          firebaseAuth.setPersistence(
-            auth,
-            firebaseAuth.browserLocalPersistence
-          );
-          firestore = firebaseFirestore.getFirestore(app);
-          if (typeof window !== "undefined" && "serviceWorker" in navigator) {
-            messaging = firebaseMessaging.getMessaging(app);
-          }
-        });
-      });
-    });
-  });
-} else {
-  // React Native Firebase setup
-  import("@react-native-firebase/app")
-    .then((firebaseApp) => {
+async function initializeFirebase() {
+  try {
+    if (Platform.OS === "web") {
+      const firebaseApp = await import("firebase/app");
+      const firebaseAuth = await import("firebase/auth");
+      const firebaseFirestore = await import("firebase/firestore");
+      const firebaseMessaging = await import("firebase/messaging");
+
+      const app = firebaseApp.initializeApp(firebaseConfig);
+      auth = firebaseAuth.getAuth(app);
+      firebaseAuth.setPersistence(auth, firebaseAuth.browserLocalPersistence);
+      firestore = firebaseFirestore.getFirestore(app);
+
+      if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+        messaging = firebaseMessaging.getMessaging(app);
+      }
+    } else {
+      const firebaseApp = await import("@react-native-firebase/app");
       firebase = firebaseApp.default;
+
       if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
       }
 
-      Promise.all([
-        import("@react-native-firebase/auth"),
-        import("@react-native-firebase/firestore"),
-        import("@react-native-firebase/messaging"),
-      ])
-        .then(([firebaseAuth, firebaseFirestore, firebaseMessaging]) => {
-          auth = firebaseAuth.default();
-          firestore = firebaseFirestore.default();
-          messaging = firebaseMessaging.default();
-        })
-        .catch((error) => {
-          console.error("Error initializing Firebase modules:", error);
-        });
-    })
-    .catch((error) => {
-      console.error("Error importing @react-native-firebase/app:", error);
-    });
+      const [firebaseAuth, firebaseFirestore, firebaseMessaging] =
+        await Promise.all([
+          import("@react-native-firebase/auth"),
+          import("@react-native-firebase/firestore"),
+          import("@react-native-firebase/messaging"),
+        ]);
+
+      auth = firebaseAuth.default();
+      firestore = firebaseFirestore.default();
+      messaging = firebaseMessaging.default();
+    }
+  } catch (error) {
+    console.error("Error initializing Firebase:", error);
+  }
 }
+
+initializeFirebase();
 
 export { firebase, auth, firestore as db, messaging, firebaseConfig };
