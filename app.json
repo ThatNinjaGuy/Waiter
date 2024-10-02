@@ -22,8 +22,13 @@
       "bundleIdentifier": "com.thatninjaguyspeaks.Waiter",
       "infoPlist": {
         "UIFileSharingEnabled": true,
-        "LSSupportsOpeningDocumentsInPlace": true
-      }
+        "LSSupportsOpeningDocumentsInPlace": true,
+        "UIBackgroundModes": ["remote-notification"],
+        "NSCameraUsageDescription": "This app uses the camera to scan QR codes.",
+        "NSPhotoLibraryUsageDescription": "This app requires access to the photo library to upload images.",
+        "NSMicrophoneUsageDescription": "This app uses the microphone for voice commands."
+      },
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "versionCode": 1,

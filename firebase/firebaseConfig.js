@@ -1,16 +1,7 @@
-import { initializeApp } from "firebase/app";
-import { initializeFirestore, CACHE_SIZE_UNLIMITED } from "firebase/firestore";
-import {
-  getAuth,
-  initializeAuth,
-  getReactNativePersistence,
-} from "firebase/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
-import { getMessaging } from "firebase/messaging";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// PROD configs
-// {Replace DEV configs for PROD builds}
+let firebase, auth, firestore, messaging;
 
 // DEV configs
 const firebaseConfig = {
@@ -23,30 +14,52 @@ const firebaseConfig = {
   measurementId: "G-F4YF1WECQR",
 };
 
-const app = initializeApp(firebaseConfig);
-
-let auth;
-
 if (Platform.OS === "web") {
-  auth = getAuth(app);
-  // Set persistence for web
-  import("firebase/auth").then(
-    ({ browserLocalPersistence, setPersistence }) => {
-      setPersistence(auth, browserLocalPersistence);
-    }
-  );
-} else {
-  // Initialize auth with AsyncStorage persistence for React Native
-  auth = initializeAuth(app, {
-    persistence: getReactNativePersistence(AsyncStorage),
+  // Web Firebase setup
+  import("firebase/app").then((firebaseApp) => {
+    import("firebase/auth").then((firebaseAuth) => {
+      import("firebase/firestore").then((firebaseFirestore) => {
+        import("firebase/messaging").then((firebaseMessaging) => {
+          const app = firebaseApp.initializeApp(firebaseConfig);
+          auth = firebaseAuth.getAuth(app);
+          firebaseAuth.setPersistence(
+            auth,
+            firebaseAuth.browserLocalPersistence
+          );
+          firestore = firebaseFirestore.getFirestore(app);
+          if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+            messaging = firebaseMessaging.getMessaging(app);
+          }
+        });
+      });
+    });
   });
+} else {
+  // React Native Firebase setup
+  import("@react-native-firebase/app")
+    .then((firebaseApp) => {
+      firebase = firebaseApp.default;
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+
+      Promise.all([
+        import("@react-native-firebase/auth"),
+        import("@react-native-firebase/firestore"),
+        import("@react-native-firebase/messaging"),
+      ])
+        .then(([firebaseAuth, firebaseFirestore, firebaseMessaging]) => {
+          auth = firebaseAuth.default();
+          firestore = firebaseFirestore.default();
+          messaging = firebaseMessaging.default();
+        })
+        .catch((error) => {
+          console.error("Error initializing Firebase modules:", error);
+        });
+    })
+    .catch((error) => {
+      console.error("Error importing @react-native-firebase/app:", error);
+    });
 }
 
-// Initialize Firestore with persistent local cache
-const db = initializeFirestore(app, {
-  experimentalForceLongPolling: true,
-  synchronizeTabs: true,
-  cacheSizeBytes: CACHE_SIZE_UNLIMITED,
-});
-
-export { auth, db, firebaseConfig };
+export { firebase, auth, firestore as db, messaging, firebaseConfig };

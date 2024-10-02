@@ -1,7 +1,5 @@
 import { Platform } from "react-native";
 import React, { createContext, useState, useEffect } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/firebase/firebaseConfig";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import { fetchAllTables } from "@/firebase/queries/tables";
 import {
@@ -16,7 +14,12 @@ import {
 } from "@/utils/appText/notifications";
 import { fetchAllStaffs } from "@/firebase/queries/staffs";
 import { fetchHotelData } from "@/firebase/queries/hotelInfo";
-import { registerForPushNotificationsAsync } from "@/firebase/messaging";
+import {
+  registerForPushNotificationsAsync,
+  onMessageReceived,
+} from "@/firebase/messaging";
+import { auth, messaging } from "@/firebase/firebaseConfig";
+import { onMessage } from "firebase/messaging";
 
 const AuthContext = createContext();
 
@@ -27,17 +30,14 @@ export const AuthProvider = ({ children }) => {
   const [staffs, setStaffs] = useState([]);
   const [hotel, setHotel] = useState();
   const [loading, setLoading] = useState(true);
+  const [authInitialized, setAuthInitialized] = useState(false);
 
-  useEffect(() => {
-    const fetchHotelDetails = async () => {
-      const hotelDetails = await fetchHotelData();
-      if (hotelDetails) {
-        setHotel(hotelDetails);
-      }
-    };
-
-    fetchHotelDetails();
-  }, []);
+  const fetchHotelDetails = async () => {
+    const hotelDetails = await fetchHotelData();
+    if (hotelDetails) {
+      setHotel(hotelDetails);
+    }
+  };
 
   const setLoggedInUserDetails = (user) => {
     const staff = staffs?.find((staff) => staff.authId == user.uid);
@@ -62,43 +62,69 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const subscriber = onAuthStateChanged(auth, async (firebaseUser) => {
-        if (firebaseUser) {
-          await fetchAllStaffs(setStaffs);
-          await fetchAllTables(setLiveTables, undefined);
-          setLoggedInUserDetails(firebaseUser);
-
-          // Register for push notifications
-          const token = await registerForPushNotificationsAsync();
-          if (token) {
-            // TODO: Send this token to your server and associate it with the user
-            console.log("Push Notification:", token);
+      if (Platform.OS === "web") {
+        // For web, wait for auth to be initialized
+        const checkAuth = setInterval(() => {
+          if (auth && typeof auth.onAuthStateChanged === "function") {
+            clearInterval(checkAuth);
+            setAuthInitialized(true);
           }
-
-          // Set up message handler
-          if (Platform.OS === "android") {
-            const unsubscribe = messaging().onMessage(onMessageReceived);
-            return () => unsubscribe();
-          } else if (Platform.OS === "web") {
-            // For web, you might want to use Firebase's onMessage here
-            // This depends on how you've set up Firebase for web
-            Notification.requestPermission().then((permission) => {
-              if (permission === "granted") {
-                console.log("Notification permission granted.");
-              }
-            });
-          }
-        } else {
-          setUser(null);
-        }
-        setLoading(false);
-      });
-
-      return () => subscriber();
+        }, 100);
+      } else {
+        // For native platforms, auth should be immediately available
+        setAuthInitialized(true);
+      }
     };
 
     initializeAuth();
   }, []);
+
+  useEffect(() => {
+    if (!authInitialized) return;
+
+    const unsubscribeAuth =
+      Platform.OS === "web"
+        ? auth.onAuthStateChanged(handleAuthStateChange)
+        : auth.onAuthStateChanged(handleAuthStateChange);
+
+    return () => unsubscribeAuth();
+  }, [authInitialized]);
+
+  const handleAuthStateChange = async (firebaseUser) => {
+    if (firebaseUser) {
+      await fetchAllStaffs(setStaffs);
+      await fetchAllTables(setLiveTables, undefined);
+      setLoggedInUserDetails(firebaseUser);
+      fetchHotelDetails();
+
+      // Register for push notifications
+      const token = await registerForPushNotificationsAsync();
+      if (token) {
+        console.log("Push Notification Token:", token);
+      }
+
+      // Set up message handler
+      if (Platform.OS !== "web") {
+        const unsubscribeMessage = messaging().onMessage(onMessageReceived);
+        return () => unsubscribeMessage();
+      } else {
+        // For web
+        if (typeof Notification !== "undefined") {
+          Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+              console.log("Notification permission granted.");
+              // messaging.onMessage(onMessageReceived);
+              // const messagingInstance = getMessaging();
+              onMessage(messaging, onMessageReceived);
+            }
+          });
+        }
+      }
+    } else {
+      setUser(null);
+    }
+    setLoading(false);
+  };
 
   const publishNotifications = (updated) => {
     if (!updated) return;
@@ -114,7 +140,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await auth.signOut();
+    if (Platform.OS === "web") {
+      await auth.signOut();
+    } else {
+      await auth().signOut();
+    }
     setUser(null);
   };
 

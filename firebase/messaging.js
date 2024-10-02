@@ -1,27 +1,22 @@
 import { Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
-import { getMessaging, getToken } from "firebase/messaging";
-import { app } from "./firebaseConfig"; // Import your Firebase app instance
-import messaging from "@react-native-firebase/messaging";
+import { messaging } from "./firebaseConfig"; // Import your Firebase app instance
+import { getToken } from "firebase/messaging";
 
 export async function registerForPushNotificationsAsync() {
   let token;
 
-  if (Platform.OS === "android") {
-    await messaging().registerDeviceForRemoteMessages();
-    token = await messaging().getToken();
-  } else if (Platform.OS === "web") {
+  if (Platform.OS === "web") {
     try {
-      const messaging = getMessaging(app);
-      token = await getToken(messaging, {
-        vapidKey:
-          "BECTGATgqCCtMrHEuAMi1NzrTP06XRvi6C_MBMviG13Q-VdXCBsGyM9Cg0CTIhLCp9WPKRztai-uDaYMc9vrZT0",
-
-        serviceWorkerRegistration: await navigator.serviceWorker.register(
-          "/firebase-messaging-sw.js"
-        ),
-      });
+      if (messaging) {
+        token = await getToken(messaging, {
+          vapidKey:
+            "BECTGATgqCCtMrHEuAMi1NzrTP06XRvi6C_MBMviG13Q-VdXCBsGyM9Cg0CTIhLCp9WPKRztai-uDaYMc9vrZT0",
+        });
+      } else {
+        console.log("Messaging is not supported in this browser");
+      }
     } catch (error) {
       console.error("An error occurred while retrieving token. ", error);
     }
@@ -39,15 +34,11 @@ export async function registerForPushNotificationsAsync() {
     }
 
     if (Platform.OS === "android") {
-      await Notifications.setNotificationChannelAsync("default", {
-        name: "default",
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: "#FF231F7C",
-      });
+      await messaging().registerDeviceForRemoteMessages();
+      token = await messaging().getToken();
+    } else {
+      token = (await Notifications.getExpoPushTokenAsync()).data;
     }
-
-    token = (await Notifications.getExpoPushTokenAsync()).data;
   } else {
     alert("Must use physical device for Push Notifications");
   }

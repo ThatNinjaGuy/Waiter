@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyC-9wDAC1_KiINK-qldwnCeHUw62laPch4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>699328756162</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.thatninjaguyspeaks.Waiter</string>
+	<key>PROJECT_ID</key>
+	<string>waiter-dev-ca07d</string>
+	<key>STORAGE_BUCKET</key>
+	<string>waiter-dev-ca07d.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:699328756162:ios:3b5bd9d1a10e2981d23e5b</string>
+</dict>
+</plist>

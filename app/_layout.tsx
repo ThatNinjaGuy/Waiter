@@ -46,7 +46,7 @@ export default function RootLayout() {
           />
         </Stack>
       </AuthProvider>
-      <NotificationComponent />
+      {/* <NotificationComponent /> */}
     </ThemeProvider>
   );
 }
