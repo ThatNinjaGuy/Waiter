@@ -74,12 +74,6 @@ export const AuthProvider = ({ children }) => {
     if (!staffs || !firebaseUser) return; // Add this check to prevent setting undefined user
 
     const staff = staffs?.find((staff) => staff.authId === firebaseUser.uid);
-    console.log(
-      "staffsLength, staff, user",
-      staffs.length,
-      staff,
-      firebaseUser
-    );
     setUser({
       staffDetails: staff,
       preferredLanguage: staff?.preferredLanguage || appDefaultLanguage,

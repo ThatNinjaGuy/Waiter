@@ -34,20 +34,15 @@ export const setupNotificationHandler = () => {
 
 export const setupMessageHandler = async (platform) => {
   if (platform !== "web") {
-    console.log("Setting up message handler for Android");
     if (messaging) {
       messaging().onMessage(async (remoteMessage) => {
-        console.log("Foreground message received:", remoteMessage);
         await showNotification(remoteMessage);
       });
       messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-        console.log("Background message received:", remoteMessage);
         await showNotification(remoteMessage);
       });
-      console.log("Successful set up message handler for Android");
     }
   } else if (Platform.OS === "web" && typeof Notification !== "undefined") {
-    console.log("Requesting notification permission");
     Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
         console.log("Notification permission granted.");
