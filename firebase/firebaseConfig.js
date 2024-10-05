@@ -32,7 +32,7 @@ async function initializeFirebase() {
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker
             .register("/firebase-messaging-sw.js")
-            .then(function (registration) {
+            .then((registration) => {
               console.log(
                 "Service Worker registered with scope:",
                 registration.scope

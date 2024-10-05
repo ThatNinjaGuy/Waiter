@@ -65,17 +65,21 @@ messaging.onBackgroundMessage((payload) => {
     });
 });
 
-self.addEventListener("notificationclick", function (event) {
-  console.log("[Service Worker] Push Received.");
-  console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
 
-  const data = JSON.parse(event.data.text());
-  const title = data.notification.title || "Push Notification";
-  const options = {
-    body: data.notification.body || "Default message body",
-    // icon: "/path/to/icon.png",
-    // badge: "/path/to/badge.png",
-  };
+  if (event.action === "open") {
+    clients.openWindow("/"); // Adjust the URL to where you want to navigate
+  } else if (event.action === "close") {
+    // Handle dismiss action if needed
+  }
 
-  event.waitUntil(self.registration.showNotification(title, options));
+  event.waitUntil(
+    clients.matchAll({ type: "window" }).then((clientList) => {
+      if (clientList.length > 0) {
+        return clientList[0].focus();
+      }
+      return clients.openWindow("/");
+    })
+  );
 });
