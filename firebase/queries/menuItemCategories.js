@@ -17,31 +17,36 @@ export const fetchMenuItemCategories = async (
       docSnap = await db.doc(menuItemCategoriesPath).get();
     }
 
-    if (docSnap.exists()) {
+    if (
+      (Platform.OS === "web" && docSnap.exists()) ||
+      (Platform.OS !== "web" && docSnap.exists)
+    ) {
       const categories = docSnap.data().categories || [];
       setMenuItemCategories(categories);
     } else {
-      console.error("Menu item categories could not be found");
+      console.log("Menu item categories document not found");
+      setMenuItemCategories([]);
     }
   } catch (error) {
     console.error("Error fetching menu item categories:", error);
+    setMenuItemCategories([]);
   } finally {
     if (setIsLoading) setIsLoading(false);
   }
 };
 
-export const addMenuItemCategory = async (newCategories) => {
+export const addMenuItemCategory = async (newCategory) => {
   try {
     if (Platform.OS === "web") {
       const { doc, updateDoc, arrayUnion } = await import("firebase/firestore");
       const docRef = doc(db, menuItemCategoriesPath);
       await updateDoc(docRef, {
-        categories: arrayUnion(...newCategories),
+        categories: arrayUnion(newCategory),
       });
     } else {
       const docRef = db.doc(menuItemCategoriesPath);
       await docRef.update({
-        categories: db.FieldValue.arrayUnion(...newCategories),
+        categories: db.FieldValue.arrayUnion(newCategory),
       });
     }
     console.log("Menu category added successfully");

@@ -112,3 +112,48 @@ export const deleteTableDetails = async (id, tables, setTables) => {
     console.error("Error removing table: ", error);
   }
 };
+
+export const updateOrderStatus = async (orderId, tableId, orderStatus) => {
+  try {
+    let tableDocRef, updateDocFunc, getDocFunc;
+
+    if (Platform.OS === "web") {
+      const { doc, updateDoc, getDoc } = await import("firebase/firestore");
+      tableDocRef = doc(db, tablesPath, tableId);
+      updateDocFunc = updateDoc;
+      getDocFunc = getDoc;
+    } else {
+      tableDocRef = db.collection(tablesPath).doc(tableId);
+      updateDocFunc = (ref, data) => ref.update(data);
+      getDocFunc = (ref) => ref.get();
+    }
+
+    // Get the current orders
+    const tableSnapshot = await getDocFunc(tableDocRef);
+    const tableData =
+      Platform.OS === "web" ? tableSnapshot.data() : tableSnapshot.data();
+    const currentOrders = tableData.orders || [];
+
+    // Find the order to update
+    const updatedOrders = currentOrders.map((order) =>
+      order.id === orderId ? { ...order, status: orderStatus } : order
+    );
+
+    // Determine the new table status
+    const newTableStatus = updatedOrders.some(
+      (order) => order.status !== "Completed"
+    )
+      ? "Occupied"
+      : "Available";
+
+    // Update the orders array and table status in Firestore
+    await updateDocFunc(tableDocRef, {
+      orders: updatedOrders,
+      status: newTableStatus,
+    });
+
+    console.log("Order status and table status updated successfully");
+  } catch (error) {
+    console.error("Error updating order status:", error);
+  }
+};

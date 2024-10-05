@@ -37,7 +37,6 @@
         "backgroundColor": "#ffffff"
       },
       "googleServicesFile": "./google-services.json",
-      "useNextNotificationsApi": true,
       "package": "com.thatninjaguyspeaks.Waiter",
       "permissions": [
         "INTERNET",
@@ -63,9 +62,17 @@
       }
     },
     "plugins": [
+      "./android-manifest.plugin.js",
       "expo-router",
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
+      [
+        "@react-native-firebase/messaging",
+        {
+          "auto-initialization": true,
+          "messaging_android_notification_color": "#FFFFFF"
+        }
+      ],
       [
         "expo-notifications",
         {

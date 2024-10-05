@@ -26,6 +26,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [firebaseUser, setFirebaseUser] = useState(null);
   const [liveOrders, setLiveOrders] = useState();
   const [liveTables, setLiveTables] = useState([]);
   const [staffs, setStaffs] = useState([]);
@@ -36,8 +37,6 @@ export const AuthProvider = ({ children }) => {
   const responseListener = useRef();
 
   useEffect(() => {
-    // registerForPushNotificationsAsync();
-
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         console.log("Notification received:", notification);
@@ -71,34 +70,28 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const setLoggedInUserDetails = (loggedInUser) => {
-    if (!loggedInUser) return; // Add this check to prevent setting undefined user
+  const setLoggedInUserDetails = () => {
+    if (!staffs || !firebaseUser) return; // Add this check to prevent setting undefined user
 
-    const staff = staffs?.find(
-      (staff) =>
-        staff.authId === loggedInUser.uid ||
-        staff.authId === loggedInUser?.staffDetails?.authId
-    );
+    const staff = staffs?.find((staff) => staff.authId === firebaseUser.uid);
     console.log(
       "staffsLength, staff, user",
       staffs.length,
       staff,
-      loggedInUser
+      firebaseUser
     );
     setUser({
-      // ...firebaseUser,
       staffDetails: staff,
       preferredLanguage: staff?.preferredLanguage || appDefaultLanguage,
     });
     if (staff && !staff?.notificationToken) {
-      console.log("registering for push notifications");
       registerForPushNotificationsAsync(staff, staffs);
     }
   };
 
   useEffect(() => {
-    if (user && staffs.length > 0) {
-      setLoggedInUserDetails(user);
+    if (staffs.length > 0) {
+      setLoggedInUserDetails();
     }
   }, [staffs]);
 
@@ -147,7 +140,7 @@ export const AuthProvider = ({ children }) => {
       try {
         await fetchAllStaffs(setStaffs);
         await fetchAllTables(setLiveTables, undefined);
-        setLoggedInUserDetails(firebaseUser);
+        setFirebaseUser(firebaseUser);
         await fetchHotelDetails();
         // Set up message handler
         setupMessageHandler(Platform.OS);
@@ -156,6 +149,7 @@ export const AuthProvider = ({ children }) => {
       }
     } else {
       setUser(null);
+      setFirebaseUser(null);
     }
     setLoading(false);
   };
@@ -181,6 +175,7 @@ export const AuthProvider = ({ children }) => {
         await auth.signOut();
       }
       setUser(null);
+      setFirebaseUser(null);
     } catch (error) {
       console.error("Error during logout:", error);
     }

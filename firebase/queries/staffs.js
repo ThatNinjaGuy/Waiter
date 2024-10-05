@@ -3,6 +3,56 @@ import { db } from "@/firebase/firebaseConfig";
 import { generateUniqueKey } from "@/utils/keyGenerator";
 
 export const staffsPath = "hotel-details/staff-details/staffs";
+export const signUpRequestsPath = "hotel-details/staff-details/signup-requests";
+
+export const fetchAllSignupRequests = async (setRequests, setLoading) => {
+  try {
+    let unsubscribe;
+    if (Platform.OS === "web") {
+      const { collection, query, onSnapshot } = await import(
+        "firebase/firestore"
+      );
+      const signUpRequestsRef = collection(db, signUpRequestsPath);
+      const q = query(signUpRequestsRef);
+      unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const allRequests = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        if (setRequests) setRequests(allRequests);
+        if (setLoading) setLoading(false);
+      });
+    } else {
+      const signUpRequestsRef = db.collection(signUpRequestsPath);
+      unsubscribe = signUpRequestsRef.onSnapshot((querySnapshot) => {
+        const allRequests = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        if (setRequests) setRequests(allRequests);
+        if (setLoading) setLoading(false);
+      });
+    }
+    return () => unsubscribe();
+  } catch (error) {
+    console.error("Error fetching user sign up requests:", error);
+  }
+};
+
+export const deleteSignupRequest = async (id) => {
+  try {
+    if (Platform.OS === "web") {
+      const { doc, deleteDoc } = await import("firebase/firestore");
+      const requestRef = doc(db, signUpRequestsPath, id);
+      await deleteDoc(requestRef);
+    } else {
+      await db.collection(signUpRequestsPath).doc(id).delete();
+    }
+    console.log("Signup request successfully deleted!");
+  } catch (error) {
+    console.error("Error deleting signup request: ", error);
+  }
+};
 
 export const fetchAllStaffs = async (setStaffs, setIsLoading) => {
   try {

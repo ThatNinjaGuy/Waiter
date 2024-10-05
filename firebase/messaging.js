@@ -7,7 +7,6 @@ import { updateStaff } from "@/firebase/queries/staffs";
 
 export async function registerForPushNotificationsAsync(user, allUsers) {
   if (!user || !allUsers) return;
-  console.log("registerForPushNotificationsAsync", user);
   let token;
 
   if (Platform.OS === "web") {
@@ -26,8 +25,8 @@ export async function registerForPushNotificationsAsync(user, allUsers) {
   } else if (Device.isDevice) {
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
+
     let finalStatus = existingStatus;
-    console.log("existingStatus", existingStatus);
     if (existingStatus !== "granted") {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
@@ -50,9 +49,7 @@ export async function registerForPushNotificationsAsync(user, allUsers) {
     alert("Must use physical device for Push Notifications");
   }
 
-  console.log("token", token);
   if (token && token != user.notificationToken) {
-    console.log("Need to save notification token", token);
     updateStaff(
       user.id,
       {

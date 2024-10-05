@@ -1,19 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
 import { View, Text, FlatList, StyleSheet, Alert } from "react-native";
-import {
-  collection,
-  query,
-  onSnapshot,
-  doc,
-  deleteDoc,
-} from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { db } from "@/firebase/firebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
 import { firebaseConfig } from "@/firebase/firebaseConfig";
 import {
@@ -30,7 +22,11 @@ import AuthContext from "@/components/Authentication/AuthProvider";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import ThemedButton from "../common/ThemedButton";
 import { appDefaultLanguage } from "@/constants/appText/common";
-import { addToStaffs } from "@/firebase/queries/staffs";
+import {
+  fetchAllSignupRequests,
+  deleteSignupRequest,
+  addToStaffs,
+} from "@/firebase/queries/staffs";
 
 const ApproveSignUpRequestsScreen = () => {
   const { user } = useContext(AuthContext);
@@ -57,32 +53,7 @@ const ApproveSignUpRequestsScreen = () => {
   const secondaryApp = initializeApp(firebaseConfig, "Secondary");
 
   useEffect(() => {
-    const fetchAllSignupRequests = async () => {
-      try {
-        const signUpRequests = collection(
-          db,
-          "hotel-details/staff-details/signup-requests"
-        );
-        const q = query(signUpRequests);
-
-        // Set up real-time listener
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-          const allRequests = [];
-          querySnapshot.docs.forEach((doc) => {
-            allRequests.push({ id: doc.id, ...doc.data() });
-          });
-          setRequests(allRequests);
-          setLoading(false);
-        });
-        // Clean up the listener on component unmount
-        return () => unsubscribe();
-      } catch (error) {
-        console.error("Error fetching user sign up requests:", error);
-      }
-    };
-
-    setLoading(true);
-    fetchAllSignupRequests();
+    fetchAllSignupRequests(setRequests, setLoading);
   }, []);
 
   const handleSignUp = async ({ email, password }) => {
@@ -113,8 +84,7 @@ const ApproveSignUpRequestsScreen = () => {
 
   const deleteRequest = async ({ id }) => {
     try {
-      const docRef = doc(db, "hotel-details/staff-details/signup-requests", id);
-      await deleteDoc(docRef);
+      deleteSignupRequest(id);
       console.log("Document successfully deleted!");
     } catch (error) {
       console.error("Error removing document: ", error);

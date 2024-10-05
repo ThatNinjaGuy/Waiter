@@ -1,14 +1,10 @@
 import { Platform } from "react-native";
 import * as Notifications from "expo-notifications";
-import {
-  onMessageReceived,
-} from "@/firebase/messaging";
+import { onMessageReceived } from "@/firebase/messaging";
 import { messaging } from "@/firebase/firebaseConfig";
 import { onMessage } from "firebase/messaging";
 
 export const initializeNotifications = () => {
-  //   registerForPushNotificationsAsync();
-
   const notificationListener = Notifications.addNotificationReceivedListener(
     (notification) => {
       console.log("Notification received:", notification);
@@ -37,9 +33,6 @@ export const setupNotificationHandler = () => {
 };
 
 export const setupMessageHandler = async (platform) => {
-  // Register for push notifications
-  //   await registerForPushNotificationsAsync();
-
   if (platform !== "web") {
     console.log("Setting up message handler for Android");
     if (messaging) {

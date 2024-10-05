@@ -6,21 +6,32 @@ const menuItemsPath = "hotel-details/menu/menu-items";
 
 export const fetchMenuItems = async (setMenuItems, setIsLoading) => {
   try {
-    let querySnapshot;
+    let unsubscribe;
     if (Platform.OS === "web") {
-      const { collection, getDocs } = await import("firebase/firestore");
-      querySnapshot = await getDocs(collection(db, menuItemsPath));
+      const { collection, onSnapshot } = await import("firebase/firestore");
+      const menuItemsRef = collection(db, menuItemsPath);
+      unsubscribe = onSnapshot(menuItemsRef, (querySnapshot) => {
+        const items = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setMenuItems(items);
+        if (setIsLoading) setIsLoading(false);
+      });
     } else {
-      querySnapshot = await db.collection(menuItemsPath).get();
+      const menuItemsRef = db.collection(menuItemsPath);
+      unsubscribe = menuItemsRef.onSnapshot((querySnapshot) => {
+        const items = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setMenuItems(items);
+        if (setIsLoading) setIsLoading(false);
+      });
     }
-    const items = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setMenuItems(items);
+    return () => unsubscribe();
   } catch (error) {
     console.error("Error fetching menu items:", error);
-  } finally {
     if (setIsLoading) setIsLoading(false);
   }
 };
@@ -34,9 +45,10 @@ export const addMenuItems = async (items, menuItems, setMenuItems) => {
         "firebase/firestore"
       );
       const batch = writeBatch(db);
+      const menuItemsRef = collection(db, menuItemsPath);
       for (const item of items) {
         item.searchableKey = generateUniqueKey(menuItems, item);
-        const docRef = await addDoc(collection(db, menuItemsPath), item);
+        const docRef = await addDoc(menuItemsRef, item);
         newItems.push({ ...item, id: docRef.id });
       }
       await batch.commit();
@@ -86,7 +98,8 @@ export const deleteMenuItem = async (id, menuItems, setMenuItems) => {
   try {
     if (Platform.OS === "web") {
       const { doc, deleteDoc } = await import("firebase/firestore");
-      await deleteDoc(doc(db, menuItemsPath, id));
+      const itemRef = doc(db, menuItemsPath, id);
+      await deleteDoc(itemRef);
     } else {
       await db.collection(menuItemsPath).doc(id).delete();
     }
