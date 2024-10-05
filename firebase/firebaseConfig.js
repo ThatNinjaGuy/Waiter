@@ -1,15 +1,6 @@
-import { initializeApp } from "firebase/app";
-import { initializeFirestore, CACHE_SIZE_UNLIMITED } from "firebase/firestore";
-import {
-  getAuth,
-  initializeAuth,
-  getReactNativePersistence,
-} from "firebase/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 
-// PROD configs
-// {Replace DEV configs for PROD builds}
+let firebase, auth, firestore, messaging;
 
 // DEV configs
 const firebaseConfig = {
@@ -20,32 +11,62 @@ const firebaseConfig = {
   messagingSenderId: "699328756162",
   appId: "1:699328756162:web:f11e002f4f3dd23bd23e5b",
   measurementId: "G-F4YF1WECQR",
+  databaseURL: "https://waiter-dev-ca07d.firebaseio.com",
 };
 
-const app = initializeApp(firebaseConfig);
+async function initializeFirebase() {
+  try {
+    if (Platform.OS === "web") {
+      const firebaseApp = await import("firebase/app");
+      const firebaseAuth = await import("firebase/auth");
+      const firebaseFirestore = await import("firebase/firestore");
+      const firebaseMessaging = await import("firebase/messaging");
 
-let auth;
+      const app = firebaseApp.initializeApp(firebaseConfig);
+      auth = firebaseAuth.getAuth(app);
+      firebaseAuth.setPersistence(auth, firebaseAuth.browserLocalPersistence);
+      firestore = firebaseFirestore.getFirestore(app);
 
-if (Platform.OS === "web") {
-  auth = getAuth(app);
-  // Set persistence for web
-  import("firebase/auth").then(
-    ({ browserLocalPersistence, setPersistence }) => {
-      setPersistence(auth, browserLocalPersistence);
+      if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+        messaging = firebaseMessaging.getMessaging(app);
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker
+            .register("/firebase-messaging-sw.js")
+            .then((registration) => {
+              console.log(
+                "Service Worker registered with scope:",
+                registration.scope
+              );
+            })
+            .catch(function (error) {
+              console.log("Service Worker registration failed:", error);
+            });
+        }
+      }
+    } else {
+      const firebaseApp = await import("@react-native-firebase/app");
+      firebase = firebaseApp.default;
+
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+
+      const [firebaseAuth, firebaseFirestore, firebaseMessaging] =
+        await Promise.all([
+          import("@react-native-firebase/auth"),
+          import("@react-native-firebase/firestore"),
+          import("@react-native-firebase/messaging"),
+        ]);
+
+      auth = firebaseAuth.default();
+      firestore = firebaseFirestore.default();
+      messaging = firebaseMessaging.default;
     }
-  );
-} else {
-  // Initialize auth with AsyncStorage persistence for React Native
-  auth = initializeAuth(app, {
-    persistence: getReactNativePersistence(AsyncStorage),
-  });
+  } catch (error) {
+    console.error("Error initializing Firebase:", error);
+  }
 }
 
-// Initialize Firestore with persistent local cache
-const db = initializeFirestore(app, {
-  experimentalForceLongPolling: true,
-  synchronizeTabs: true,
-  cacheSizeBytes: CACHE_SIZE_UNLIMITED,
-});
+initializeFirebase();
 
-export { auth, db, firebaseConfig };
+export { firebase, auth, firestore as db, messaging, firebaseConfig };

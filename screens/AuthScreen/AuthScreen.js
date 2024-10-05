@@ -16,6 +16,7 @@ import { db } from "@/firebase/firebaseConfig";
 import { Picker } from "@react-native-picker/picker";
 import { validateSignupRequest } from "@/utils/validations";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
+import { Platform } from "react-native";
 
 const AuthScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -81,7 +82,11 @@ const AuthScreen = () => {
   const handleSignIn = async () => {
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      if (Platform.OS === "web") {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        await auth.signInWithEmailAndPassword(email, password);
+      }
     } catch (error) {
       console.error(error);
       if (error.code === "auth/user-disabled") {

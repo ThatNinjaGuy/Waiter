@@ -12,6 +12,7 @@ export function generateUniqueKey(existingItems, newItem) {
     return existingItems.some((item) => item.searchableKey === key);
   };
 
+  if (!newItem.name) return null;
   if (newItem.searchableKey && !keyExists) return newItem.searchableKey;
 
   let key = createInitialKey(newItem.name);
