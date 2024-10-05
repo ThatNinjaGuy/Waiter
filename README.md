@@ -129,8 +129,9 @@ ngrok http 8081
 
 ## Generating native folders and running the gradle build locally
 
-- npx expo prebuild
+- npx expo prebuild - Not working as ios is improperly configured
 - eas build --platform android --local
+- npx expo run:android
 
 ## Contributing
 

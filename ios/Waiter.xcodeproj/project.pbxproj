@@ -34,6 +34,7 @@
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Waiter/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		FD0A1D5A31464188863189AD /* GoogleService-Info.plist */ = {isa = PBXFileReference; name = "GoogleService-Info.plist"; path = "Waiter/GoogleService-Info.plist"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = text.plist.xml; explicitFileType = undefined; includeInIndex = 0; };
 		3B9561E07AC54CC296208969 /* noop-file.swift */ = {isa = PBXFileReference; name = "noop-file.swift"; path = "Waiter/noop-file.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
+		2E04872963BA49DFBB9271C2 /* Waiter-Bridging-Header.h */ = {isa = PBXFileReference; name = "Waiter-Bridging-Header.h"; path = "Waiter/Waiter-Bridging-Header.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +61,7 @@
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
 				FD0A1D5A31464188863189AD /* GoogleService-Info.plist */,
 				3B9561E07AC54CC296208969 /* noop-file.swift */,
+				2E04872963BA49DFBB9271C2 /* Waiter-Bridging-Header.h */,
 			);
 			name = Waiter;
 			sourceTree = "<group>";
@@ -200,6 +202,7 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
 				74EE3543872741CD8C331E43 /* GoogleService-Info.plist in Resources */,
+				053934ABEA764AF492D691FE /* Waiter-Bridging-Header.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,11 +307,12 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.thatninjaguyspeaks.Waiter";
-				PRODUCT_NAME = Waiter;
+				PRODUCT_NAME = "Waiter";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_OBJC_BRIDGING_HEADER = Waiter/Waiter-Bridging-Header.h;
 			};
 			name = Debug;
 		};
@@ -329,10 +333,11 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.thatninjaguyspeaks.Waiter";
-				PRODUCT_NAME = Waiter;
+				PRODUCT_NAME = "Waiter";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_OBJC_BRIDGING_HEADER = Waiter/Waiter-Bridging-Header.h;
 			};
 			name = Release;
 		};

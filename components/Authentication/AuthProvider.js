@@ -14,13 +14,13 @@ import {
 } from "@/utils/appText/notifications";
 import { fetchAllStaffs } from "@/firebase/queries/staffs";
 import { fetchHotelData } from "@/firebase/queries/hotelInfo";
+import { auth } from "@/firebase/firebaseConfig";
 import {
-  registerForPushNotificationsAsync,
-  onMessageReceived,
-} from "@/firebase/messaging";
-import { auth, messaging, firebase } from "@/firebase/firebaseConfig";
-import { onMessage } from "firebase/messaging";
+  setupNotificationHandler,
+  setupMessageHandler,
+} from "@/utils/notificationManager";
 import * as Notifications from "expo-notifications";
+import { registerForPushNotificationsAsync } from "@/firebase/messaging";
 
 const AuthContext = createContext();
 
@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
   const responseListener = useRef();
 
   useEffect(() => {
-    registerForPushNotificationsAsync();
+    // registerForPushNotificationsAsync();
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
@@ -57,16 +57,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    // Set up notification handler for Android
-    // if (Platform.OS === "android") {
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: false,
-      }),
-    });
-    // }
+    setupNotificationHandler();
   }, []);
 
   const fetchHotelDetails = async () => {
@@ -80,17 +71,35 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const setLoggedInUserDetails = (user) => {
-    const staff = staffs?.find((staff) => staff.authId === user.uid);
+  const setLoggedInUserDetails = (loggedInUser) => {
+    if (!loggedInUser) return; // Add this check to prevent setting undefined user
+
+    const staff = staffs?.find(
+      (staff) =>
+        staff.authId === loggedInUser.uid ||
+        staff.authId === loggedInUser?.staffDetails?.authId
+    );
+    console.log(
+      "staffsLength, staff, user",
+      staffs.length,
+      staff,
+      loggedInUser
+    );
     setUser({
-      ...user,
+      // ...firebaseUser,
       staffDetails: staff,
       preferredLanguage: staff?.preferredLanguage || appDefaultLanguage,
     });
+    if (staff && !staff?.notificationToken) {
+      console.log("registering for push notifications");
+      registerForPushNotificationsAsync(staff, staffs);
+    }
   };
 
   useEffect(() => {
-    if (user) setLoggedInUserDetails(user);
+    if (user && staffs.length > 0) {
+      setLoggedInUserDetails(user);
+    }
   }, [staffs]);
 
   useEffect(() => {
@@ -117,7 +126,6 @@ export const AuthProvider = ({ children }) => {
           if (auth && typeof auth.onAuthStateChanged === "function") {
             clearInterval(checkAuth);
             setAuthInitialized(true);
-            console.log("Auth initialized");
           }
         }, 100);
       }
@@ -141,40 +149,8 @@ export const AuthProvider = ({ children }) => {
         await fetchAllTables(setLiveTables, undefined);
         setLoggedInUserDetails(firebaseUser);
         await fetchHotelDetails();
-
-        // Register for push notifications
-        await registerForPushNotificationsAsync();
-
         // Set up message handler
-        if (Platform.OS !== "web") {
-          console.log("Setting up message handler for Android");
-          if (messaging) {
-            messaging().onMessage(async (remoteMessage) => {
-              console.log("Foreground message received:", remoteMessage);
-              await showNotification(remoteMessage);
-            });
-            messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-              console.log("Background message received:", remoteMessage);
-              await showNotification(remoteMessage);
-            });
-            console.log("Successful set up message handler for Android");
-          }
-        } else if (
-          Platform.OS === "web" &&
-          typeof Notification !== "undefined"
-        ) {
-          console.log("Requesting notification permission");
-          Notification.requestPermission().then((permission) => {
-            if (permission === "granted") {
-              console.log("Notification permission granted.");
-              if (messaging && typeof onMessage === "function") {
-                onMessage(messaging, onMessageReceived);
-              }
-            } else {
-              console.log("Notification permission denied.");
-            }
-          });
-        }
+        setupMessageHandler(Platform.OS);
       } catch (error) {
         console.error("Error during authentication state change:", error);
       }
@@ -182,19 +158,6 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
     }
     setLoading(false);
-  };
-
-  const showNotification = async (remoteMessage) => {
-    const { title, body } =
-      remoteMessage.notification || remoteMessage.data || {};
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: title || "New Message",
-        body: body || "You have a new notification",
-        data: remoteMessage.data,
-      },
-      trigger: null,
-    });
   };
 
   const publishNotifications = (updated) => {
@@ -215,7 +178,7 @@ export const AuthProvider = ({ children }) => {
       if (Platform.OS === "web") {
         await auth.signOut();
       } else {
-        await auth().signOut();
+        await auth.signOut();
       }
       setUser(null);
     } catch (error) {

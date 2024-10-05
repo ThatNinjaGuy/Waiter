@@ -3,8 +3,11 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { messaging } from "./firebaseConfig"; // Import your Firebase app instance
 import { getToken } from "firebase/messaging";
+import { updateStaff } from "@/firebase/queries/staffs";
 
-export async function registerForPushNotificationsAsync() {
+export async function registerForPushNotificationsAsync(user, allUsers) {
+  if (!user || !allUsers) return;
+  console.log("registerForPushNotificationsAsync", user);
   let token;
 
   if (Platform.OS === "web") {
@@ -24,6 +27,7 @@ export async function registerForPushNotificationsAsync() {
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
+    console.log("existingStatus", existingStatus);
     if (existingStatus !== "granted") {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
@@ -33,16 +37,33 @@ export async function registerForPushNotificationsAsync() {
       return;
     }
 
-    // if (Platform.OS === "android") {
-    //   await messaging().registerDeviceForRemoteMessages();
-    //   token = await messaging().getToken();
-    // } else {
-    //   token = (await Notifications.getExpoPushTokenAsync()).data;
-    // }
+    // Fetch token for mobile platforms
+    if (Platform.OS === "android") {
+      if (messaging) {
+        await messaging().registerDeviceForRemoteMessages();
+        token = await messaging().getToken();
+      }
+    } else {
+      //   token = (await Notifications.getExpoPushTokenAsync()).data;
+    }
   } else {
     alert("Must use physical device for Push Notifications");
   }
 
+  console.log("token", token);
+  if (token && token != user.notificationToken) {
+    console.log("Need to save notification token", token);
+    updateStaff(
+      user.id,
+      {
+        ...user,
+        notificationToken: token,
+      },
+      allUsers,
+      undefined,
+      undefined
+    );
+  }
   return token;
 }
 
@@ -87,9 +108,6 @@ export async function onMessageReceived(message) {
         };
       } catch (error) {
         console.error("Error creating web notification:", error);
-        console.error("Error name:", error.name);
-        console.error("Error message:", error.message);
-        console.error("Error stack:", error.stack);
       }
     } else {
       console.log("Notification permission not granted for web");
