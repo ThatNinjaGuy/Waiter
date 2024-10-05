@@ -1,6 +1,4 @@
 import React, { useState, useContext } from "react";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "@/firebase/firebaseConfig";
 import OrdersScreen from "./OrdersScreen";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import { View } from "react-native";
