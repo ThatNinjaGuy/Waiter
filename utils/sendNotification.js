@@ -1,5 +1,8 @@
-export async function sendNotification(title, body) {
-  const token = getRecieverToken();
+export async function sendNotification(title, body, notificationTokens) {
+  if (!notificationTokens || notificationTokens.length === 0) {
+    console.log("No notification subscribers found");
+    return;
+  }
   try {
     const response = await fetch("https://notify-users.onrender.com/send", {
       method: "POST",
@@ -7,7 +10,7 @@ export async function sendNotification(title, body) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        token,
+        tokens: notificationTokens,
         title,
         body,
       }),
@@ -26,6 +29,9 @@ export async function sendNotification(title, body) {
   }
 }
 
-function getRecieverToken() {
-  return "f73pSpXZTyySLZUnFN2gHz:APA91bFUMvGOFWI6Fvfi1K6mT8myJqXfWYff5JX6DVSFnjBFJuyb9vQAYMLTwicd0X_MckznyVrHTqEbCFKekbyRig9X64lxdIpLUUKBDyTQb_Tl5VEIGrnoCgtpyiH6Wo7MAs3LCK-c";
-}
+export const identifyNotificationTokens = (staffs) => {
+  const notificationKeys = staffs
+    .filter((staff) => staff.notificationToken)
+    .map((staff) => staff.notificationToken);
+  return notificationKeys;
+};

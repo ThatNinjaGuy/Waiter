@@ -5,9 +5,10 @@ import AuthContext from "@/components/Authentication/AuthProvider";
 import AuthScreen from "@/screens/AuthScreen/AuthScreen";
 import { updateOrderStatus } from "@/firebase/queries/tables";
 import { sendNotification } from "@/utils/sendNotification";
+import { identifyNotificationTokens } from "@/utils/sendNotification";
 
 const OrdersScreenContainer = () => {
-  const { user, liveOrders } = useContext(AuthContext);
+  const { user, liveOrders, staffs } = useContext(AuthContext);
 
   const handleUpdateOrderStatus = async (
     orderId,
@@ -18,7 +19,8 @@ const OrdersScreenContainer = () => {
   ) => {
     sendNotification(
       "Order Status Updated",
-      `${orderName} for table ${tableName} has been updated to ${newStatus}`
+      `${orderName} for table ${tableName} has been updated to ${newStatus}`,
+      identifyNotificationTokens(staffs)
     );
     await updateOrderStatus(orderId, tableId, newStatus);
   };
