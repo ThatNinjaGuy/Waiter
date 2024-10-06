@@ -2,16 +2,8 @@ import { Platform } from "react-native";
 import React, { createContext, useState, useEffect, useRef } from "react";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import { fetchAllTables } from "@/firebase/queries/tables";
-import {
-  extractOrdersFromTable,
-  identifyChangedOrders,
-} from "@/utils/orderManagement";
-import { sendNotificationToUser } from "@/components/Notifications/Notification";
+import { extractOrdersFromTable } from "@/utils/orderManagement";
 import { appDefaultLanguage } from "@/constants/appText/common";
-import {
-  getNotificationTitleTranslation,
-  getNotificationContentTranslation,
-} from "@/utils/appText/notifications";
 import { fetchAllStaffs } from "@/firebase/queries/staffs";
 import { fetchHotelData } from "@/firebase/queries/hotelInfo";
 import { auth } from "@/firebase/firebaseConfig";
@@ -91,9 +83,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const newOrders = extractOrdersFromTable(liveTables);
-    const { updated } = identifyChangedOrders(liveOrders, newOrders);
-    publishNotifications(updated);
-
     setLiveOrders(newOrders);
   }, [liveTables]);
 
@@ -146,19 +135,6 @@ export const AuthProvider = ({ children }) => {
       setFirebaseUser(null);
     }
     setLoading(false);
-  };
-
-  const publishNotifications = (updated) => {
-    if (!updated) return;
-
-    updated.forEach((element) => {
-      const title = getNotificationTitleTranslation(user.preferredLanguage);
-      const content = getNotificationContentTranslation(
-        user.preferredLanguage,
-        element
-      );
-      sendNotificationToUser(title, content);
-    });
   };
 
   const logout = async () => {

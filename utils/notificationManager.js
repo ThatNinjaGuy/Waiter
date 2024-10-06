@@ -4,24 +4,6 @@ import { onMessageReceived } from "@/firebase/messaging";
 import { messaging } from "@/firebase/firebaseConfig";
 import { onMessage } from "firebase/messaging";
 
-export const initializeNotifications = () => {
-  const notificationListener = Notifications.addNotificationReceivedListener(
-    (notification) => {
-      console.log("Notification received:", notification);
-    }
-  );
-
-  const responseListener =
-    Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log("Notification response received:", response);
-    });
-
-  return () => {
-    Notifications.removeNotificationSubscription(notificationListener);
-    Notifications.removeNotificationSubscription(responseListener);
-  };
-};
-
 export const setupNotificationHandler = () => {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -59,10 +41,11 @@ export const setupMessageHandler = async (platform) => {
 export const showNotification = async (remoteMessage) => {
   const { title, body } =
     remoteMessage.notification || remoteMessage.data || {};
+  if (!title || !body) return;
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: title || "New Message",
-      body: body || "You have a new notification",
+      title: title,
+      body: body,
       data: remoteMessage.data,
     },
     trigger: null,

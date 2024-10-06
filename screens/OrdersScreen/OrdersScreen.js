@@ -67,13 +67,25 @@ const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
           text: acceptText,
           type: "success",
           onPress: () =>
-            updateOrderStatus(item.id, item.tableId, ORDER_STATUS.PENDING),
+            updateOrderStatus(
+              item.id,
+              item.name,
+              item.tableId,
+              item.tableNumber,
+              ORDER_STATUS.PENDING
+            ),
         },
         {
           text: completeText,
           type: "primary",
           onPress: () =>
-            updateOrderStatus(item.id, item.tableId, ORDER_STATUS.READY),
+            updateOrderStatus(
+              item.id,
+              item.name,
+              item.tableId,
+              item.tableNumber,
+              ORDER_STATUS.READY
+            ),
         }
       );
     } else if (item.status === ORDER_STATUS.PENDING) {
@@ -82,13 +94,25 @@ const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
           text: cancelText,
           type: "danger",
           onPress: () =>
-            updateOrderStatus(item.id, item.tableId, ORDER_STATUS.CANCEL),
+            updateOrderStatus(
+              item.id,
+              item.name,
+              item.tableId,
+              item.tableNumber,
+              ORDER_STATUS.CANCEL
+            ),
         },
         {
           text: completeText,
           type: "success",
           onPress: () =>
-            updateOrderStatus(item.id, item.tableId, ORDER_STATUS.READY),
+            updateOrderStatus(
+              item.id,
+              item.name,
+              item.tableId,
+              item.tableNumber,
+              ORDER_STATUS.READY
+            ),
         }
       );
     } else if (item.status === ORDER_STATUS.READY) {
@@ -96,14 +120,26 @@ const OrdersScreen = ({ orders, updateOrderStatus, user }) => {
         text: deliveredText,
         type: "success",
         onPress: () =>
-          updateOrderStatus(item.id, item.tableId, ORDER_STATUS.COMPLETE),
+          updateOrderStatus(
+            item.id,
+            item.name,
+            item.tableId,
+            item.tableNumber,
+            ORDER_STATUS.COMPLETE
+          ),
       });
     } else if (item.status === ORDER_STATUS.CANCEL) {
       buttonConfigs.push({
         text: cancelText,
         type: "danger",
         onPress: () =>
-          updateOrderStatus(item.id, item.tableId, ORDER_STATUS.CANCELLED),
+          updateOrderStatus(
+            item.id,
+            item.name,
+            item.tableId,
+            item.tableNumber,
+            ORDER_STATUS.CANCELLED
+          ),
       });
     }
 

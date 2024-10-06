@@ -1,24 +1,29 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import OrdersScreen from "./OrdersScreen";
-import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import { View } from "react-native";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import AuthScreen from "@/screens/AuthScreen/AuthScreen";
 import { updateOrderStatus } from "@/firebase/queries/tables";
+import { sendNotification } from "@/utils/sendNotification";
 
 const OrdersScreenContainer = () => {
   const { user, liveOrders } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
 
-  const handleUpdateOrderStatus = async (orderId, tableId, newStatus) => {
+  const handleUpdateOrderStatus = async (
+    orderId,
+    orderName,
+    tableId,
+    tableName,
+    newStatus
+  ) => {
+    sendNotification(
+      "Order Status Updated",
+      `${orderName} for table ${tableName} has been updated to ${newStatus}`
+    );
     await updateOrderStatus(orderId, tableId, newStatus);
   };
 
   if (!user) return <AuthScreen />;
-
-  if (loading) {
-    return <LoadingScreen />;
-  }
 
   return (
     <View style={{ flex: 1 }}>

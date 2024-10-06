@@ -48,6 +48,7 @@
     "expo-system-ui": "~3.0.7",
     "expo-web-browser": "~13.0.3",
     "firebase": "^10.12.3",
+    "firebase-admin": "^12.6.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "lottie-react-native": "^6.7.2",
