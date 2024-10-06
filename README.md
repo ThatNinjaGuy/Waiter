@@ -36,6 +36,8 @@ This project is a comprehensive React Native application for managing a restaura
 ### 📊 Dashboard
 
 ![Dashboard](https://pplx-res.cloudinary.com/image/upload/v1720996665/user_uploads/lzwlavxmz/image.jpg)
+![Overview Screen](https://github.com/user-attachments/assets/6877ce51-b70b-4c36-b223-08eedf681bba)
+
 
 ### 🍽️ Menu Management
 
