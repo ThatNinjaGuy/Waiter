@@ -7,25 +7,28 @@ This project is a comprehensive React Native application for managing a restaura
 - [✨ Features](#-features)
 - [📸 Screenshots](#-screenshots)
 - [🚀 Installation](#-installation)
-- [🔥 Firebase Setup](#-firebase-setup)
-- [🏗️ Project Structure](#-project-structure)
-- [📱 Usage](#-usage)
-- [📦 Building the APK](#-building-the-apk)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
 
 ## ✨ Features
 
 - **Dashboard Overview**: Provides a summary of the day's revenue, orders, reservations, low inventory, and staff status.
 - **Notifications**: Displays important notifications such as new orders, staff meetings, and low inventory alerts.
 - **Quick Actions**: Allows quick navigation to different sections like Menu, Orders, Staffs, and Inventory.
-- **Menu Management**: Add, update, and delete menu items.
+- **Menu Management**: Add, update, and delete menu items with real-time updates.
 - **Order Management**: View and manage orders, including order details and table management.
-- **Inventory Management**: Add, update, and delete inventory items.
+- **Table Management**: Efficiently manage table assignments and availability.
+- **Inventory Management**: Add, update, and delete inventory items with low stock alerts.
+- **Staff Management**: Manage staff schedules, roles, and performance.
+- **Reservation System**: Handle customer reservations and table bookings.
+- **Reporting and Analytics**: Generate insights on sales, popular dishes, and peak hours.
+- **Multi-language Support**: Cater to diverse customer bases with multiple language options.
+- **Customizable Themes**: Adapt the app's appearance to match your restaurant's branding.
 - **Offline Support**: Works seamlessly offline and syncs data when the internet is available.
 - **Firebase Firestore Integration**: Uses Firestore for real-time data storage and retrieval.
 - **Batch Operations**: Efficiently add multiple items using batch write operations.
-- **User-Friendly Interface**: Simple and intuitive UI for managing menu items.
+- **User-Friendly Interface**: Simple and intuitive UI for managing all aspects of restaurant operations.
+- **Role-Based Access Control**: Ensure proper access levels for different staff members.
+- **Integration with POS Systems**: Seamlessly connect with popular Point of Sale systems.
+- **Customer Feedback System**: Collect and manage customer reviews and ratings.
 
 ## 🎥 Demo
 
