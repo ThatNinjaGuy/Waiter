@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import StaffScreenView from "./StaffScreenView";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import AuthScreen from "@/screens/AuthScreen/AuthScreen";
-import UnauthorizedScreen from "@/components/Authentication/UnauthorizedScreen";
 import { updateStaff, deleteStaff } from "@/firebase/queries/staffs";
 import { isAdminEmployee } from "@/utils/entitlementManagement";
 const StaffsScreenContainer = () => {

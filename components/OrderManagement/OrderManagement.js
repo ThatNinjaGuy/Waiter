@@ -102,7 +102,7 @@ const OrderManagement = ({
 
   const handleSave = () => {
     const updatedOrders = [...rawOrders, ...pendingOrders];
-    updateOrder(updatedOrders);
+    updateOrder(updatedOrders, pendingOrders.length);
     setRawOrders(updatedOrders);
     setPendingOrders([]);
     onClose();
@@ -110,7 +110,7 @@ const OrderManagement = ({
 
   const completeOrder = () => {
     const updatedOrders = [...rawOrders, ...pendingOrders];
-    updateOrder(updatedOrders);
+    updateOrder(updatedOrders, pendingOrders.length);
     setRawOrders(updatedOrders);
     setPendingOrders([]);
     handleCompleteOrder();
