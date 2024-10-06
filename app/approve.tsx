@@ -1,5 +1,5 @@
 import React from "react";
-import ApproveSignUpRequestsScreen from "@/components/Authentication/ApproveSignUpRequestsScreen";
+import ApproveSignUpRequestsScreen from "@/screens/ApproveSignUpRequestsScreen/ApproveSignUpRequestsScreen";
 
 export default function ApproveSignupRequests() {
   return <ApproveSignUpRequestsScreen />;

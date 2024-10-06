@@ -20,7 +20,7 @@ import {
 } from "@/utils/appText/profileScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
-import ThemedButton from "../common/ThemedButton";
+import ThemedButton from "@/components/common/ThemedButton";
 import { appDefaultLanguage } from "@/constants/appText/common";
 import {
   fetchAllSignupRequests,

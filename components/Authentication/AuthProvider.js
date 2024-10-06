@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
       staffDetails: staff,
       preferredLanguage: staff?.preferredLanguage || appDefaultLanguage,
     });
-    if (staff && !staff?.notificationToken) {
+    if (staff) {
       registerForPushNotificationsAsync(staff, staffs);
     }
   };

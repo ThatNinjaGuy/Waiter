@@ -49,17 +49,21 @@ export async function registerForPushNotificationsAsync(user, allUsers) {
     alert("Must use physical device for Push Notifications");
   }
 
-  if (token && token != user.notificationToken) {
-    updateStaff(
-      user.id,
-      {
-        ...user,
-        notificationToken: token,
-      },
-      allUsers,
-      undefined,
-      undefined
-    );
+  if (token) {
+    let notificationTokens = user.notificationTokens || [];
+    if (!notificationTokens.includes(token)) {
+      notificationTokens.push(token);
+      updateStaff(
+        user.id,
+        {
+          ...user,
+          notificationTokens: notificationTokens,
+        },
+        allUsers,
+        undefined,
+        undefined
+      );
+    }
   }
   return token;
 }
