@@ -3,7 +3,6 @@ export async function sendNotification(title, body, notificationTokens) {
     console.log("No notification subscribers found");
     return;
   }
-  console.log("Sending notification to tokens:", notificationTokens);
   try {
     const response = await fetch("https://notify-users.onrender.com/send", {
       method: "POST",
@@ -31,10 +30,15 @@ export async function sendNotification(title, body, notificationTokens) {
 }
 
 export const identifyNotificationTokens = (staffs) => {
-  const notificationTokens = staffs
-    .filter(
-      (staff) => staff.notificationTokens && staff.notificationTokens.length > 0
-    )
-    .flatMap((staff) => staff.notificationTokens);
+  const notificationTokens = [
+    ...new Set(
+      staffs
+        .filter(
+          (staff) =>
+            staff.notificationTokens && staff.notificationTokens.length > 0
+        )
+        .flatMap((staff) => staff.notificationTokens)
+    ),
+  ];
   return notificationTokens;
 };
