@@ -35,19 +35,25 @@ This project is a comprehensive React Native application for managing a restaura
 
 ### 📊 Dashboard
 
-![Dashboard](https://pplx-res.cloudinary.com/image/upload/v1720996665/user_uploads/lzwlavxmz/image.jpg)
 ![Overview Screen](https://github.com/user-attachments/assets/6877ce51-b70b-4c36-b223-08eedf681bba)
-
 
 ### 🍽️ Menu Management
 
-![Menu Management](https://pplx-res.cloudinary.com/image/upload/v1720996696/user_uploads/vmfypybrr/image.jpg)
+![Menu Management](https://github.com/user-attachments/assets/33f307ca-2883-4d8e-a9ec-96ce2d742d0f)
 
 ### 📋 Order Management
 
-![Order Management](https://pplx-res.cloudinary.com/image/upload/v1720996738/user_uploads/gdbpxmlvs/image.jpg)
+![Order Management](https://github.com/user-attachments/assets/54a00e2b-7e48-4d45-97fe-9165a7389306)
 
-### 📦 Inventory Management
+### 📦 Table Management
+
+![Table Management](https://github.com/user-attachments/assets/4632e003-99f5-4af5-a44b-0774316dceee)
+
+### 📦 Order Taking
+
+![Table Management](https://github.com/user-attachments/assets/94a086b0-29a0-4e12-b750-39b1579e5429)
+
+### 📦 Inventory, Screen, Profile Management
 
 ![Inventory Management](https://pplx-res.cloudinary.com/image/upload/v1720996764/user_uploads/ytaxbbnsv/image.jpg)
 
