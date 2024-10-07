@@ -57,6 +57,9 @@ This project is a comprehensive React Native application for managing a restaura
 
 ![Inventory Management](https://pplx-res.cloudinary.com/image/upload/v1720996764/user_uploads/ytaxbbnsv/image.jpg)
 
+## Additional projects
+- For sending out notifications using Google FCM, a seperate nodenodejs project has been developed: https://github.com/ThatNinjaGuy/notify-users
+ 
 ## 🚀 Installation
 
 1. **Clone the repository:**
