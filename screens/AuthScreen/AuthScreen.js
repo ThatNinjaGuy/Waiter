@@ -11,12 +11,11 @@ import {
 } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase/firebaseConfig";
-import { doc, writeBatch, collection } from "firebase/firestore";
-import { db } from "@/firebase/firebaseConfig";
 import { Picker } from "@react-native-picker/picker";
 import { validateSignupRequest } from "@/utils/validations";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import { Platform } from "react-native";
+import { addSignUpRequest } from "@/firebase/queries/staffs";
 
 const AuthScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -43,25 +42,22 @@ const AuthScreen = () => {
       return;
     }
     if (!isPasswordValid) {
-      setAuthReqResponse("Password must have atleast 6 characters.");
+      setAuthReqResponse("Password must have at least 6 characters.");
       return;
     }
-    const batch = writeBatch(db);
-    const docRef = doc(
-      collection(db, "hotel-details/staff-details/signup-requests")
-    );
-    batch.set(docRef, {
-      name: name,
-      age: age,
-      email: email,
-      role: role,
-      mobile: mobile,
-      password: password,
-      createdAt: Date.now(),
-    });
-    try {
-      await batch.commit();
-      console.log("Batch write successful");
+
+    const userData = {
+      name,
+      age,
+      email,
+      role,
+      mobile,
+      password,
+    };
+
+    const success = await addSignUpRequest(userData);
+
+    if (success) {
       Alert.alert(
         "Request submitted successfully",
         "Your sign up request has been sent successfully. Please try to sign in when your manager approves the request."
@@ -69,8 +65,7 @@ const AuthScreen = () => {
       setAuthReqResponse(
         "Try to sign in when your manager approves the request."
       );
-    } catch (error) {
-      console.error("Error writing batch:", error);
+    } else {
       Alert.alert(
         "Failed to submit request",
         "An error occurred when submitting your sign up request. Please try again."

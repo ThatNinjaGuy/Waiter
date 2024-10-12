@@ -39,6 +39,22 @@ export const fetchAllSignupRequests = async (setRequests, setLoading) => {
   }
 };
 
+export const addSignUpRequest = async (userData) => {
+  try {
+    if (Platform.OS === "web") {
+      const { collection, addDoc } = await import("firebase/firestore");
+      await addDoc(collection(db, signUpRequestsPath), userData);
+    } else {
+      await db.collection(signUpRequestsPath).add(userData);
+    }
+    console.log("Sign-up request added successfully");
+    return true;
+  } catch (error) {
+    console.error("Error adding sign-up request:", error);
+    return false;
+  }
+};
+
 export const deleteSignupRequest = async (id) => {
   try {
     if (Platform.OS === "web") {
