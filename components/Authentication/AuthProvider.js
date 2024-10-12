@@ -31,12 +31,12 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        console.log("Notification received:", notification);
+        console.log("Notification received");
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log("Notification response received:", response);
+        console.log("Notification response received");
       });
 
     return () => {

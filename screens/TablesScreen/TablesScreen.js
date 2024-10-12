@@ -25,6 +25,7 @@ import {
 import { getAddTableTranslation } from "@/utils/appText/tablesScreen";
 import { sendNotification } from "@/utils/sendNotification";
 import { identifyNotificationTokens } from "@/utils/sendNotification";
+import { NEW_ORDERS } from "@/constants/notificationControls";
 
 const TablesScreen = () => {
   const { user, hotel, liveTables, staffs } = useContext(AuthContext);
@@ -107,7 +108,7 @@ const TablesScreen = () => {
       sendNotification(
         "New order recieved",
         `New order for ${pendingOrdersCount} items placed on table ${selectedTable.number}`,
-        identifyNotificationTokens(staffs)
+        identifyNotificationTokens(staffs, NEW_ORDERS)
       );
     }
     handleTableOrderUpdate(

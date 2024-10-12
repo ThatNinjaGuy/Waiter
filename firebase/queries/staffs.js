@@ -1,6 +1,7 @@
 import { Platform } from "react-native";
 import { db } from "@/firebase/firebaseConfig";
 import { generateUniqueKey } from "@/utils/keyGenerator";
+import { DEFAULT_NOTIFICATION_SETTINGS } from "@/constants/notificationControls";
 
 export const staffsPath = "hotel-details/staff-details/staffs";
 export const signUpRequestsPath = "hotel-details/staff-details/signup-requests";
@@ -36,6 +37,22 @@ export const fetchAllSignupRequests = async (setRequests, setLoading) => {
     return () => unsubscribe();
   } catch (error) {
     console.error("Error fetching user sign up requests:", error);
+  }
+};
+
+export const addSignUpRequest = async (userData) => {
+  try {
+    if (Platform.OS === "web") {
+      const { collection, addDoc } = await import("firebase/firestore");
+      await addDoc(collection(db, signUpRequestsPath), userData);
+    } else {
+      await db.collection(signUpRequestsPath).add(userData);
+    }
+    console.log("Sign-up request added successfully");
+    return true;
+  } catch (error) {
+    console.error("Error adding sign-up request:", error);
+    return false;
   }
 };
 
@@ -147,12 +164,7 @@ export const addToStaffs = async (
     authId: authId,
     mobile: mobile,
     preferredLanguage: appDefaultLanguage,
-    notificationSettings: {
-      newOrders: true,
-      orderReady: true,
-      orderCompleted: true,
-      newGuests: false,
-    },
+    notificationSettings: DEFAULT_NOTIFICATION_SETTINGS,
     createdAt: Date.now(),
   };
 

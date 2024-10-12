@@ -27,6 +27,7 @@ import {
   deleteSignupRequest,
   addToStaffs,
 } from "@/firebase/queries/staffs";
+import { ThemedText } from "@/components/common/ThemedText";
 
 const ApproveSignUpRequestsScreen = () => {
   const { user } = useContext(AuthContext);
@@ -51,7 +52,6 @@ const ApproveSignUpRequestsScreen = () => {
 
   // Create a secondary app for user creation
   const secondaryApp = initializeApp(firebaseConfig, "Secondary");
-
   useEffect(() => {
     fetchAllSignupRequests(setRequests, setLoading);
   }, []);
@@ -82,13 +82,16 @@ const ApproveSignUpRequestsScreen = () => {
     }
   };
 
-  const deleteRequest = async ({ id }) => {
+  const deleteRequest = async (id) => {
     try {
+      setLoading(true);
       deleteSignupRequest(id);
       console.log("Document successfully deleted!");
     } catch (error) {
       console.error("Error removing document: ", error);
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -98,7 +101,7 @@ const ApproveSignUpRequestsScreen = () => {
       setLoading(true);
       request.authId = await handleSignUp(request);
       addToStaffs(request, appDefaultLanguage);
-      deleteRequest(request);
+      deleteSignupRequest(request.id);
       console.log("Approval requests updated");
       Alert.alert(successText, requestApprovedSuccessText);
     } catch (error) {
@@ -112,9 +115,17 @@ const ApproveSignUpRequestsScreen = () => {
   const renderItem = ({ item }) => (
     <View style={styles.requestItem}>
       <View style={styles.requestInfo}>
-        <Text style={styles.requestName}>{item.name}</Text>
-        <Text style={styles.requestEmail}>{item.email}</Text>
+        <ThemedText type="subtitle">{item.name}</ThemedText>
+        <ThemedText type="default">{item.role}</ThemedText>
+        <ThemedText type="default">{item.email}</ThemedText>
       </View>
+      <ThemedButton
+        type="danger"
+        style={(styles.approveGradient, styles.approveButton)}
+        onPress={() => deleteRequest(item.id)}
+      >
+        <Ionicons name="trash-outline" size={24} color="#000" />
+      </ThemedButton>
       <ThemedButton
         type="success"
         style={(styles.approveGradient, styles.approveButton)}
@@ -131,7 +142,9 @@ const ApproveSignUpRequestsScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{approveSignupRequestsText}</Text>
+      <ThemedText type="title" style={styles.title}>
+        {approveSignupRequestsText}
+      </ThemedText>
       {requests.length === 0 ? (
         <Text style={styles.noRequestsText}>{noPendingSignupRequestsText}</Text>
       ) : (
@@ -158,10 +171,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 20,
     textAlign: "center",
   },
   listContainer: {
@@ -183,16 +192,6 @@ const styles = StyleSheet.create({
   },
   requestInfo: {
     flex: 1,
-  },
-  requestName: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-  },
-  requestEmail: {
-    fontSize: 14,
-    color: "#666",
-    marginTop: 4,
   },
   approveButton: {
     marginLeft: 10,

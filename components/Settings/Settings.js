@@ -18,6 +18,10 @@ import { ThemedText } from "@/components/common/ThemedText";
 import { Tooltip, Text } from "react-native-elements";
 import { updateStaff } from "@/firebase/queries/staffs";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
+import {
+  DEFAULT_NOTIFICATION_SETTINGS,
+  NOTIFICATION_SETTINGS_LABELS,
+} from "@/constants/notificationControls";
 
 const SettingsScreen = ({ userDetails, staffs, onCancel }) => {
   const [name, setName] = useState(userDetails?.name || "");
@@ -29,10 +33,7 @@ const SettingsScreen = ({ userDetails, staffs, onCancel }) => {
     userDetails?.preferredLanguage || appDefaultLanguage
   );
   const [notificationSettings, setNotificationSettings] = useState({
-    newOrders: false,
-    orderReady: false,
-    orderCompleted: false,
-    newGuests: false,
+    ...DEFAULT_NOTIFICATION_SETTINGS,
     ...userDetails?.notificationSettings,
   });
   const [loading, setLoading] = useState(false);
@@ -66,25 +67,6 @@ const SettingsScreen = ({ userDetails, staffs, onCancel }) => {
     );
     onCancel();
   };
-
-  const notificationSettingTypes = [
-    {
-      displayText: "New Order receivied",
-      key: "newOrders",
-    },
-    {
-      displayText: "Order Ready for pickup",
-      key: "orderReady",
-    },
-    {
-      displayText: "Order Complete",
-      key: "orderCompleted",
-    },
-    {
-      displayText: "New Guest arrived",
-      key: "newGuests",
-    },
-  ];
 
   if (loading) {
     return <LoadingScreen />;
@@ -203,7 +185,7 @@ const SettingsScreen = ({ userDetails, staffs, onCancel }) => {
         </TouchableOpacity>
         {expandedNotificationsSection && (
           <View style={styles.sectionContent}>
-            {notificationSettingTypes.map((item, index) => (
+            {NOTIFICATION_SETTINGS_LABELS.map((item, index) => (
               <View key={index} style={styles.switchContainer}>
                 <ThemedText>{item.displayText}</ThemedText>
                 <Switch
