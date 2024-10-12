@@ -1,6 +1,7 @@
 import { Platform } from "react-native";
 import { db } from "@/firebase/firebaseConfig";
 import { generateUniqueKey } from "@/utils/keyGenerator";
+import { DEFAULT_NOTIFICATION_SETTINGS } from "@/constants/notificationControls";
 
 export const staffsPath = "hotel-details/staff-details/staffs";
 export const signUpRequestsPath = "hotel-details/staff-details/signup-requests";
@@ -163,12 +164,7 @@ export const addToStaffs = async (
     authId: authId,
     mobile: mobile,
     preferredLanguage: appDefaultLanguage,
-    notificationSettings: {
-      newOrders: true,
-      orderReady: true,
-      orderCompleted: true,
-      newGuests: false,
-    },
+    notificationSettings: DEFAULT_NOTIFICATION_SETTINGS,
     createdAt: Date.now(),
   };
 
