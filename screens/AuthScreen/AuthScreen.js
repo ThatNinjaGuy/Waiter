@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   TextInput,
@@ -20,9 +20,11 @@ import {
   fetchLocations,
   fetchRestaurants,
 } from "@/firebase/queries/restaurants";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AuthContext from "@/components/Authentication/AuthProvider";
 
 const AuthScreen = () => {
+  const { restaurantPath, updateRestaurantPath } = useContext(AuthContext);
+
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
@@ -36,40 +38,19 @@ const AuthScreen = () => {
   const [locations, setLocations] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [savedRestaurantPath, setSavedRestaurantPath] = useState(null);
-
-  useEffect(() => {
-    const loadSavedRestaurantPath = async () => {
-      try {
-        const savedPath = await AsyncStorage.getItem("restaurantPath");
-        console.log("Loaded saved path:", savedPath);
-        if (savedPath) {
-          const parsedPath = JSON.parse(savedPath);
-          console.log("Parsed saved path:", parsedPath);
-          setSavedRestaurantPath(parsedPath);
-        }
-      } catch (error) {
-        console.error("Error loading saved restaurant path:", error);
-      }
-    };
-    loadSavedRestaurantPath();
-  }, []);
 
   useEffect(() => {
     const loadLocations = async () => {
       try {
         const fetchedLocations = await fetchLocations();
-        console.log("Fetched locations:", fetchedLocations);
         setLocations(fetchedLocations);
-        if (savedRestaurantPath) {
-          console.log("Trying to find saved location:", savedRestaurantPath);
+        if (restaurantPath) {
           const savedLocation = fetchedLocations.find(
             (loc) =>
-              loc.countryId === savedRestaurantPath.countryId &&
-              loc.stateId === savedRestaurantPath.stateId &&
-              loc.cityId === savedRestaurantPath.cityId
+              loc.countryId === restaurantPath.countryId &&
+              loc.stateId === restaurantPath.stateId &&
+              loc.cityId === restaurantPath.cityId
           );
-          console.log("Found saved location:", savedLocation);
           if (savedLocation) {
             setSelectedLocation(savedLocation);
           }
@@ -79,30 +60,23 @@ const AuthScreen = () => {
       }
     };
     loadLocations();
-  }, [savedRestaurantPath]);
+  }, [restaurantPath]);
 
   useEffect(() => {
     const loadRestaurants = async () => {
       if (selectedLocation) {
-        console.log("Loading restaurants for location:", selectedLocation);
         try {
           const fetchedRestaurants = await fetchRestaurants(selectedLocation);
-          console.log("Fetched restaurants:", fetchedRestaurants);
           setRestaurants(fetchedRestaurants);
           if (
-            savedRestaurantPath &&
-            selectedLocation.countryId === savedRestaurantPath.countryId &&
-            selectedLocation.stateId === savedRestaurantPath.stateId &&
-            selectedLocation.cityId === savedRestaurantPath.cityId
+            restaurantPath &&
+            selectedLocation.countryId === restaurantPath.countryId &&
+            selectedLocation.stateId === restaurantPath.stateId &&
+            selectedLocation.cityId === restaurantPath.cityId
           ) {
-            console.log(
-              "Trying to find saved restaurant:",
-              savedRestaurantPath.restaurantId
-            );
             const savedRestaurant = fetchedRestaurants.find(
-              (r) => r.id === savedRestaurantPath.restaurantId
+              (r) => r.id === restaurantPath.restaurantId
             );
-            console.log("Found saved restaurant:", savedRestaurant);
             if (savedRestaurant) {
               setRestaurant(savedRestaurant);
             }
@@ -113,7 +87,7 @@ const AuthScreen = () => {
       }
     };
     loadRestaurants();
-  }, [selectedLocation, savedRestaurantPath]);
+  }, [selectedLocation, restaurantPath]);
 
   const toggleMode = () => {
     setIsSignUpMode((prevMode) => !prevMode);
@@ -146,7 +120,6 @@ const AuthScreen = () => {
 
     if (success) {
       await saveRestaurantPath();
-      console.log("Sign up successful, restaurant path saved");
       Alert.alert(
         "Request submitted successfully",
         "Your sign up request has been sent successfully. Please try to sign in when your manager approves the request."
@@ -155,7 +128,6 @@ const AuthScreen = () => {
         "Try to sign in when your manager approves the request."
       );
     } else {
-      console.log("Sign up failed");
       Alert.alert(
         "Failed to submit request",
         "An error occurred when submitting your sign up request. Please try again."
@@ -173,7 +145,6 @@ const AuthScreen = () => {
         await auth.signInWithEmailAndPassword(email, password);
       }
       await saveRestaurantPath();
-      console.log("Sign in successful, restaurant path saved");
     } catch (error) {
       console.error("Sign in error:", error);
       if (error.code === "auth/user-disabled") {
@@ -193,10 +164,8 @@ const AuthScreen = () => {
   };
 
   const handleLocationChange = (locationIndex) => {
-    console.log("Location changed to index:", locationIndex);
     if (locationIndex !== "") {
       const newLocation = locations[locationIndex];
-      console.log("New selected location:", newLocation);
       setSelectedLocation(newLocation);
     } else {
       setSelectedLocation(null);
@@ -216,10 +185,8 @@ const AuthScreen = () => {
         cityId: selectedLocation.cityId,
         restaurantId: restaurant.id,
       };
-      console.log("Saving restaurant path:", path);
       try {
-        await AsyncStorage.setItem("restaurantPath", JSON.stringify(path));
-        console.log("Restaurant path saved successfully");
+        await updateRestaurantPath(path);
       } catch (error) {
         console.error("Error saving restaurant path:", error);
       }
