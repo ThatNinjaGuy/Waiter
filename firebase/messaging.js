@@ -5,7 +5,11 @@ import { messaging } from "./firebaseConfig"; // Import your Firebase app instan
 import { getToken } from "firebase/messaging";
 import { updateStaff } from "@/firebase/queries/staffs";
 
-export async function registerForPushNotificationsAsync(user, allUsers) {
+export async function registerForPushNotificationsAsync(
+  restaurantPath,
+  user,
+  allUsers
+) {
   if (!user || !allUsers) return;
   let token;
 
@@ -54,6 +58,7 @@ export async function registerForPushNotificationsAsync(user, allUsers) {
     if (!notificationTokens.includes(token)) {
       notificationTokens.push(token);
       updateStaff(
+        restaurantPath,
         user.id,
         {
           ...user,

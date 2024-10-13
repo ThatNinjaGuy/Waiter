@@ -1,25 +1,35 @@
 import { Platform } from "react-native";
 import { db } from "@/firebase/firebaseConfig";
+import { constructHotelPath } from "./common";
 
-const hotelDetailsPath = "hotel-details/details";
-
-export const fetchHotelData = async () => {
+export const fetchHotelData = async (restaurantPath) => {
   try {
+    const path = constructHotelPath(restaurantPath);
     let docSnap;
+
     if (Platform.OS === "web") {
       const { doc, getDoc } = await import("firebase/firestore");
-      const docRef = doc(db, hotelDetailsPath);
+      const docRef = doc(db, path);
       docSnap = await getDoc(docRef);
     } else {
-      docSnap = await db.doc(hotelDetailsPath).get();
+      docSnap = await db.doc(path).get();
     }
 
-    // Update this check
     if (
       docSnap.exists ||
       (typeof docSnap.exists === "function" && docSnap.exists())
     ) {
-      return docSnap.data();
+      const data = docSnap.data();
+      return {
+        id: docSnap.id,
+        category: data.category,
+        city: data.city,
+        country: data.country,
+        name: data.name,
+        owner: data.owner,
+        pinCode: data.pinCode,
+        state: data.state,
+      };
     } else {
       console.log("No such document!");
       return null;
@@ -30,14 +40,15 @@ export const fetchHotelData = async () => {
   }
 };
 
-export const updateHotelData = async (updatedData) => {
+export const updateHotelData = async (restaurantPath, updatedData) => {
   try {
+    const path = constructHotelPath(restaurantPath);
     if (Platform.OS === "web") {
       const { doc, updateDoc } = await import("firebase/firestore");
-      const docRef = doc(db, hotelDetailsPath);
+      const docRef = doc(db, path);
       await updateDoc(docRef, updatedData);
     } else {
-      await db.doc(hotelDetailsPath).update(updatedData);
+      await db.doc(path).update(updatedData);
     }
     console.log("Hotel data updated successfully");
   } catch (error) {
@@ -46,14 +57,15 @@ export const updateHotelData = async (updatedData) => {
   }
 };
 
-export const setHotelData = async (data) => {
+export const setHotelData = async (restaurantPath, data) => {
   try {
+    const path = constructHotelPath(restaurantPath);
     if (Platform.OS === "web") {
       const { doc, setDoc } = await import("firebase/firestore");
-      const docRef = doc(db, hotelDetailsPath);
+      const docRef = doc(db, path);
       await setDoc(docRef, data);
     } else {
-      await db.doc(hotelDetailsPath).set(data);
+      await db.doc(path).set(data);
     }
     console.log("Hotel data set successfully");
   } catch (error) {

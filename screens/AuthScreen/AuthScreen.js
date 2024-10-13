@@ -116,7 +116,7 @@ const AuthScreen = () => {
       password,
     };
 
-    const success = await addSignUpRequest(userData);
+    const success = await addSignUpRequest(restaurantPath, userData);
 
     if (success) {
       await saveRestaurantPath();

@@ -1,16 +1,22 @@
 import { Platform } from "react-native";
 import { db } from "@/firebase/firebaseConfig";
+import { constructHotelPath } from "./common";
 
-export const tablesPath = "hotel-details/seating-arrangement/tables";
+export const tablesPath = "/tables";
 
-export const fetchAllTables = async (setTables, setIsLoading) => {
+export const fetchAllTables = async (
+  restaurantPath,
+  setTables,
+  setIsLoading
+) => {
   try {
+    const path = constructHotelPath(restaurantPath) + tablesPath;
     let unsubscribe;
     if (Platform.OS === "web") {
       const { collection, query, onSnapshot } = await import(
         "firebase/firestore"
       );
-      const tablesRef = collection(db, tablesPath);
+      const tablesRef = collection(db, path);
       const q = query(tablesRef);
       unsubscribe = onSnapshot(q, (querySnapshot) => {
         const allTables = querySnapshot.docs.map((doc) => ({
@@ -21,7 +27,7 @@ export const fetchAllTables = async (setTables, setIsLoading) => {
         if (setIsLoading) setIsLoading(false);
       });
     } else {
-      const tablesRef = db.collection(tablesPath);
+      const tablesRef = db.collection(path);
       unsubscribe = tablesRef.onSnapshot((querySnapshot) => {
         const allTables = querySnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -37,7 +43,8 @@ export const fetchAllTables = async (setTables, setIsLoading) => {
   }
 };
 
-export const addTable = async (items, tables, setTables) => {
+export const addTable = async (restaurantPath, items, tables, setTables) => {
+  const path = constructHotelPath(restaurantPath) + tablesPath;
   try {
     const newItems = [];
     if (Platform.OS === "web") {
@@ -49,7 +56,7 @@ export const addTable = async (items, tables, setTables) => {
         item.number = item.number ? item.number : tables.length + 1;
         item.searchableKey = item.number;
         item.status = "Available";
-        const docRef = await addDoc(collection(db, tablesPath), item);
+        const docRef = await addDoc(collection(db, path), item);
         newItems.push({ ...item, id: docRef.id });
       }
       await batch.commit();
@@ -59,7 +66,7 @@ export const addTable = async (items, tables, setTables) => {
         item.number = item.number ? item.number : tables.length + 1;
         item.searchableKey = item.number;
         item.status = "Available";
-        const docRef = db.collection(tablesPath).doc();
+        const docRef = db.collection(path).doc();
         batch.set(docRef, item);
         newItems.push({ ...item, id: docRef.id });
       }
@@ -73,18 +80,20 @@ export const addTable = async (items, tables, setTables) => {
 };
 
 export const updateTableDetails = async (
+  restaurantPath,
   id,
   updatedItem,
   tables,
   setTables
 ) => {
   try {
+    const path = constructHotelPath(restaurantPath) + tablesPath;
     if (Platform.OS === "web") {
       const { doc, updateDoc } = await import("firebase/firestore");
-      const itemRef = doc(db, tablesPath, id);
+      const itemRef = doc(db, path, id);
       await updateDoc(itemRef, updatedItem);
     } else {
-      await db.collection(tablesPath).doc(id).update(updatedItem);
+      await db.collection(path).doc(id).update(updatedItem);
     }
     if (setTables && tables)
       setTables(
@@ -98,13 +107,19 @@ export const updateTableDetails = async (
   }
 };
 
-export const deleteTableDetails = async (id, tables, setTables) => {
+export const deleteTableDetails = async (
+  restaurantPath,
+  id,
+  tables,
+  setTables
+) => {
   try {
+    const path = constructHotelPath(restaurantPath) + tablesPath;
     if (Platform.OS === "web") {
       const { doc, deleteDoc } = await import("firebase/firestore");
-      await deleteDoc(doc(db, tablesPath, id));
+      await deleteDoc(doc(db, path, id));
     } else {
-      await db.collection(tablesPath).doc(id).delete();
+      await db.collection(path).doc(id).delete();
     }
     setTables(tables.filter((item) => item.id !== id));
     console.log("Table successfully deleted!");
@@ -113,17 +128,23 @@ export const deleteTableDetails = async (id, tables, setTables) => {
   }
 };
 
-export const updateOrderStatus = async (orderId, tableId, orderStatus) => {
+export const updateOrderStatus = async (
+  restaurantPath,
+  orderId,
+  tableId,
+  orderStatus
+) => {
   try {
+    const path = constructHotelPath(restaurantPath) + tablesPath;
     let tableDocRef, updateDocFunc, getDocFunc;
 
     if (Platform.OS === "web") {
       const { doc, updateDoc, getDoc } = await import("firebase/firestore");
-      tableDocRef = doc(db, tablesPath, tableId);
+      tableDocRef = doc(db, path, tableId);
       updateDocFunc = updateDoc;
       getDocFunc = getDoc;
     } else {
-      tableDocRef = db.collection(tablesPath).doc(tableId);
+      tableDocRef = db.collection(path).doc(tableId);
       updateDocFunc = (ref, data) => ref.update(data);
       getDocFunc = (ref) => ref.get();
     }

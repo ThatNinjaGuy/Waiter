@@ -67,9 +67,9 @@ export const AuthProvider = ({ children }) => {
     setupNotificationHandler();
   }, []);
 
-  const fetchHotelDetails = async () => {
+  const fetchHotelDetails = async (restaurantPath) => {
     try {
-      const hotelDetails = await fetchHotelData();
+      const hotelDetails = await fetchHotelData(restaurantPath);
       if (hotelDetails) {
         setHotel(hotelDetails);
       }
@@ -87,7 +87,7 @@ export const AuthProvider = ({ children }) => {
       preferredLanguage: staff?.preferredLanguage || appDefaultLanguage,
     });
     if (staff) {
-      registerForPushNotificationsAsync(staff, staffs);
+      registerForPushNotificationsAsync(restaurantPath, staff, staffs);
     }
   };
 
@@ -136,18 +136,23 @@ export const AuthProvider = ({ children }) => {
 
   const handleAuthStateChange = async (firebaseUser) => {
     if (firebaseUser) {
-      console.log("User logged in");
-      console.log("Restaurant path:", restaurantPath);
       try {
-        if (restaurantPath) {
+        setFirebaseUser(firebaseUser);
+
+        // Load the restaurant path from AsyncStorage
+        const savedPath = await AsyncStorage.getItem("restaurantPath");
+        if (savedPath) {
+          const parsedPath = JSON.parse(savedPath);
+          setRestaurantPath(parsedPath);
+
           // Use restaurantPath to fetch data
-          await fetchAllStaffs(setStaffs);
-          await fetchAllTables(setLiveTables, undefined);
+          await fetchAllStaffs(parsedPath, setStaffs);
+          await fetchAllTables(parsedPath, setLiveTables);
+          await fetchHotelDetails(parsedPath);
         } else {
           console.warn("Restaurant path not available. Unable to fetch data.");
         }
-        setFirebaseUser(firebaseUser);
-        await fetchHotelDetails();
+
         // Set up message handler
         setupMessageHandler(Platform.OS);
       } catch (error) {
@@ -156,6 +161,7 @@ export const AuthProvider = ({ children }) => {
     } else {
       setUser(null);
       setFirebaseUser(null);
+      setRestaurantPath(null);
     }
     setLoading(false);
   };

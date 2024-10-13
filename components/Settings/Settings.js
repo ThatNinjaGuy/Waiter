@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   TextInput,
@@ -22,8 +22,10 @@ import {
   DEFAULT_NOTIFICATION_SETTINGS,
   NOTIFICATION_SETTINGS_LABELS,
 } from "@/constants/notificationControls";
+import AuthContext from "@/components/Authentication/AuthProvider";
 
 const SettingsScreen = ({ userDetails, staffs, onCancel }) => {
+  const { restaurantPath } = useContext(AuthContext);
   const [name, setName] = useState(userDetails?.name || "");
   const [age, setAge] = useState(userDetails?.age || "");
   const [email, setEmail] = useState(userDetails?.email || "");
@@ -52,6 +54,7 @@ const SettingsScreen = ({ userDetails, staffs, onCancel }) => {
   const onUpdate = async () => {
     setLoading(true);
     await updateStaff(
+      restaurantPath,
       userDetails.id,
       {
         ...userDetails,
