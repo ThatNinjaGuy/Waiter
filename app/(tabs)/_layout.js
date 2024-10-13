@@ -56,7 +56,7 @@ export default function TabLayout() {
           title: "Tables",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "bag-sharp" : "bag-outline"}
+              name={focused ? "storefront-sharp" : "storefront-outline"}
               color={color}
             />
           ),

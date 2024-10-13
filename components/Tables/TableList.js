@@ -3,7 +3,7 @@ import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
 import React, { useMemo } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import Icon from "react-native-vector-icons/Ionicons";
 import {
   calculateTotalOrderCount,
   completedOrdersCount,
@@ -127,7 +127,7 @@ const TableList = ({
         </View>
         <View style={styles.orderDetailsIcon}>
           <Icon
-            name="receipt"
+            name="print"
             size={36}
             onPress={() => onOrderDetailsPress(item)}
             style={styles.iconContainer}
@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     backgroundColor: "#e0e0e0", // Default
+    borderRadius: 20,
   },
   notesContainer: {
     width: "100%",

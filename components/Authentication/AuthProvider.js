@@ -19,13 +19,10 @@ const AuthContext = createContext();
 const getSavedRestaurantPath = async () => {
   try {
     const savedPath = await AsyncStorage.getItem("restaurantPath");
-    if (savedPath) {
-      const parsedPath = JSON.parse(savedPath);
-      return parsedPath;
-    }
-    return undefined;
+    return savedPath ? JSON.parse(savedPath) : null;
   } catch (error) {
     console.error("Error loading saved restaurant path:", error);
+    return null;
   }
 };
 
@@ -40,9 +37,7 @@ export const AuthProvider = ({ children }) => {
   const [authInitialized, setAuthInitialized] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-  const [restaurantPath, setRestaurantPath] = useState(
-    getSavedRestaurantPath()
-  );
+  const [restaurantPath, setRestaurantPath] = useState(null);
 
   useEffect(() => {
     notificationListener.current =
@@ -61,6 +56,14 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     setupNotificationHandler();
+  }, []);
+
+  useEffect(() => {
+    const loadSavedRestaurantPath = async () => {
+      const savedPath = await getSavedRestaurantPath();
+      setRestaurantPath(savedPath);
+    };
+    loadSavedRestaurantPath();
   }, []);
 
   const fetchHotelDetails = async (restaurantPath) => {
@@ -135,20 +138,15 @@ export const AuthProvider = ({ children }) => {
       try {
         setFirebaseUser(firebaseUser);
 
-        // Load the restaurant path from AsyncStorage
-        const savedPath =
-          restaurantPath || (await AsyncStorage.getItem("restaurantPath"));
-        if (
-          savedPath &&
-          savedPath.restaurantId &&
-          savedPath.restaurantId !== null
-        ) {
-          setRestaurantPath(savedPath);
-
-          await fetchAllStaffs(savedPath, setStaffs);
-          await fetchAllTables(savedPath, setLiveTables);
-          await fetchHotelDetails(savedPath);
+        if (restaurantPath && restaurantPath.restaurantId) {
+          await fetchAllStaffs(restaurantPath, setStaffs);
+          await fetchAllTables(restaurantPath, setLiveTables);
+          await fetchHotelDetails(restaurantPath);
+        } else {
+          console.log("No valid restaurant path found");
+          // You might want to redirect to a restaurant selection screen here
         }
+
         // Set up message handler
         setupMessageHandler(Platform.OS);
       } catch (error) {
@@ -175,20 +173,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    setRestaurantPath(getSavedRestaurantPath());
-  }, []);
-
   const updateRestaurantPath = async (newPath) => {
     try {
       if (JSON.stringify(newPath) !== JSON.stringify(restaurantPath)) {
         setRestaurantPath(newPath);
         await AsyncStorage.setItem("restaurantPath", JSON.stringify(newPath));
+
+        // Fetch data for the new restaurant path
+        await fetchAllStaffs(newPath, setStaffs);
+        await fetchAllTables(newPath, setLiveTables);
+        await fetchHotelDetails(newPath);
       }
     } catch (error) {
       console.error("Error updating restaurant path:", error);
     }
   };
+
+  useEffect(() => {
+    if (restaurantPath && firebaseUser) {
+      fetchAllStaffs(restaurantPath, setStaffs);
+      fetchAllTables(restaurantPath, setLiveTables);
+      fetchHotelDetails(restaurantPath);
+    }
+  }, [restaurantPath, firebaseUser]);
 
   if (loading) {
     return <LoadingScreen />;
