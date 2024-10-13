@@ -10,10 +10,8 @@ export const addCompletedOrder = async (restaurantPath, order) => {
     if (Platform.OS === "web") {
       const { collection, addDoc } = await import("firebase/firestore");
       const docRef = await addDoc(collection(db, path), order);
-      console.log("Completed order added with ID: ", docRef.id);
     } else {
       const docRef = await db.collection(path).add(order);
-      console.log("Completed order added with ID: ", docRef.id);
     }
     console.log("Completed order addition successful");
   } catch (error) {

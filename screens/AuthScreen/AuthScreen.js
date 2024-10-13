@@ -38,6 +38,7 @@ const AuthScreen = () => {
   const [locations, setLocations] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const [localRestaurantPath, setLocalRestaurantPath] = useState(null);
 
   useEffect(() => {
     const loadLocations = async () => {
@@ -53,6 +54,7 @@ const AuthScreen = () => {
           );
           if (savedLocation) {
             setSelectedLocation(savedLocation);
+            setLocalRestaurantPath(restaurantPath);
           }
         }
       } catch (error) {
@@ -69,13 +71,13 @@ const AuthScreen = () => {
           const fetchedRestaurants = await fetchRestaurants(selectedLocation);
           setRestaurants(fetchedRestaurants);
           if (
-            restaurantPath &&
-            selectedLocation.countryId === restaurantPath.countryId &&
-            selectedLocation.stateId === restaurantPath.stateId &&
-            selectedLocation.cityId === restaurantPath.cityId
+            localRestaurantPath &&
+            selectedLocation.countryId === localRestaurantPath.countryId &&
+            selectedLocation.stateId === localRestaurantPath.stateId &&
+            selectedLocation.cityId === localRestaurantPath.cityId
           ) {
             const savedRestaurant = fetchedRestaurants.find(
-              (r) => r.id === restaurantPath.restaurantId
+              (r) => r.id === localRestaurantPath.restaurantId
             );
             if (savedRestaurant) {
               setRestaurant(savedRestaurant);
@@ -87,7 +89,7 @@ const AuthScreen = () => {
       }
     };
     loadRestaurants();
-  }, [selectedLocation, restaurantPath]);
+  }, [selectedLocation, localRestaurantPath]);
 
   const toggleMode = () => {
     setIsSignUpMode((prevMode) => !prevMode);
@@ -107,6 +109,11 @@ const AuthScreen = () => {
       return;
     }
 
+    if (!localRestaurantPath || !localRestaurantPath.restaurantId) {
+      setAuthReqResponse("Please select a location and restaurant.");
+      return;
+    }
+
     const userData = {
       name,
       age,
@@ -116,10 +123,10 @@ const AuthScreen = () => {
       password,
     };
 
-    const success = await addSignUpRequest(restaurantPath, userData);
+    const success = await addSignUpRequest(localRestaurantPath, userData);
 
     if (success) {
-      await saveRestaurantPath();
+      await updateRestaurantPath(localRestaurantPath);
       Alert.alert(
         "Request submitted successfully",
         "Your sign up request has been sent successfully. Please try to sign in when your manager approves the request."
@@ -139,12 +146,18 @@ const AuthScreen = () => {
   const handleSignIn = async () => {
     setLoading(true);
     try {
+      if (!localRestaurantPath || !localRestaurantPath.restaurantId) {
+        setAuthReqResponse("Please select a location and restaurant.");
+        setLoading(false);
+        return;
+      }
+
       if (Platform.OS === "web") {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
         await auth.signInWithEmailAndPassword(email, password);
       }
-      await saveRestaurantPath();
+      await updateRestaurantPath(localRestaurantPath);
     } catch (error) {
       console.error("Sign in error:", error);
       if (error.code === "auth/user-disabled") {
@@ -163,34 +176,42 @@ const AuthScreen = () => {
     }
   };
 
-  const handleLocationChange = (locationIndex) => {
-    if (locationIndex !== "") {
-      const newLocation = locations[locationIndex];
-      setSelectedLocation(newLocation);
+  const handleLocationChange = (cityId) => {
+    if (cityId !== "") {
+      const newLocation = locations.find((loc) => loc.cityId === cityId);
+      if (newLocation) {
+        setSelectedLocation(newLocation);
+        setLocalRestaurantPath({
+          countryId: newLocation.countryId,
+          stateId: newLocation.stateId,
+          cityId: newLocation.cityId,
+          restaurantId: null,
+        });
+        // Reset restaurant when location changes
+        setRestaurant("");
+        setRestaurants([]);
+      }
     } else {
       setSelectedLocation(null);
+      setLocalRestaurantPath(null);
+      setRestaurant("");
+      setRestaurants([]);
     }
-    setRestaurant(""); // Reset restaurant when location changes
+  };
+
+  const handleRestaurantChange = (restaurantId) => {
+    const selectedRestaurant = restaurants.find((r) => r.id === restaurantId);
+    setRestaurant(selectedRestaurant);
+    if (selectedRestaurant && localRestaurantPath) {
+      setLocalRestaurantPath({
+        ...localRestaurantPath,
+        restaurantId: selectedRestaurant.id,
+      });
+    }
   };
 
   const formatLocation = (location) => {
     return `${location.city}, ${location.state}, ${location.country}`;
-  };
-
-  const saveRestaurantPath = async () => {
-    if (selectedLocation && restaurant) {
-      const path = {
-        countryId: selectedLocation.countryId,
-        stateId: selectedLocation.stateId,
-        cityId: selectedLocation.cityId,
-        restaurantId: restaurant.id,
-      };
-      try {
-        await updateRestaurantPath(path);
-      } catch (error) {
-        console.error("Error saving restaurant path:", error);
-      }
-    }
   };
 
   if (loading) {
@@ -213,20 +234,16 @@ const AuthScreen = () => {
         <View style={[styles.splitInputContainer, styles.inputContainer]}>
           <Text style={styles.inputIcon}>📍</Text>
           <Picker
-            selectedValue={
-              selectedLocation
-                ? locations.findIndex((loc) => loc === selectedLocation)
-                : ""
-            }
+            selectedValue={selectedLocation ? selectedLocation.cityId : ""}
             style={styles.picker}
-            onValueChange={handleLocationChange}
+            onValueChange={(value) => handleLocationChange(value)}
           >
             <Picker.Item label="Choose a location" value="" />
             {locations.map((loc, index) => (
               <Picker.Item
                 key={index}
                 label={formatLocation(loc)}
-                value={index}
+                value={loc.cityId}
               />
             ))}
           </Picker>
@@ -237,9 +254,7 @@ const AuthScreen = () => {
           <Picker
             selectedValue={restaurant ? restaurant.id : ""}
             style={styles.picker}
-            onValueChange={(itemValue) =>
-              setRestaurant(restaurants.find((r) => r.id === itemValue))
-            }
+            onValueChange={handleRestaurantChange}
             enabled={!!selectedLocation}
           >
             <Picker.Item label="Select your restaurant" value="" />

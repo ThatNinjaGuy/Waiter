@@ -5,6 +5,9 @@ import { constructHotelPath } from "./common";
 export const fetchHotelData = async (restaurantPath) => {
   try {
     const path = constructHotelPath(restaurantPath);
+    if (!restaurantPath.restaurantId || restaurantPath.restaurantId === null) {
+      return null;
+    }
     let docSnap;
 
     if (Platform.OS === "web") {
@@ -31,7 +34,7 @@ export const fetchHotelData = async (restaurantPath) => {
         state: data.state,
       };
     } else {
-      console.log("No such document!");
+      console.log("No such document!", path);
       return null;
     }
   } catch (error) {

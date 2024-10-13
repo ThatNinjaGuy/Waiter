@@ -46,14 +46,10 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        console.log("Notification received");
-      });
+      Notifications.addNotificationReceivedListener((notification) => {});
 
     responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log("Notification response received");
-      });
+      Notifications.addNotificationResponseReceivedListener((response) => {});
 
     return () => {
       Notifications.removeNotificationSubscription(
@@ -132,7 +128,7 @@ export const AuthProvider = ({ children }) => {
     const unsubscribeAuth = auth.onAuthStateChanged(handleAuthStateChange);
 
     return () => unsubscribeAuth();
-  }, [authInitialized]);
+  }, [authInitialized, restaurantPath]);
 
   const handleAuthStateChange = async (firebaseUser) => {
     if (firebaseUser) {
@@ -140,19 +136,19 @@ export const AuthProvider = ({ children }) => {
         setFirebaseUser(firebaseUser);
 
         // Load the restaurant path from AsyncStorage
-        const savedPath = await AsyncStorage.getItem("restaurantPath");
-        if (savedPath) {
-          const parsedPath = JSON.parse(savedPath);
-          setRestaurantPath(parsedPath);
+        const savedPath =
+          restaurantPath || (await AsyncStorage.getItem("restaurantPath"));
+        if (
+          savedPath &&
+          savedPath.restaurantId &&
+          savedPath.restaurantId !== null
+        ) {
+          setRestaurantPath(savedPath);
 
-          // Use restaurantPath to fetch data
-          await fetchAllStaffs(parsedPath, setStaffs);
-          await fetchAllTables(parsedPath, setLiveTables);
-          await fetchHotelDetails(parsedPath);
-        } else {
-          console.warn("Restaurant path not available. Unable to fetch data.");
+          await fetchAllStaffs(savedPath, setStaffs);
+          await fetchAllTables(savedPath, setLiveTables);
+          await fetchHotelDetails(savedPath);
         }
-
         // Set up message handler
         setupMessageHandler(Platform.OS);
       } catch (error) {
@@ -161,7 +157,6 @@ export const AuthProvider = ({ children }) => {
     } else {
       setUser(null);
       setFirebaseUser(null);
-      setRestaurantPath(null);
     }
     setLoading(false);
   };
