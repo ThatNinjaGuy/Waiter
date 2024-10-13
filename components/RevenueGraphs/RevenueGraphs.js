@@ -111,7 +111,7 @@ const RevenueGraphs = ({ restaurantPath }) => {
         const monthIndex = (now.getMonth() - orderDate.getMonth() + 12) % 12;
         if (monthIndex < 6) {
           monthlyData[monthIndex].revenue += order.orderValue;
-          monthlyData[monthIndex].count += 1;
+          monthlyData[monthIndex].count += order.totalOrders;
         }
       }
     });
@@ -138,7 +138,7 @@ const RevenueGraphs = ({ restaurantPath }) => {
         const hourIndex = 23 - Math.floor((now - orderDate) / (60 * 60 * 1000));
         if (hourIndex >= 0) {
           hourlyData[hourIndex].revenue += order.orderValue;
-          hourlyData[hourIndex].count += 1;
+          hourlyData[hourIndex].count += order.totalOrders;
         }
       }
     });
@@ -164,7 +164,7 @@ const RevenueGraphs = ({ restaurantPath }) => {
           6 - Math.floor((now - orderDate) / (24 * 60 * 60 * 1000));
         if (dayIndex >= 0) {
           dailyData[dayIndex].revenue += order.orderValue;
-          dailyData[dayIndex].count += 1;
+          dailyData[dayIndex].count += order.totalOrders;
         }
       }
     });
