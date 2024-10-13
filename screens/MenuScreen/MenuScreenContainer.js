@@ -16,8 +16,9 @@ import {
   deleteMenuItemCategory,
 } from "@/firebase/queries/menuItemCategories";
 import { isAdminEmployee } from "@/utils/entitlementManagement";
+
 const MenuScreenContainer = () => {
-  const { user } = useContext(AuthContext);
+  const { user, restaurantPath } = useContext(AuthContext);
   const preferredLanguage = user?.preferredLanguage;
   const [isLoading, setIsLoading] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
@@ -28,12 +29,12 @@ const MenuScreenContainer = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    fetchMenuItems(setMenuItems, setIsLoading);
-    fetchMenuItemCategories(setMenuItemCategories);
+    fetchMenuItems(restaurantPath, setMenuItems, setIsLoading);
+    fetchMenuItemCategories(restaurantPath, setMenuItemCategories);
   }, []);
 
   const addMenuItem = (item) => {
-    addMenuItems([item], menuItems, setMenuItems);
+    addMenuItems(restaurantPath, [item], menuItems, setMenuItems);
   };
 
   if (!user) return <AuthScreen />;
@@ -47,15 +48,23 @@ const MenuScreenContainer = () => {
       menuItems={menuItems}
       preferredLanguage={preferredLanguage}
       addMenuItem={addMenuItem}
-      deleteMenuItem={(id) => deleteMenuItem(id, menuItems, setMenuItems)}
+      deleteMenuItem={(id) =>
+        deleteMenuItem(restaurantPath, id, menuItems, setMenuItems)
+      }
       updateMenuItem={(id, updatedItem) =>
-        updateMenuItem(id, updatedItem, menuItems, setMenuItems)
+        updateMenuItem(restaurantPath, id, updatedItem, menuItems, setMenuItems)
       }
       categories={menuItemCategories}
       setCategories={setMenuItemCategories}
-      handleAddMenuItemCategory={addMenuItemCategory}
-      handleUpdateMenuItemCategory={updateMenuItemCategory}
-      handleDeleteMenuItemCategory={deleteMenuItemCategory}
+      handleAddMenuItemCategory={(category) =>
+        addMenuItemCategory(restaurantPath, category)
+      }
+      handleUpdateMenuItemCategory={(editingCategory, newCategory) =>
+        updateMenuItemCategory(restaurantPath, editingCategory, newCategory)
+      }
+      handleDeleteMenuItemCategory={(category) =>
+        deleteMenuItemCategory(restaurantPath, category)
+      }
       isMenuAddVisible={isMenuAddVisible}
       isMenuCategoryAddVisible={isMenuCategoryAddVisible}
       isMenuEditVisible={isMenuEditVisible}

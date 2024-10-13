@@ -1,15 +1,21 @@
 import { Platform } from "react-native";
 import { db } from "@/firebase/firebaseConfig";
 import { generateUniqueKey } from "@/utils/keyGenerator";
+import { constructHotelPath } from "./common";
 
-const menuItemsPath = "hotel-details/menu/menu-items";
+const menuItemsPath = "/menu-items";
 
-export const fetchMenuItems = async (setMenuItems, setIsLoading) => {
+export const fetchMenuItems = async (
+  restaurantPath,
+  setMenuItems,
+  setIsLoading
+) => {
+  const path = constructHotelPath(restaurantPath) + menuItemsPath;
   try {
     let unsubscribe;
     if (Platform.OS === "web") {
       const { collection, onSnapshot } = await import("firebase/firestore");
-      const menuItemsRef = collection(db, menuItemsPath);
+      const menuItemsRef = collection(db, path);
       unsubscribe = onSnapshot(menuItemsRef, (querySnapshot) => {
         const items = querySnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -19,7 +25,7 @@ export const fetchMenuItems = async (setMenuItems, setIsLoading) => {
         if (setIsLoading) setIsLoading(false);
       });
     } else {
-      const menuItemsRef = db.collection(menuItemsPath);
+      const menuItemsRef = db.collection(path);
       unsubscribe = menuItemsRef.onSnapshot((querySnapshot) => {
         const items = querySnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -36,7 +42,13 @@ export const fetchMenuItems = async (setMenuItems, setIsLoading) => {
   }
 };
 
-export const addMenuItems = async (items, menuItems, setMenuItems) => {
+export const addMenuItems = async (
+  restaurantPath,
+  items,
+  menuItems,
+  setMenuItems
+) => {
+  const path = constructHotelPath(restaurantPath) + menuItemsPath;
   const newItems = [];
 
   try {
@@ -45,7 +57,7 @@ export const addMenuItems = async (items, menuItems, setMenuItems) => {
         "firebase/firestore"
       );
       const batch = writeBatch(db);
-      const menuItemsRef = collection(db, menuItemsPath);
+      const menuItemsRef = collection(db, path);
       for (const item of items) {
         item.searchableKey = generateUniqueKey(menuItems, item);
         const docRef = await addDoc(menuItemsRef, item);
@@ -56,7 +68,7 @@ export const addMenuItems = async (items, menuItems, setMenuItems) => {
       const batch = db.batch();
       for (const item of items) {
         item.searchableKey = generateUniqueKey(menuItems, item);
-        const docRef = db.collection(menuItemsPath).doc();
+        const docRef = db.collection(path).doc();
         batch.set(docRef, item);
         newItems.push({ ...item, id: docRef.id });
       }
@@ -70,18 +82,20 @@ export const addMenuItems = async (items, menuItems, setMenuItems) => {
 };
 
 export const updateMenuItem = async (
+  restaurantPath,
   id,
   updatedItem,
   menuItems,
   setMenuItems
 ) => {
+  const path = constructHotelPath(restaurantPath) + menuItemsPath;
   try {
     if (Platform.OS === "web") {
       const { doc, updateDoc } = await import("firebase/firestore");
-      const itemRef = doc(db, menuItemsPath, id);
+      const itemRef = doc(db, path, id);
       await updateDoc(itemRef, updatedItem);
     } else {
-      await db.collection(menuItemsPath).doc(id).update(updatedItem);
+      await db.collection(path).doc(id).update(updatedItem);
     }
     setMenuItems(
       menuItems.map((item) =>
@@ -94,14 +108,20 @@ export const updateMenuItem = async (
   }
 };
 
-export const deleteMenuItem = async (id, menuItems, setMenuItems) => {
+export const deleteMenuItem = async (
+  restaurantPath,
+  id,
+  menuItems,
+  setMenuItems
+) => {
+  const path = constructHotelPath(restaurantPath) + menuItemsPath;
   try {
     if (Platform.OS === "web") {
       const { doc, deleteDoc } = await import("firebase/firestore");
-      const itemRef = doc(db, menuItemsPath, id);
+      const itemRef = doc(db, path, id);
       await deleteDoc(itemRef);
     } else {
-      await db.collection(menuItemsPath).doc(id).delete();
+      await db.collection(path).doc(id).delete();
     }
     setMenuItems(menuItems.filter((item) => item.id !== id));
     console.log("Menu item successfully deleted!");

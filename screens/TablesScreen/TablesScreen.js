@@ -28,7 +28,8 @@ import { identifyNotificationTokens } from "@/utils/sendNotification";
 import { NEW_ORDERS } from "@/constants/notificationControls";
 
 const TablesScreen = () => {
-  const { user, hotel, liveTables, staffs } = useContext(AuthContext);
+  const { user, hotel, liveTables, staffs, restaurantPath } =
+    useContext(AuthContext);
   const preferredLanguage = user?.preferredLanguage;
   const addTableText = getAddTableTranslation(preferredLanguage);
 
@@ -48,7 +49,7 @@ const TablesScreen = () => {
 
   useEffect(() => {
     // Fetch menu items on the liveTables screen so no refetch is needed for each table
-    fetchMenuItems(setMenuItems, undefined);
+    fetchMenuItems(restaurantPath, setMenuItems, undefined);
   }, []);
 
   const refreshSelectedTable = () => {
@@ -58,7 +59,7 @@ const TablesScreen = () => {
   };
 
   const addNewTable = (item) => {
-    addTable([item], liveTables, undefined);
+    addTable(restaurantPath, [item], liveTables, undefined);
     setTableAdd(false);
   };
 
@@ -78,12 +79,16 @@ const TablesScreen = () => {
   };
 
   const handleUpdateTable = (updatedTable) => {
-    updatedTable = markOrderAsCompleted(
-      updatedTable,
-      selectedTable,
-      addCompletedOrder
+    updatedTable = markOrderAsCompleted(updatedTable, selectedTable, (table) =>
+      addCompletedOrder(restaurantPath, table)
     );
-    updateTableDetails(updatedTable.id, updatedTable, undefined, undefined);
+    updateTableDetails(
+      restaurantPath,
+      updatedTable.id,
+      updatedTable,
+      undefined,
+      undefined
+    );
     setSelectedTable(null);
     setTableInfoOptionClicked(false);
   };
@@ -116,7 +121,8 @@ const TablesScreen = () => {
       liveTables,
       selectedTable,
       undefined,
-      updateTableDetails
+      updateTableDetails,
+      restaurantPath
     );
   };
 

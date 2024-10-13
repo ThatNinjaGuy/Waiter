@@ -17,7 +17,7 @@ import {
 } from "@/constants/notificationControls";
 
 const OrdersScreenContainer = () => {
-  const { user, liveOrders, staffs } = useContext(AuthContext);
+  const { user, liveOrders, staffs, restaurantPath } = useContext(AuthContext);
 
   const handleUpdateOrderStatus = async (
     orderId,
@@ -45,7 +45,7 @@ const OrdersScreenContainer = () => {
       );
     }
 
-    await updateOrderStatus(orderId, tableId, newStatus);
+    await updateOrderStatus(restaurantPath, orderId, tableId, newStatus);
   };
 
   if (!user) return <AuthScreen />;

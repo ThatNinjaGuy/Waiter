@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   TextInput,
@@ -16,8 +16,15 @@ import { validateSignupRequest } from "@/utils/validations";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import { Platform } from "react-native";
 import { addSignUpRequest } from "@/firebase/queries/staffs";
+import {
+  fetchLocations,
+  fetchRestaurants,
+} from "@/firebase/queries/restaurants";
+import AuthContext from "@/components/Authentication/AuthProvider";
 
 const AuthScreen = () => {
+  const { restaurantPath, updateRestaurantPath } = useContext(AuthContext);
+
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
@@ -27,6 +34,62 @@ const AuthScreen = () => {
   const [password, setPassword] = useState("");
   const [authReqResponse, setAuthReqResponse] = useState("");
   const [isSignUpMode, setIsSignUpMode] = useState(false);
+  const [restaurant, setRestaurant] = useState("");
+  const [locations, setLocations] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [localRestaurantPath, setLocalRestaurantPath] = useState(null);
+
+  useEffect(() => {
+    const loadLocations = async () => {
+      try {
+        const fetchedLocations = await fetchLocations();
+        setLocations(fetchedLocations);
+        if (restaurantPath) {
+          const savedLocation = fetchedLocations.find(
+            (loc) =>
+              loc.countryId === restaurantPath.countryId &&
+              loc.stateId === restaurantPath.stateId &&
+              loc.cityId === restaurantPath.cityId
+          );
+          if (savedLocation) {
+            setSelectedLocation(savedLocation);
+            setLocalRestaurantPath(restaurantPath);
+          }
+        }
+      } catch (error) {
+        console.error("Error loading locations:", error);
+      }
+    };
+    loadLocations();
+  }, [restaurantPath]);
+
+  useEffect(() => {
+    const loadRestaurants = async () => {
+      if (selectedLocation) {
+        try {
+          const fetchedRestaurants = await fetchRestaurants(selectedLocation);
+          setRestaurants(fetchedRestaurants);
+          if (
+            localRestaurantPath &&
+            selectedLocation.countryId === localRestaurantPath.countryId &&
+            selectedLocation.stateId === localRestaurantPath.stateId &&
+            selectedLocation.cityId === localRestaurantPath.cityId
+          ) {
+            const savedRestaurant = fetchedRestaurants.find(
+              (r) => r.id === localRestaurantPath.restaurantId
+            );
+            if (savedRestaurant) {
+              setRestaurant(savedRestaurant);
+            }
+          }
+        } catch (error) {
+          console.error("Error loading restaurants:", error);
+        }
+      }
+    };
+    loadRestaurants();
+  }, [selectedLocation, localRestaurantPath]);
 
   const toggleMode = () => {
     setIsSignUpMode((prevMode) => !prevMode);
@@ -46,6 +109,11 @@ const AuthScreen = () => {
       return;
     }
 
+    if (!localRestaurantPath || !localRestaurantPath.restaurantId) {
+      setAuthReqResponse("Please select a location and restaurant.");
+      return;
+    }
+
     const userData = {
       name,
       age,
@@ -55,9 +123,10 @@ const AuthScreen = () => {
       password,
     };
 
-    const success = await addSignUpRequest(userData);
+    const success = await addSignUpRequest(localRestaurantPath, userData);
 
     if (success) {
+      await updateRestaurantPath(localRestaurantPath);
       Alert.alert(
         "Request submitted successfully",
         "Your sign up request has been sent successfully. Please try to sign in when your manager approves the request."
@@ -77,13 +146,20 @@ const AuthScreen = () => {
   const handleSignIn = async () => {
     setLoading(true);
     try {
+      if (!localRestaurantPath || !localRestaurantPath.restaurantId) {
+        setAuthReqResponse("Please select a location and restaurant.");
+        setLoading(false);
+        return;
+      }
+
       if (Platform.OS === "web") {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
         await auth.signInWithEmailAndPassword(email, password);
       }
+      await updateRestaurantPath(localRestaurantPath);
     } catch (error) {
-      console.error(error);
+      console.error("Sign in error:", error);
       if (error.code === "auth/user-disabled") {
         setAuthReqResponse(
           "This user account has been disabled. Please contact support."
@@ -98,6 +174,44 @@ const AuthScreen = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLocationChange = (cityId) => {
+    if (cityId !== "") {
+      const newLocation = locations.find((loc) => loc.cityId === cityId);
+      if (newLocation) {
+        setSelectedLocation(newLocation);
+        setLocalRestaurantPath({
+          countryId: newLocation.countryId,
+          stateId: newLocation.stateId,
+          cityId: newLocation.cityId,
+          restaurantId: null,
+        });
+        // Reset restaurant when location changes
+        setRestaurant("");
+        setRestaurants([]);
+      }
+    } else {
+      setSelectedLocation(null);
+      setLocalRestaurantPath(null);
+      setRestaurant("");
+      setRestaurants([]);
+    }
+  };
+
+  const handleRestaurantChange = (restaurantId) => {
+    const selectedRestaurant = restaurants.find((r) => r.id === restaurantId);
+    setRestaurant(selectedRestaurant);
+    if (selectedRestaurant && localRestaurantPath) {
+      setLocalRestaurantPath({
+        ...localRestaurantPath,
+        restaurantId: selectedRestaurant.id,
+      });
+    }
+  };
+
+  const formatLocation = (location) => {
+    return `${location.city}, ${location.state}, ${location.country}`;
   };
 
   if (loading) {
@@ -116,6 +230,39 @@ const AuthScreen = () => {
         <Text style={styles.subText}>
           Your one-stop solution for restaurant management
         </Text>
+
+        <View style={[styles.splitInputContainer, styles.inputContainer]}>
+          <Text style={styles.inputIcon}>📍</Text>
+          <Picker
+            selectedValue={selectedLocation ? selectedLocation.cityId : ""}
+            style={styles.picker}
+            onValueChange={(value) => handleLocationChange(value)}
+          >
+            <Picker.Item label="Choose a location" value="" />
+            {locations.map((loc, index) => (
+              <Picker.Item
+                key={index}
+                label={formatLocation(loc)}
+                value={loc.cityId}
+              />
+            ))}
+          </Picker>
+        </View>
+
+        <View style={[styles.splitInputContainer, styles.inputContainer]}>
+          <Text style={styles.inputIcon}>🍽️</Text>
+          <Picker
+            selectedValue={restaurant ? restaurant.id : ""}
+            style={styles.picker}
+            onValueChange={handleRestaurantChange}
+            enabled={!!selectedLocation}
+          >
+            <Picker.Item label="Select your restaurant" value="" />
+            {restaurants.map((rest) => (
+              <Picker.Item key={rest.id} label={rest.name} value={rest.id} />
+            ))}
+          </Picker>
+        </View>
 
         <View style={styles.inputContainer}>
           <Text style={styles.inputIcon}>✉️</Text>
@@ -299,7 +446,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     flex: 1,
-    height: 49,
+    height: 48,
     color: "#333",
     backgroundColor: "#f5f5f5",
     borderRadius: 5,

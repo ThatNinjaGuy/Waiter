@@ -2,18 +2,24 @@ import { Platform } from "react-native";
 import { db } from "@/firebase/firebaseConfig";
 import { generateUniqueKey } from "@/utils/keyGenerator";
 import { DEFAULT_NOTIFICATION_SETTINGS } from "@/constants/notificationControls";
+import { constructHotelPath } from "./common";
 
-export const staffsPath = "hotel-details/staff-details/staffs";
-export const signUpRequestsPath = "hotel-details/staff-details/signup-requests";
+export const staffsPath = "/staffs";
+export const signUpRequestsPath = "/signup-requests";
 
-export const fetchAllSignupRequests = async (setRequests, setLoading) => {
+export const fetchAllSignupRequests = async (
+  restaurantPath,
+  setRequests,
+  setLoading
+) => {
+  const path = constructHotelPath(restaurantPath) + signUpRequestsPath;
   try {
     let unsubscribe;
     if (Platform.OS === "web") {
       const { collection, query, onSnapshot } = await import(
         "firebase/firestore"
       );
-      const signUpRequestsRef = collection(db, signUpRequestsPath);
+      const signUpRequestsRef = collection(db, path);
       const q = query(signUpRequestsRef);
       unsubscribe = onSnapshot(q, (querySnapshot) => {
         const allRequests = querySnapshot.docs.map((doc) => ({
@@ -24,7 +30,7 @@ export const fetchAllSignupRequests = async (setRequests, setLoading) => {
         if (setLoading) setLoading(false);
       });
     } else {
-      const signUpRequestsRef = db.collection(signUpRequestsPath);
+      const signUpRequestsRef = db.collection(path);
       unsubscribe = signUpRequestsRef.onSnapshot((querySnapshot) => {
         const allRequests = querySnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -40,13 +46,14 @@ export const fetchAllSignupRequests = async (setRequests, setLoading) => {
   }
 };
 
-export const addSignUpRequest = async (userData) => {
+export const addSignUpRequest = async (restaurantPath, userData) => {
+  const path = constructHotelPath(restaurantPath) + signUpRequestsPath;
   try {
     if (Platform.OS === "web") {
       const { collection, addDoc } = await import("firebase/firestore");
-      await addDoc(collection(db, signUpRequestsPath), userData);
+      await addDoc(collection(db, path), userData);
     } else {
-      await db.collection(signUpRequestsPath).add(userData);
+      await db.collection(path).add(userData);
     }
     console.log("Sign-up request added successfully");
     return true;
@@ -56,14 +63,15 @@ export const addSignUpRequest = async (userData) => {
   }
 };
 
-export const deleteSignupRequest = async (id) => {
+export const deleteSignupRequest = async (restaurantPath, id) => {
+  const path = constructHotelPath(restaurantPath) + signUpRequestsPath;
   try {
     if (Platform.OS === "web") {
       const { doc, deleteDoc } = await import("firebase/firestore");
-      const requestRef = doc(db, signUpRequestsPath, id);
+      const requestRef = doc(db, path, id);
       await deleteDoc(requestRef);
     } else {
-      await db.collection(signUpRequestsPath).doc(id).delete();
+      await db.collection(path).doc(id).delete();
     }
     console.log("Signup request successfully deleted!");
   } catch (error) {
@@ -71,14 +79,19 @@ export const deleteSignupRequest = async (id) => {
   }
 };
 
-export const fetchAllStaffs = async (setStaffs, setIsLoading) => {
+export const fetchAllStaffs = async (
+  restaurantPath,
+  setStaffs,
+  setIsLoading
+) => {
   try {
+    const path = constructHotelPath(restaurantPath) + staffsPath;
     let unsubscribe;
     if (Platform.OS === "web") {
       const { collection, query, onSnapshot } = await import(
         "firebase/firestore"
       );
-      const staffsRef = collection(db, staffsPath);
+      const staffsRef = collection(db, path);
       const q = query(staffsRef);
       unsubscribe = onSnapshot(q, (querySnapshot) => {
         const allStaffs = querySnapshot.docs.map((doc) => ({
@@ -89,7 +102,7 @@ export const fetchAllStaffs = async (setStaffs, setIsLoading) => {
         if (setIsLoading) setIsLoading(false);
       });
     } else {
-      const staffsRef = db.collection(staffsPath);
+      const staffsRef = db.collection(path);
       unsubscribe = staffsRef.onSnapshot((querySnapshot) => {
         const allStaffs = querySnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -106,6 +119,7 @@ export const fetchAllStaffs = async (setStaffs, setIsLoading) => {
 };
 
 export const updateStaff = async (
+  restaurantPath,
   id,
   updatedItem,
   staffs,
@@ -113,15 +127,16 @@ export const updateStaff = async (
   setLoading
 ) => {
   try {
+    const path = constructHotelPath(restaurantPath) + staffsPath;
     if (staffs && !updatedItem.searchableKey)
       updatedItem.searchableKey = generateUniqueKey(staffs, updatedItem);
 
     if (Platform.OS === "web") {
       const { doc, updateDoc } = await import("firebase/firestore");
-      const itemRef = doc(db, staffsPath, id);
+      const itemRef = doc(db, path, id);
       await updateDoc(itemRef, updatedItem);
     } else {
-      await db.collection(staffsPath).doc(id).update(updatedItem);
+      await db.collection(path).doc(id).update(updatedItem);
     }
 
     if (setStaffs)
@@ -138,13 +153,14 @@ export const updateStaff = async (
   }
 };
 
-export const deleteStaff = async (id) => {
+export const deleteStaff = async (restaurantPath, id) => {
+  const path = constructHotelPath(restaurantPath) + staffsPath;
   try {
     if (Platform.OS === "web") {
       const { doc, deleteDoc } = await import("firebase/firestore");
-      await deleteDoc(doc(db, staffsPath, id));
+      await deleteDoc(doc(db, path, id));
     } else {
-      await db.collection(staffsPath).doc(id).delete();
+      await db.collection(path).doc(id).delete();
     }
     console.log("Document successfully deleted!");
   } catch (error) {
@@ -153,9 +169,11 @@ export const deleteStaff = async (id) => {
 };
 
 export const addToStaffs = async (
+  restaurantPath,
   { name, email, role, age, mobile, authId },
   appDefaultLanguage
 ) => {
+  const path = constructHotelPath(restaurantPath) + staffsPath;
   const newStaff = {
     name: name,
     age: age,
@@ -171,9 +189,9 @@ export const addToStaffs = async (
   try {
     if (Platform.OS === "web") {
       const { collection, addDoc } = await import("firebase/firestore");
-      await addDoc(collection(db, staffsPath), newStaff);
+      await addDoc(collection(db, path), newStaff);
     } else {
-      await db.collection(staffsPath).add(newStaff);
+      await db.collection(path).add(newStaff);
     }
     console.log("Staff added successfully");
   } catch (error) {

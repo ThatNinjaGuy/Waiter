@@ -32,7 +32,6 @@ const StaffScreenView = ({
   };
 
   const handleSaveItem = (item) => {
-    console.log("item", item);
     if (currentItem) {
       updateStaff(currentItem.id, item);
     }

@@ -30,7 +30,7 @@ import {
 import { ThemedText } from "@/components/common/ThemedText";
 
 const ApproveSignUpRequestsScreen = () => {
-  const { user } = useContext(AuthContext);
+  const { user, restaurantPath } = useContext(AuthContext);
   const preferredLanguage = user.preferredLanguage;
   const approveSignupRequestsText =
     getApproveSignupRequestsTranslation(preferredLanguage);
@@ -53,7 +53,7 @@ const ApproveSignUpRequestsScreen = () => {
   // Create a secondary app for user creation
   const secondaryApp = initializeApp(firebaseConfig, "Secondary");
   useEffect(() => {
-    fetchAllSignupRequests(setRequests, setLoading);
+    fetchAllSignupRequests(restaurantPath, setRequests, setLoading);
   }, []);
 
   const handleSignUp = async ({ email, password }) => {
@@ -85,7 +85,7 @@ const ApproveSignUpRequestsScreen = () => {
   const deleteRequest = async (id) => {
     try {
       setLoading(true);
-      deleteSignupRequest(id);
+      deleteSignupRequest(resid);
       console.log("Document successfully deleted!");
     } catch (error) {
       console.error("Error removing document: ", error);
@@ -100,8 +100,8 @@ const ApproveSignUpRequestsScreen = () => {
     try {
       setLoading(true);
       request.authId = await handleSignUp(request);
-      addToStaffs(request, appDefaultLanguage);
-      deleteSignupRequest(request.id);
+      addToStaffs(restaurantPath, request, appDefaultLanguage);
+      deleteSignupRequest(restaurantPath, id);
       console.log("Approval requests updated");
       Alert.alert(successText, requestApprovedSuccessText);
     } catch (error) {

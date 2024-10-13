@@ -67,7 +67,8 @@ export const handleTableOrderUpdate = (
   tables,
   selectedTable,
   setTables,
-  updateTableDetails
+  updateTableDetails,
+  restaurantPath
 ) => {
   const tableIndex = tables.findIndex((t) => t.id === selectedTable.id);
   if (tableIndex !== -1) {
@@ -79,6 +80,12 @@ export const handleTableOrderUpdate = (
     const newTables = [...tables];
     newTables[tableIndex] = updatedTable;
     if (setTables) setTables(newTables);
-    updateTableDetails(selectedTable.id, updatedTable, tables, setTables);
+    updateTableDetails(
+      restaurantPath,
+      selectedTable.id,
+      updatedTable,
+      tables,
+      setTables
+    );
   } else console.error("Couldn't find table");
 };

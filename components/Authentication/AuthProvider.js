@@ -1,5 +1,6 @@
 import { Platform } from "react-native";
 import React, { createContext, useState, useEffect, useRef } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import { fetchAllTables } from "@/firebase/queries/tables";
 import { extractOrdersFromTable } from "@/utils/orderManagement";
@@ -15,6 +16,18 @@ import * as Notifications from "expo-notifications";
 import { registerForPushNotificationsAsync } from "@/firebase/messaging";
 
 const AuthContext = createContext();
+const getSavedRestaurantPath = async () => {
+  try {
+    const savedPath = await AsyncStorage.getItem("restaurantPath");
+    if (savedPath) {
+      const parsedPath = JSON.parse(savedPath);
+      return parsedPath;
+    }
+    return undefined;
+  } catch (error) {
+    console.error("Error loading saved restaurant path:", error);
+  }
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -27,17 +40,16 @@ export const AuthProvider = ({ children }) => {
   const [authInitialized, setAuthInitialized] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
+  const [restaurantPath, setRestaurantPath] = useState(
+    getSavedRestaurantPath()
+  );
 
   useEffect(() => {
     notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        console.log("Notification received");
-      });
+      Notifications.addNotificationReceivedListener((notification) => {});
 
     responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log("Notification response received");
-      });
+      Notifications.addNotificationResponseReceivedListener((response) => {});
 
     return () => {
       Notifications.removeNotificationSubscription(
@@ -51,9 +63,9 @@ export const AuthProvider = ({ children }) => {
     setupNotificationHandler();
   }, []);
 
-  const fetchHotelDetails = async () => {
+  const fetchHotelDetails = async (restaurantPath) => {
     try {
-      const hotelDetails = await fetchHotelData();
+      const hotelDetails = await fetchHotelData(restaurantPath);
       if (hotelDetails) {
         setHotel(hotelDetails);
       }
@@ -71,7 +83,7 @@ export const AuthProvider = ({ children }) => {
       preferredLanguage: staff?.preferredLanguage || appDefaultLanguage,
     });
     if (staff) {
-      registerForPushNotificationsAsync(staff, staffs);
+      registerForPushNotificationsAsync(restaurantPath, staff, staffs);
     }
   };
 
@@ -116,15 +128,27 @@ export const AuthProvider = ({ children }) => {
     const unsubscribeAuth = auth.onAuthStateChanged(handleAuthStateChange);
 
     return () => unsubscribeAuth();
-  }, [authInitialized]);
+  }, [authInitialized, restaurantPath]);
 
   const handleAuthStateChange = async (firebaseUser) => {
     if (firebaseUser) {
       try {
-        await fetchAllStaffs(setStaffs);
-        await fetchAllTables(setLiveTables, undefined);
         setFirebaseUser(firebaseUser);
-        await fetchHotelDetails();
+
+        // Load the restaurant path from AsyncStorage
+        const savedPath =
+          restaurantPath || (await AsyncStorage.getItem("restaurantPath"));
+        if (
+          savedPath &&
+          savedPath.restaurantId &&
+          savedPath.restaurantId !== null
+        ) {
+          setRestaurantPath(savedPath);
+
+          await fetchAllStaffs(savedPath, setStaffs);
+          await fetchAllTables(savedPath, setLiveTables);
+          await fetchHotelDetails(savedPath);
+        }
         // Set up message handler
         setupMessageHandler(Platform.OS);
       } catch (error) {
@@ -151,13 +175,37 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    setRestaurantPath(getSavedRestaurantPath());
+  }, []);
+
+  const updateRestaurantPath = async (newPath) => {
+    try {
+      if (JSON.stringify(newPath) !== JSON.stringify(restaurantPath)) {
+        setRestaurantPath(newPath);
+        await AsyncStorage.setItem("restaurantPath", JSON.stringify(newPath));
+      }
+    } catch (error) {
+      console.error("Error updating restaurant path:", error);
+    }
+  };
+
   if (loading) {
     return <LoadingScreen />;
   }
 
   return (
     <AuthContext.Provider
-      value={{ user, logout, liveTables, liveOrders, staffs, hotel }}
+      value={{
+        user,
+        logout,
+        liveTables,
+        liveOrders,
+        staffs,
+        hotel,
+        restaurantPath,
+        updateRestaurantPath,
+      }}
     >
       {children}
     </AuthContext.Provider>

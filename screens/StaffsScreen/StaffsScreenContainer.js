@@ -5,7 +5,7 @@ import AuthScreen from "@/screens/AuthScreen/AuthScreen";
 import { updateStaff, deleteStaff } from "@/firebase/queries/staffs";
 import { isAdminEmployee } from "@/utils/entitlementManagement";
 const StaffsScreenContainer = () => {
-  const { user, staffs } = useContext(AuthContext);
+  const { user, staffs, restaurantPath } = useContext(AuthContext);
   const [staffsState, setStaffsState] = useState([]);
   const isStaffEditable = isAdminEmployee(user?.staffDetails?.role);
 
@@ -18,8 +18,10 @@ const StaffsScreenContainer = () => {
   return (
     <StaffScreenView
       staffs={staffsState}
-      deleteStaff={deleteStaff}
-      updateStaff={(id, updatedItem) => updateStaff(id, updatedItem, staffs)}
+      deleteStaff={(id) => deleteStaff(restaurantPath, id)}
+      updateStaff={(id, updatedItem) =>
+        updateStaff(restaurantPath, id, updatedItem, staffs)
+      }
       isStaffEditable={isStaffEditable}
     />
   );
