@@ -18,7 +18,6 @@ import {
   getProfileTranslation,
   getOverviewTranslation,
 } from "@/utils/appText/homeScreen";
-import { fetchCompletedOrders } from "@/firebase/queries/completedOrder";
 
 export default function HomeScreen() {
   const { user, hotel, restaurantPath } = useContext(AuthContext);
@@ -31,72 +30,6 @@ export default function HomeScreen() {
   const INVENTORY = getInventoryTranslation(preferredLanguage);
   const PROFILE = getProfileTranslation(preferredLanguage);
   const TODAY_OVERVIEW = getOverviewTranslation(preferredLanguage);
-  const [completedOrders, setCompletedOrders] = useState([]);
-  const [weeklyRevenue, setWeeklyRevenue] = useState([]);
-  const [monthlyRevenue, setMonthlyRevenue] = useState([]);
-
-  useEffect(() => {
-    fetchCompletedOrders(restaurantPath, setCompletedOrders);
-  }, []);
-
-  useEffect(() => {
-    if (completedOrders.length > 0) {
-      setWeeklyRevenue(processWeeklyRevenue(completedOrders));
-      setMonthlyRevenue(processMonthlyRevenue(completedOrders));
-    }
-  }, [completedOrders]);
-
-  const processWeeklyRevenue = (orders) => {
-    const now = new Date();
-    const oneMonthAgo = new Date(
-      now.getFullYear(),
-      now.getMonth() - 1,
-      now.getDate()
-    );
-    const weeklyData = Array(4).fill(0);
-
-    orders.forEach((order) => {
-      const orderDate = new Date(order.bookingTime.seconds * 1000);
-      if (orderDate >= oneMonthAgo) {
-        const weekIndex = Math.floor(
-          (now - orderDate) / (7 * 24 * 60 * 60 * 1000)
-        );
-        if (weekIndex < 4) {
-          weeklyData[weekIndex] += order.orderValue;
-        }
-      }
-    });
-
-    return weeklyData
-      .map((value, index) => ({
-        name: `Week ${4 - index}`,
-        revenue: value,
-      }))
-      .reverse();
-  };
-
-  const processMonthlyRevenue = (orders) => {
-    const now = new Date();
-    const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
-    const monthlyData = Array(6).fill(0);
-
-    orders.forEach((order) => {
-      const orderDate = new Date(order.bookingTime.seconds * 1000);
-      if (orderDate >= sixMonthsAgo) {
-        const monthIndex = (now.getMonth() - orderDate.getMonth() + 12) % 12;
-        if (monthIndex < 6) {
-          monthlyData[monthIndex] += order.orderValue;
-        }
-      }
-    });
-
-    return monthlyData
-      .map((value, index) => ({
-        name: `Month ${6 - index}`,
-        revenue: value,
-      }))
-      .reverse();
-  };
 
   const navigation = useNavigation();
 
@@ -133,10 +66,7 @@ export default function HomeScreen() {
           <Overview preferredLanguage={preferredLanguage} />
         </ThemedView>
         <NavigationMenu items={navigationItems} />
-        <RevenueGraphs
-          weeklyRevenue={weeklyRevenue}
-          monthlyRevenue={monthlyRevenue}
-        />
+        <RevenueGraphs restaurantPath={restaurantPath} />
       </ThemedView>
     </View>
   );
