@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import AuthScreen from "@/screens/AuthScreen/AuthScreen";
@@ -41,37 +41,37 @@ const ProfileScreen = () => {
   const navigationOptions = [
     {
       title: settingsText,
-      icon: "person-add",
+      icon: "settings-outline",
       visible: true,
       onPress: () => openDisplaySettingsScreen(true),
     },
     {
       title: approveSignupRequestsText,
-      icon: "person-add",
+      icon: "person-add-outline",
       visible: isSignupRequestsVisible,
       onPress: () => navigation.navigate("approve"),
     },
     {
       title: checkoutMenuText,
-      icon: "restaurant-menu",
+      icon: "restaurant-outline",
       visible: true,
       onPress: () => navigation.navigate("menu"),
     },
     {
       title: inventoryText,
-      icon: "inventory",
+      icon: "cart-outline",
       visible: true,
       onPress: () => navigation.navigate("inventory"),
     },
     {
       title: employeesText,
-      icon: "people",
+      icon: "people-outline",
       visible: true,
       onPress: () => navigation.navigate("staffs"),
     },
     {
       title: logoutText,
-      icon: "exit-to-app",
+      icon: "exit-outline",
       visible: true,
       onPress: () => logout(),
     },
