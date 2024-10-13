@@ -1,9 +1,5 @@
-import React, { useContext } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import React, { useContext, useEffect, useState } from "react";
+import { StyleSheet, View, FlatList } from "react-native";
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
 import Overview from "@/components/RestaurantOverview/Overview";
@@ -12,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import AuthScreen from "@/screens/AuthScreen/AuthScreen";
 import AuthContext from "@/components/Authentication/AuthProvider";
 import ProfileHeader from "@/components/ProfileHeader/ProfileHeader";
+import RevenueGraphs from "@/components/RevenueGraphs/RevenueGraphs";
 import {
   getStaffsTranslation,
   getTablesTranslation,
@@ -21,9 +18,10 @@ import {
   getProfileTranslation,
   getOverviewTranslation,
 } from "@/utils/appText/homeScreen";
+import { fetchCompletedOrders } from "@/firebase/queries/completedOrder";
 
 export default function HomeScreen() {
-  const { user, hotel } = useContext(AuthContext);
+  const { user, hotel, restaurantPath } = useContext(AuthContext);
   const preferredLanguage = user?.preferredLanguage;
 
   const STAFFS = getStaffsTranslation(preferredLanguage);
@@ -33,6 +31,72 @@ export default function HomeScreen() {
   const INVENTORY = getInventoryTranslation(preferredLanguage);
   const PROFILE = getProfileTranslation(preferredLanguage);
   const TODAY_OVERVIEW = getOverviewTranslation(preferredLanguage);
+  const [completedOrders, setCompletedOrders] = useState([]);
+  const [weeklyRevenue, setWeeklyRevenue] = useState([]);
+  const [monthlyRevenue, setMonthlyRevenue] = useState([]);
+
+  useEffect(() => {
+    fetchCompletedOrders(restaurantPath, setCompletedOrders);
+  }, []);
+
+  useEffect(() => {
+    if (completedOrders.length > 0) {
+      setWeeklyRevenue(processWeeklyRevenue(completedOrders));
+      setMonthlyRevenue(processMonthlyRevenue(completedOrders));
+    }
+  }, [completedOrders]);
+
+  const processWeeklyRevenue = (orders) => {
+    const now = new Date();
+    const oneMonthAgo = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      now.getDate()
+    );
+    const weeklyData = Array(4).fill(0);
+
+    orders.forEach((order) => {
+      const orderDate = new Date(order.bookingTime.seconds * 1000);
+      if (orderDate >= oneMonthAgo) {
+        const weekIndex = Math.floor(
+          (now - orderDate) / (7 * 24 * 60 * 60 * 1000)
+        );
+        if (weekIndex < 4) {
+          weeklyData[weekIndex] += order.orderValue;
+        }
+      }
+    });
+
+    return weeklyData
+      .map((value, index) => ({
+        name: `Week ${4 - index}`,
+        revenue: value,
+      }))
+      .reverse();
+  };
+
+  const processMonthlyRevenue = (orders) => {
+    const now = new Date();
+    const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+    const monthlyData = Array(6).fill(0);
+
+    orders.forEach((order) => {
+      const orderDate = new Date(order.bookingTime.seconds * 1000);
+      if (orderDate >= sixMonthsAgo) {
+        const monthIndex = (now.getMonth() - orderDate.getMonth() + 12) % 12;
+        if (monthIndex < 6) {
+          monthlyData[monthIndex] += order.orderValue;
+        }
+      }
+    });
+
+    return monthlyData
+      .map((value, index) => ({
+        name: `Month ${6 - index}`,
+        revenue: value,
+      }))
+      .reverse();
+  };
 
   const navigation = useNavigation();
 
@@ -42,7 +106,7 @@ export default function HomeScreen() {
     { title: MENU, onPress: () => navigation.navigate("menu") },
     { title: ORDERS, onPress: () => navigation.navigate("orders") },
     { title: INVENTORY, onPress: () => navigation.navigate("inventory") },
-    { title: PROFILE, onPress: () => navigation.navigate("profile") }, // Add a translation if necessary
+    { title: PROFILE, onPress: () => navigation.navigate("profile") },
   ];
 
   const renderHeader = () => (
@@ -69,6 +133,10 @@ export default function HomeScreen() {
           <Overview preferredLanguage={preferredLanguage} />
         </ThemedView>
         <NavigationMenu items={navigationItems} />
+        <RevenueGraphs
+          weeklyRevenue={weeklyRevenue}
+          monthlyRevenue={monthlyRevenue}
+        />
       </ThemedView>
     </View>
   );
@@ -88,16 +156,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  headerForeground: {
-    height: hp("15%"),
-    paddingLeft: wp("2%"),
-    justifyContent: "center",
-    backgroundColor: "rgba(14, 16, 231, 0.8)",
-  },
-  sectionTitle: {
-    fontSize: wp("4%"),
-    marginBottom: hp("2%"),
   },
   section: {
     borderWidth: 0.5,
